@@ -1,4 +1,4 @@
-const fastify = require('fastify')({ logger: { level: 'debg' } })
+const fastify = require('fastify')({ logger: { level: 'debug' } })
 const path = require('path')
 const env = require('env-var')
 const PORT = env.get('PORT', 8080).asInt()
