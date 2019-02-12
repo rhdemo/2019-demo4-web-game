@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rm -rf dist .cache",
     "start:server": "node server/index.js | pino-pretty",
-    "start:parcel": "parcel serve public/index.html",
+    "start:parcel": "parcel watch public/index.html",
     "start:dev": "yarn build:dev && env NODE_ENV=development run-p -l start:parcel start:server",
     "prebuild": "yarn lint && yarn clean",
     "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/index.html",
