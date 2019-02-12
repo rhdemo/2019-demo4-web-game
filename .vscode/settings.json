@@ -1,0 +1,26 @@
+{
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "editor.rulers": [
+    120
+  ],
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "coverage": true,
+    "lib": true,
+    "npm": true,
+    "test-lib": true
+  },
+  "eslint.enable": false,
+  "typescript.format.enable": false,
+  "tslint.enable": true,
+  "tslint.ignoreDefinitionFiles": false,
+  "tslint.autoFixOnSave": true,
+  "tslint.alwaysShowStatus": true,
+  "tslint.validateWithDefaultConfig": true,
+  "typescript.reportStyleChecksAsWarnings": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+}

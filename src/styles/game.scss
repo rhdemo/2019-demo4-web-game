@@ -1,0 +1,15 @@
+@import "variables.scss";
+
+.game-el-container {
+  .stopped {
+    color: $redhat-red;
+  }
+
+  .paused {
+    color: $redhat-gold;
+  }
+
+  .active {
+    color: $redhat-green;
+  }
+}
