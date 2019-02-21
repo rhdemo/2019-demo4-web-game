@@ -22,7 +22,8 @@ export function connect(isAdmin = false) {
   return new Promise((resolve, reject) => {
     const port = isAdmin ? 8082 : 8081;
 
-    sock = new Sockette(`ws://${window.location.hostname}:${port}`, {
+    // sock = new Sockette(`ws://${window.location.hostname}:${port}`, {
+    sock = new Sockette(`ws://192.168.0.18:8081`, {
       timeout: 60000,
       maxAttempts: 10,
       onopen: e => {
@@ -80,6 +81,11 @@ function onMessage(e: MessageEvent) {
       ApplicationEventTypes.ScoreUpdate,
       classified.data as WSS.IncomingFrames.Score
     );
+  } else if (WSS.IncomingFrames.Type.Heartbeat === classified.type) {
+    console.log(`${new Date()}  - received heartbeat from server`)
+    emitter.emit(
+      ApplicationEventTypes.ServerHeartBeat
+    )
   } else {
     // TODO: oh noes, this shouldn't ever happen
     console.error("message was classified, but was of unknown type");

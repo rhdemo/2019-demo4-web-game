@@ -19,6 +19,11 @@ export function classify (payload: string): WSS.IncomingFrames.ClassifiedFrame |
         type: WSS.IncomingFrames.Type.Score,
         data: parsed as WSS.IncomingFrames.Score
       }
+    } else if (parsed.type === WSS.IncomingFrames.Type.Heartbeat) {
+      return {
+        type: WSS.IncomingFrames.Type.Heartbeat,
+        data: {} as WSS.IncomingFrames.Heartbeat
+      }
     } else {
       return null
     }

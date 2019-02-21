@@ -1,8 +1,7 @@
 import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
-import { WebSocketFrames } from '@app/websocks/message-classifier'
 import * as webmo from 'webmo'
-import { ConfigGameMode, GameConfiguration } from './interfaces';
+import { ConfigGameMode, GameConfiguration, WSS } from './interfaces';
 
 /**
  * All application events should be listed here so we can type them
@@ -11,6 +10,7 @@ import { ConfigGameMode, GameConfiguration } from './interfaces';
 export enum ApplicationEventTypes {
   ScoreUpdate = 'ws:frame:score',
   ConfigUpdate = 'ws:frame:config',
+  ServerHeartBeat = 'ws:frame:heartbeat',
   MotionUpdate = 'orientation-motion:update'
 }
 
@@ -19,9 +19,10 @@ export enum ApplicationEventTypes {
  * handler signatures so we have a typed event system - yay!?
  */
 export interface ApplicationEventHandlers {
-  [ApplicationEventTypes.ScoreUpdate]: (data: WebSocketFrames.Score) => void
-  [ApplicationEventTypes.ConfigUpdate]: (data: WebSocketFrames.Config|{ gameState: ConfigGameMode }) => void
+  [ApplicationEventTypes.ScoreUpdate]: (data: WSS.IncomingFrames.Score) => void
+  [ApplicationEventTypes.ConfigUpdate]: (data: WSS.IncomingFrames.Config|{ gameState: ConfigGameMode }) => void
   [ApplicationEventTypes.MotionUpdate]: (data: { orientation: number[][], motion: number[][] }) => void
+  [ApplicationEventTypes.ServerHeartBeat]: () => void
 }
 
 /**

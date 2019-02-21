@@ -3,6 +3,8 @@ import * as ws from '@app/websocks/ws';
 import { OrientationListener, OrientationListenerEvent } from 'webmo/src/orientation';
 import { MotionListener, MotionListenerEvent } from 'webmo/src/motion';
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 let ol: OrientationListener
 let ml: MotionListener
 
@@ -56,7 +58,8 @@ export async function initialiseMotionAndOrietationTracking () {
 
   const autoStart = false
 
-  if (supports[0] && supports[1]) {
+  // If mode is dev then just ignore the check results, e.g running on desktop
+  if (!isProduction || supports[0] && supports[1]) {
     ml = new MotionListener((e) => mBuffer.push(e), { autoStart, threshold: 1 })
     ol = new OrientationListener((e) => oBuffer.push(e), { autoStart, threshold: 0.5 })
   } else {

@@ -39,7 +39,8 @@ export namespace WSS {
   export namespace IncomingFrames {
     export enum Type {
       Config = "config",
-      Score = "score"
+      Score = "score",
+      Heartbeat = 'heartbeat'
     }
 
     export interface FrameBase {
@@ -57,9 +58,13 @@ export namespace WSS {
       intensity: string; // some kind of measure indicating the impact of the player's movements
     }
 
+    export interface Heartbeat extends FrameBase {
+      type: Type.Heartbeat
+    }
+
     export interface ClassifiedFrame {
       type: Type;
-      data: Config | Score;
+      data: Config|Score|Heartbeat;
     }
   }
 }
