@@ -12,7 +12,7 @@
     "nodeshift:production": "nodeshift --expose --build.env YARN_ENABLED=true",
     "start": "node server/index.js",
     "start:server": "node server/index.js | pino-pretty",
-    "start:parcel": "parcel watch public/index.html",
+    "start:parcel": "parcel watch public/index.html public/admin.html",
     "start:dev": "yarn build:dev && env NODE_ENV=development run-p -l start:parcel start:server",
     "prebuild": "yarn lint && yarn clean",
     "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/index.html",
