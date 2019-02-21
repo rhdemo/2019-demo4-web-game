@@ -1,4 +1,5 @@
 import { Component, h } from "preact";
+import { connect, sendGameStateChange } from "../../websocks/ws";
 
 export class AdminView extends Component {
   constructor() {
@@ -21,41 +22,16 @@ export class AdminView extends Component {
       }
     });
   }
-  //
-  // componentWillMount () {
-  //   const onConfigEvent = (config: WebSocketFrames.Config) => {
-  //     this.setState({ mode: config.gameState })
-  //   }
-  //
-  //   const onMotionEvent = (motion: MotionAndOrientationPayload) => {
-  //     this.setState({ motion })
-  //   }
-  //
-  //   emitter.on(ApplicationEventTypes.OrientationMotionEvents.Update, (e) => onMotionEvent(e))
-  //   emitter.on(ApplicationEventTypes.WebSocketEvents.Config, (e) => onConfigEvent(e))
-  // }
+
+  async componentWillMount() {
+    connect(true);
+  }
 
   sendMessage(state) {
-    console.log(state);
+    sendGameStateChange({ state: state });
   }
 
   render() {
-    // let v: any
-    //
-    // switch (this.state.mode) {
-    //   case WebSocketFrames.ConfigGameMode.Active:
-    //     v = <GameActiveView/>
-    //     break
-    //   case WebSocketFrames.ConfigGameMode.Paused:
-    //     v = <GamePausedView/>
-    //     break
-    //   case WebSocketFrames.ConfigGameMode.Stopped:
-    //     v = <GameStoppedView/>
-    //     break
-    //   default:
-    //     v = <GameBorkedView/>
-    // }
-
     return (
       <div>
         <h1>Admin View</h1>
