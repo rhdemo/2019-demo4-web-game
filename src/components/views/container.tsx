@@ -26,7 +26,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     emitter.on(ApplicationEventTypes.ConfigUpdate, (config) => onConfigChange(config))
 
     initialiseMotionAndOrietationTracking()
-      .then(connect)
+      .then(() => connect())
       .then(() => setGameConfiguration({ gameState: ConfigGameMode.Ready }))
       .catch((err) => {
         setError(err)

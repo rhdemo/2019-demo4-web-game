@@ -1,48 +1,45 @@
 import { Component, h } from "preact";
-import { connect, sendGameStateChange } from "../../websocks/ws";
+import { connect, sendGameStateChange } from "@app/websocks/ws";
+import { GameModes, GameModeEntry } from "@app/interfaces/admin";
 
-export class AdminView extends Component {
+export class AdminView extends Component <{}, AdminViewState> {
   constructor() {
     super();
 
     this.setState({
-      modes: {
-        lobby: {
-          text: "Lobby"
-        },
-        play: {
-          text: "Play"
-        },
-        pause: {
-          text: "Pause"
-        },
-        gameover: {
-          text: "Game Over"
-        }
-      }
-    });
+      activeGameMode: GameModes.Lobby
+    })
   }
 
   async componentWillMount() {
     connect(true);
   }
 
-  sendMessage(state) {
-    sendGameStateChange({ state: state });
+  sendMessage(mode: GameModeEntry) {
+    // Set component state
+    this.setState({ activeGameMode: mode })
+
+    sendGameStateChange({ state: mode.text });
   }
 
   render() {
+    const modes = Object.keys(GameModes)
     return (
       <div>
         <h1>Admin View</h1>
-        {Object.keys(this.state.modes).map(key => {
+
+        {Object.keys(GameModes).map((key) => {
           return (
-            <button onClick={() => this.sendMessage(key)}>
-              {this.state.modes[key].text}
+            <button onClick={() => this.sendMessage(GameModes[key])}>
+              {key} { this.state.activeGameMode === GameModes[key] ? (<span>(active)</span>) : (<span></span>)}
             </button>
           );
         })}
       </div>
     );
   }
+}
+
+interface AdminViewState {
+  activeGameMode: GameModeEntry
 }
