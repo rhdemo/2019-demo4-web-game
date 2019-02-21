@@ -1,23 +1,93 @@
-import * as gyronorm from 'gyronorm'
-import { ApplicationEventTypes, emitter } from '@app/store'
+import * as webmo from 'webmo'
+import * as ws from '@app/websocks/ws';
+import { OrientationListener, OrientationListenerEvent } from 'webmo/src/orientation';
+import { MotionListener, MotionListenerEvent } from 'webmo/src/motion';
 
-export async function startMotionAndOrietationTracking () {
-  const g = new gyronorm.GyroNorm()
+let ol: OrientationListener
+let ml: MotionListener
 
-  await g.init({
-    // Poll for device motion and orientation 10 times per second
-    frequency: 100,
+let oBuffer: OrientationListenerEvent[] = []
+let mBuffer: MotionListenerEvent[] = []
 
-    // Round to 5 decimal places
-    decimalCount: 5
-  })
+let emitterInterval: NodeJS.Timer|null = null
 
-  g.start(function gyroEventCallback (data: gyronorm.MotionAndOrientationPayload) {
-    // console.log('received gyronorm payload', data)
+/**
+ * Stops the periodic sending of data to WSS
+ */
+export function stopSendLoop () {
+  if (emitterInterval === null) {
+    console.warn('stopSendLoop was called, but tracking is currently inactive')
+  } else {
+    clearInterval(emitterInterval)
+    emitterInterval = null
 
-    emitter.emit(
-      ApplicationEventTypes.OrientationMotionEvents.Update,
-      data
-    )
-  })
+    ml.stop()
+    ol.stop()
+
+    clearBuffers()
+  }
+}
+
+/**
+ * Starts sending data to the WSS on an interval
+ */
+export function startSendLoop () {
+  if (emitterInterval) {
+    console.warn('startSendLoop was called, but tracking is currently active')
+  } else {
+    clearBuffers()
+
+    ml.start()
+    ol.start()
+
+    // Emit motion data every second...for now
+    emitterInterval = setInterval(emitMotionAndOrientation, 1000)
+  }
+}
+
+/**
+ * Verifies that the current device supports motion and orientation APIs
+ */
+export async function initialiseMotionAndOrietationTracking () {
+  const supports = await Promise.all([
+    webmo.motion.deviceHasMotionSupport(),
+    webmo.orientation.deviceHasOrientationSupport()
+  ])
+
+  const autoStart = false
+
+  if (supports[0] && supports[1]) {
+    ml = new MotionListener((e) => mBuffer.push(e), { autoStart, threshold: 1 })
+    ol = new OrientationListener((e) => oBuffer.push(e), { autoStart, threshold: 0.5 })
+  } else {
+    throw new Error(`Device does not support motion (check: ${supports[0]}) or orientation (check: ${supports[1]})`)
+  }
+}
+
+function clearBuffers () {
+  oBuffer = []
+  mBuffer = []
+}
+
+function round (n: number) {
+  return parseFloat(n.toFixed(5))
+}
+
+function vectoriseMotionEvent (data: MotionListenerEvent) {
+  return [round(data.acceleration.x), round(data.acceleration.y), round(data.acceleration.z), data.timestamp]
+}
+
+function vectoriseOrientationEvent (data: OrientationListenerEvent) {
+  return [round(data.alpha), round(data.beta), round(data.gamma), data.timestamp]
+}
+
+function emitMotionAndOrientation () {
+  const data = {
+    orientation: oBuffer.map(vectoriseOrientationEvent),
+    motion: mBuffer.map(vectoriseMotionEvent)
+  }
+
+  clearBuffers()
+
+  ws.sendMotionAndOrientationData(data)
 }

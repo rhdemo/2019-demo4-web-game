@@ -34,7 +34,8 @@ module.exports = function (fastify, options, next) {
       setTimeout(sendRandomState, getRandomInt(1000, 5000))
     }
 
-    sendRandomState()
+    // Wait before sending initial payload
+    setTimeout(sendRandomState, 1000)
   });
 
   next()

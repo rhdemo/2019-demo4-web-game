@@ -1,43 +1,56 @@
 import { Component, h } from 'preact'
-import { ApplicationEventTypes, emitter, state } from '@app/store'
-import { WebSocketFrames } from '@app/websocks/message-classifier'
 import { GameActiveView } from './game.active'
 import { GamePausedView } from './game.paused'
 import { GameBorkedView } from './game.borked'
 import { GameStoppedView } from './game.stopped'
-import { MotionAndOrientationPayload } from 'gyronorm'
+import { GameLoadingView } from './game.loading'
+import { GameReadyView } from './game.ready'
+import { connect } from '@app/websocks/ws';
+import { ApplicationEventTypes, emitter, getState, setGameConfiguration, setError } from '@app/store'
+import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion';
+import { ConfigGameMode, GameConfiguration } from '@app/interfaces';
+
 
 export class ViewsContainer extends Component<{}, ViewsContainerState> {
   constructor () {
     super()
 
-    this.setState({ mode: state.activeMode })
+    this.setState({ config: getState().config })
   }
 
-  componentWillMount () {
-    const onConfigEvent = (config: WebSocketFrames.Config) => {
-      this.setState({ mode: config.gameState })
+  async componentWillMount () {
+    const onConfigChange = (config: GameConfiguration) => {
+      this.setState({ config })
     }
 
-    const onMotionEvent = (motion: MotionAndOrientationPayload) => {
-      this.setState({ motion })
-    }
+    emitter.on(ApplicationEventTypes.ConfigUpdate, (config) => onConfigChange(config))
 
-    emitter.on(ApplicationEventTypes.OrientationMotionEvents.Update, (e) => onMotionEvent(e))
-    emitter.on(ApplicationEventTypes.WebSocketEvents.Config, (e) => onConfigEvent(e))
+    initialiseMotionAndOrietationTracking()
+      .then(connect)
+      .then(() => setGameConfiguration({ gameState: ConfigGameMode.Ready }))
+      .catch((err) => {
+        setError(err)
+        setGameConfiguration({ gameState: ConfigGameMode.Borked })
+      })
   }
 
   render () {
     let v: any
 
-    switch (this.state.mode) {
-      case WebSocketFrames.ConfigGameMode.Active:
+    switch (this.state.config.gameState) {
+      case ConfigGameMode.Loading:
+        v = <GameLoadingView/>
+        break
+      case ConfigGameMode.Ready:
+        v = <GameReadyView/>
+        break
+      case ConfigGameMode.Active:
         v = <GameActiveView/>
         break
-      case WebSocketFrames.ConfigGameMode.Paused:
+      case ConfigGameMode.Paused:
         v = <GamePausedView/>
         break
-      case WebSocketFrames.ConfigGameMode.Stopped:
+      case ConfigGameMode.Stopped:
         v = <GameStoppedView/>
         break
       default:
@@ -53,6 +66,5 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 }
 
 interface ViewsContainerState {
-  mode: WebSocketFrames.ConfigGameMode
-  motion?: MotionAndOrientationPayload
+  config: GameConfiguration
 }
