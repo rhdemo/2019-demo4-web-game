@@ -1,11 +1,13 @@
-import { GameConfiguration, WSS } from "@app/interfaces";
+import { GameConfiguration, WSS } from '@app/interfaces'
 
 /**
  * Classifies incoming frames and wraps them in a ClassifiedFrame Object with
  * their given type classification and original payload
  * @param payload
  */
-export function classify (payload: string): WSS.IncomingFrames.ClassifiedFrame | null {
+export function classify (
+  payload: string
+): WSS.IncomingFrames.ClassifiedFrame | null {
   try {
     const parsed = JSON.parse(payload) as WSS.IncomingFrames.FrameBase
 

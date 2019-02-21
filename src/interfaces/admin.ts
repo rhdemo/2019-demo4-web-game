@@ -1,4 +1,3 @@
-
 export interface GameModeEntry {
   text: string
 }
@@ -8,9 +7,9 @@ export interface GameModesInterface {
   // Allows type safe looping and access, e.g in Object.keys/map loops
   [index: string]: GameModeEntry
 
-  Lobby: GameModeEntry,
-  Play: GameModeEntry,
-  Pause: GameModeEntry,
+  Lobby: GameModeEntry
+  Play: GameModeEntry
+  Pause: GameModeEntry
   GameOver: GameModeEntry
 }
 

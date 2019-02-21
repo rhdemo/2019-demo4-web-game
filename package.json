@@ -25,7 +25,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run format && yarn run lint"
+      "pre-commit": "yarn run format && yarn run lint && git add ."
     }
   },
   "dependencies": {
@@ -57,6 +57,7 @@
     "parcel-plugin-typescript": "^1.0.0",
     "pino-pretty": "^2.5.0",
     "preact": "^8.3.1",
+    "prettier": "^1.16.4",
     "run-p": "^0.0.0",
     "sockette": "^2.0.5",
     "strict-event-emitter-types": "^2.0.0",

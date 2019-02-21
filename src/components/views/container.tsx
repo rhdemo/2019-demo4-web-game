@@ -1,15 +1,20 @@
+import { GameLoadingView } from './game.loading'
 import { Component, h } from 'preact'
-import { GameActiveView } from './game.active'
 import { GamePausedView } from './game.paused'
 import { GameBorkedView } from './game.borked'
 import { GameStoppedView } from './game.stopped'
-import { GameLoadingView } from './game.loading'
+import { GameActiveView } from './game.active'
 import { GameReadyView } from './game.ready'
-import { connect } from '@app/websocks/ws';
-import { ApplicationEventTypes, emitter, getState, setGameConfiguration, setError } from '@app/store'
-import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion';
-import { ConfigGameMode, GameConfiguration } from '@app/interfaces';
-
+import { connect } from '@app/websocks/ws'
+import {
+  ApplicationEventTypes,
+  emitter,
+  getState,
+  setError,
+  setGameConfiguration
+} from '@app/store'
+import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion'
+import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 
 export class ViewsContainer extends Component<{}, ViewsContainerState> {
   constructor () {
@@ -23,7 +28,9 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       this.setState({ config })
     }
 
-    emitter.on(ApplicationEventTypes.ConfigUpdate, (config) => onConfigChange(config))
+    emitter.on(ApplicationEventTypes.ConfigUpdate, (config) =>
+      onConfigChange(config)
+    )
 
     initialiseMotionAndOrietationTracking()
       .then(() => connect())
@@ -39,29 +46,25 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     switch (this.state.config.gameState) {
       case ConfigGameMode.Loading:
-        v = <GameLoadingView/>
+        v = <GameLoadingView />
         break
       case ConfigGameMode.Ready:
-        v = <GameReadyView/>
+        v = <GameReadyView />
         break
       case ConfigGameMode.Active:
-        v = <GameActiveView/>
+        v = <GameActiveView />
         break
       case ConfigGameMode.Paused:
-        v = <GamePausedView/>
+        v = <GamePausedView />
         break
       case ConfigGameMode.Stopped:
-        v = <GameStoppedView/>
+        v = <GameStoppedView />
         break
       default:
-        v = <GameBorkedView/>
+        v = <GameBorkedView />
     }
 
-    return (
-      <div class='game-el-container'>
-        {v}
-      </div>
-    )
+    return <div class='game-el-container'>{v}</div>
   }
 }
 

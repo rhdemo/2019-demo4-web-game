@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import * as webmo from 'webmo'
-import { ConfigGameMode, GameConfiguration, WSS } from './interfaces';
+import { ConfigGameMode, GameConfiguration, WSS } from './interfaces'
 
 /**
  * All application events should be listed here so we can type them
@@ -20,7 +20,7 @@ export enum ApplicationEventTypes {
  */
 export interface ApplicationEventHandlers {
   [ApplicationEventTypes.ScoreUpdate]: (data: WSS.IncomingFrames.Score) => void
-  [ApplicationEventTypes.ConfigUpdate]: (data: WSS.IncomingFrames.Config|{ gameState: ConfigGameMode }) => void
+  [ApplicationEventTypes.ConfigUpdate]: (data: WSS.IncomingFrames.Config | { gameState: ConfigGameMode }) => void
   [ApplicationEventTypes.MotionUpdate]: (data: { orientation: number[][], motion: number[][] }) => void
   [ApplicationEventTypes.ServerHeartBeat]: () => void
 }

@@ -1,7 +1,10 @@
 import * as webmo from 'webmo'
-import * as ws from '@app/websocks/ws';
-import { OrientationListener, OrientationListenerEvent } from 'webmo/src/orientation';
-import { MotionListener, MotionListenerEvent } from 'webmo/src/motion';
+import * as ws from '@app/websocks/ws'
+import {
+  OrientationListener,
+  OrientationListenerEvent
+} from 'webmo/src/orientation'
+import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -11,7 +14,7 @@ let ml: MotionListener
 let oBuffer: OrientationListenerEvent[] = []
 let mBuffer: MotionListenerEvent[] = []
 
-let emitterInterval: NodeJS.Timer|null = null
+let emitterInterval: NodeJS.Timer | null = null
 
 /**
  * Stops the periodic sending of data to WSS
@@ -59,11 +62,18 @@ export async function initialiseMotionAndOrietationTracking () {
   const autoStart = false
 
   // If mode is dev then just ignore the check results, e.g running on desktop
-  if (!isProduction || supports[0] && supports[1]) {
+  if (!isProduction || (supports[0] && supports[1])) {
     ml = new MotionListener((e) => mBuffer.push(e), { autoStart, threshold: 1 })
-    ol = new OrientationListener((e) => oBuffer.push(e), { autoStart, threshold: 0.5 })
+    ol = new OrientationListener((e) => oBuffer.push(e), {
+      autoStart,
+      threshold: 0.5
+    })
   } else {
-    throw new Error(`Device does not support motion (check: ${supports[0]}) or orientation (check: ${supports[1]})`)
+    throw new Error(
+      `Device does not support motion (check: ${
+        supports[0]
+      }) or orientation (check: ${supports[1]})`
+    )
   }
 }
 
@@ -77,11 +87,21 @@ function round (n: number) {
 }
 
 function vectoriseMotionEvent (data: MotionListenerEvent) {
-  return [round(data.acceleration.x), round(data.acceleration.y), round(data.acceleration.z), data.timestamp]
+  return [
+    round(data.acceleration.x),
+    round(data.acceleration.y),
+    round(data.acceleration.z),
+    data.timestamp
+  ]
 }
 
 function vectoriseOrientationEvent (data: OrientationListenerEvent) {
-  return [round(data.alpha), round(data.beta), round(data.gamma), data.timestamp]
+  return [
+    round(data.alpha),
+    round(data.beta),
+    round(data.gamma),
+    data.timestamp
+  ]
 }
 
 function emitMotionAndOrientation () {
