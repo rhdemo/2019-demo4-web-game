@@ -4,6 +4,8 @@ export interface GameModeEntry {
 }
 
 export interface GameModesInterface {
+  // Index Signature - tells the compiler index is a string type
+  // Allows type safe looping and access, e.g in Object.keys/map loops
   [index: string]: GameModeEntry
 
   Lobby: GameModeEntry,
