@@ -13,6 +13,7 @@
     "prebuild": "yarn lint && yarn clean",
     "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/index.html",
     "build:dev": "env NODE_ENV=development parcel build public/index.html",
+    "postbuild": "cp nginx.conf dist",
     "lint": "tslint --format stylish --fix --project tsconfig.json",
     "pretest": "yarn lint",
     "test": "jest",
@@ -24,6 +25,7 @@
     }
   },
   "dependencies": {
+    "@types/debug": "^4.1.2",
     "debug": "^4.1.1",
     "env-var": "^3.4.2",
     "webmo": "^0.2.0"

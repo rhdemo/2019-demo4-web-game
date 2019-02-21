@@ -28,10 +28,10 @@ export function connect (isAdmin = false) {
   }
 
   return new Promise((resolve, reject) => {
-    const port = isAdmin ? 8082 : 8081
+    const suffix = isAdmin ? '/admin-socket' : '/game-socket'
+    const url = `ws://${window.location.hostname}${suffix}`
 
-    // sock = new Sockette(`ws://${window.location.hostname}:${port}`, {
-    sock = new Sockette(`ws://${process.env.WS_HOST}:${port}`, {
+    sock = new Sockette(url, {
       timeout: 60000,
       maxAttempts: 10,
       onopen: (e) => {
