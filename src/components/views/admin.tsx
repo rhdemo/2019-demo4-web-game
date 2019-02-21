@@ -23,7 +23,6 @@ export class AdminView extends Component <{}, AdminViewState> {
   }
 
   render() {
-    const modes = Object.keys(GameModes)
     return (
       <div>
         <h1>Admin View</h1>
