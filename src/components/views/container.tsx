@@ -5,7 +5,8 @@ import { GameBorkedView } from './game.borked'
 import { GameStoppedView } from './game.stopped'
 import { GameActiveView } from './game.active'
 import { GameReadyView } from './game.ready'
-import { connect } from '@app/websocks/ws'
+import { GameLobbyView } from './game.lobby'
+import { connect, sendConnection } from '@app/websocks/ws'
 import {
   ApplicationEventTypes,
   emitter,
@@ -34,6 +35,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     initialiseMotionAndOrietationTracking()
       .then(() => connect())
+      .then(() => sendConnection(this.state.playerId))
       .then(() => setGameConfiguration({ gameState: ConfigGameMode.Ready }))
       .catch((err) => {
         setError(err)
@@ -43,6 +45,10 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
   render () {
     let v: any
+
+    if (getState().error) {
+      return <GameBorkedView />
+    }
 
     switch (this.state.config.gameState) {
       case ConfigGameMode.Loading:
@@ -60,7 +66,15 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       case ConfigGameMode.Stopped:
         v = <GameStoppedView />
         break
+      case ConfigGameMode.Lobby:
+        v = <GameLobbyView />
+        break
       default:
+        setError(
+          new Error(
+            `Received unknown game state of "${this.state.config.gameState}"`
+          )
+        )
         v = <GameBorkedView />
     }
 
@@ -70,4 +84,5 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
 interface ViewsContainerState {
   config: GameConfiguration
+  playerId: string
 }

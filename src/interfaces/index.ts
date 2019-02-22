@@ -1,10 +1,11 @@
 export enum ConfigGameMode {
   Active = 'active',
   Borked = 'borked',
-  Paused = 'paused',
+  Paused = 'pause',
   Stopped = 'stopped',
   Loading = 'loading',
-  Ready = 'ready'
+  Ready = 'ready',
+  Lobby = 'lobby'
 }
 
 export interface GameConfiguration {
@@ -18,12 +19,13 @@ export namespace WSS {
   export namespace OutgoingFrames {
     export enum Type {
       Motion = 'motion',
-      GameStateChange = 'game'
+      GameStateChange = 'game',
+      Connection = 'connection'
     }
 
-    export interface OutgoingFrameBase {
+    export interface OutgoingFrame {
       type: Type
-      data: any
+      [key: string]: any
     }
 
     export interface MotionDataPayload {
@@ -34,11 +36,13 @@ export namespace WSS {
     export interface GameStateChangePayload {
       state: string
     }
+
+    export interface Connection {}
   }
 
   export namespace IncomingFrames {
     export enum Type {
-      Config = 'config',
+      Config = 'configuration',
       Score = 'score',
       Heartbeat = 'heartbeat'
     }

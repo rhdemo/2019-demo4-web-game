@@ -1,7 +1,9 @@
 import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
-import * as webmo from 'webmo'
 import { ConfigGameMode, GameConfiguration, WSS } from './interfaces'
+import getLogger from '@app/log'
+
+const log = getLogger('store')
 
 /**
  * All application events should be listed here so we can type them
@@ -35,9 +37,10 @@ export interface ApplicationState {
   error?: Error
 }
 
+const playerId = localStorage.getItem('playerId') || undefined
 const state: ApplicationState = {
   // Always initialise in loading state
-  config: { gameState: ConfigGameMode.Loading }
+  config: { gameState: ConfigGameMode.Loading, playerId }
 }
 
 export function getState () {
@@ -46,11 +49,17 @@ export function getState () {
 }
 
 export function setError (err: Error) {
-  console.log('setting error', err)
+  log('setting error to:', err)
   state.error = err
 }
 
 export function setGameConfiguration (config: GameConfiguration) {
+  log('setting game configuration to:', config)
+  if (config.playerId) {
+    localStorage.setItem('playerId', config.playerId)
+  }
+
   state.config = config
+
   emitter.emit(ApplicationEventTypes.ConfigUpdate, config)
 }
