@@ -74,7 +74,6 @@ objects:
           from:
             kind: ImageStreamTag
             name: web-app-builder-runtime:latest
-          incremental: true
         type: Source
       triggers:
         - type: ConfigChange
@@ -123,7 +122,6 @@ objects:
           from:
             kind: ImageStreamTag
             name: nginx-image-runtime:latest
-          incremental: true
         type: Source
       triggers:
         - type: ConfigChange
