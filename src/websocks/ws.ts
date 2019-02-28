@@ -28,10 +28,9 @@ export function connect (isAdmin = false) {
   }
 
   return new Promise((resolve, reject) => {
-    const port = isAdmin ? 8082 : 8081
+    const url = getSocketUrl(isAdmin)
 
-    // sock = new Sockette(`ws://${window.location.hostname}:${port}`, {
-    sock = new Sockette(`ws://${process.env.WS_HOST}:${port}`, {
+    sock = new Sockette(url, {
       timeout: 60000,
       maxAttempts: 10,
       onopen: (e) => {
@@ -49,6 +48,23 @@ export function connect (isAdmin = false) {
       }
     })
   })
+}
+
+function getSocketUrl (isAdmin = false) {
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  const devGameSocket = process.env.GAME_SOCKET
+  const devAdminSocket = process.env.ADMIN_SOCKET
+
+  if (isDevelopment && isAdmin && devAdminSocket) {
+    return devAdminSocket
+  }
+
+  if (isDevelopment && !isAdmin && devGameSocket) {
+    return devGameSocket
+  }
+
+  const suffix = isAdmin ? '/admin-socket' : '/game-socket'
+  return `ws://${window.location.hostname}${suffix}`
 }
 
 export function sendMotionAndOrientationData (
