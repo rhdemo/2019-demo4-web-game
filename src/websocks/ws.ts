@@ -31,7 +31,8 @@ export function connect (isAdmin = false) {
     const port = isAdmin ? 8082 : 8081
 
     // sock = new Sockette(`ws://${window.location.hostname}:${port}`, {
-    sock = new Sockette(`ws://${process.env.WS_HOST}:${port}`, {
+    // sock = new Sockette(`ws://${process.env.WS_HOST}:${port}`, {
+    sock = new Sockette(`ws://localhost:${port}`, {
       timeout: 60000,
       maxAttempts: 10,
       onopen: (e) => {

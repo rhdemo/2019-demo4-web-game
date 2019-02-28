@@ -1,7 +1,7 @@
 export enum ConfigGameMode {
   Active = 'active',
   Borked = 'borked',
-  Paused = 'pause',
+  Paused = 'paused',
   Stopped = 'stopped',
   Loading = 'loading',
   Ready = 'ready',
@@ -19,7 +19,7 @@ export namespace WSS {
   export namespace OutgoingFrames {
     export enum Type {
       Motion = 'motion',
-      GameStateChange = 'game',
+      GameStateChange = 'configuration',
       Connection = 'connection'
     }
 
