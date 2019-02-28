@@ -10,22 +10,22 @@ export interface GameModesInterface {
   [index: string]: GameModeEntry
 
   Lobby: GameModeEntry
-  Play: GameModeEntry
-  Pause: GameModeEntry
-  GameOver: GameModeEntry
+  Active: GameModeEntry
+  Paused: GameModeEntry
+  Stopped: GameModeEntry
 }
 
 export const GameModes: GameModesInterface = {
   Lobby: {
     text: ConfigGameMode.Lobby
   },
-  Play: {
+  Active: {
     text: ConfigGameMode.Active
   },
-  Pause: {
+  Paused: {
     text: ConfigGameMode.Paused
   },
-  GameOver: {
+  Stopped: {
     text: ConfigGameMode.Stopped
   }
 }
