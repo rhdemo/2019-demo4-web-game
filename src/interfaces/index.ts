@@ -1,7 +1,7 @@
 export enum ConfigGameMode {
   Active = 'active',
   Borked = 'borked',
-  Paused = 'pause',
+  Paused = 'paused',
   Stopped = 'stopped',
   Loading = 'loading',
   Ready = 'ready',
