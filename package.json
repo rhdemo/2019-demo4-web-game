@@ -25,12 +25,12 @@
     }
   },
   "dependencies": {
-    "@types/debug": "^4.1.2",
     "debug": "^4.1.1",
     "env-var": "^3.4.2",
     "webmo": "^0.2.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.2",
     "@types/jest": "^23.3.0",
     "@types/node": "^10.9.4",
     "@types/ws": "^6.0.1",
