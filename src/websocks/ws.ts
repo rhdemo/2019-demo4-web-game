@@ -2,6 +2,7 @@ import Sockette from 'sockette'
 import {
   ApplicationEventTypes,
   emitter,
+  getState,
   setGameConfiguration
 } from '@app/store'
 import { classify } from './message-classifier'
@@ -10,15 +11,20 @@ import getLogger from '@app/log'
 
 const log = getLogger('ws')
 
-let sock: Sockette
+let sock: Sockette | null = null
 
 export function disconnect () {
   if (sock) {
     log('closing socket')
     sock.close()
+    sock = null
   } else {
     log('disconnect called, but no socket exists')
   }
+}
+
+export function isConnected () {
+  return sock ? true : false
 }
 
 export function connect (isAdmin = false) {
@@ -30,12 +36,16 @@ export function connect (isAdmin = false) {
   return new Promise((resolve, reject) => {
     const url = getSocketUrl(isAdmin)
 
-    sock = new Sockette(url, {
+    const _sock = (sock = new Sockette(url, {
       timeout: 60000,
       maxAttempts: 10,
       onopen: (e) => {
         log('Connected!', e)
-        resolve(sock)
+
+        // Immediately send connection payload with playerId
+        sendConnection(getState().config.playerId)
+
+        resolve(_sock)
       },
       onmessage: (e) => onMessage(e),
       onreconnect: (e) => log('Reconnecting...', e),
@@ -46,7 +56,7 @@ export function connect (isAdmin = false) {
         log('Error:', e)
         reject(e)
       }
-    })
+    }))
   })
 }
 
@@ -93,7 +103,11 @@ export function sendConnection (playerId?: string) {
 }
 
 function sendJsonPayload (payload: WSS.OutgoingFrames.OutgoingFrame) {
-  sock.json(payload)
+  if (sock) {
+    sock.json({ ...payload, playerId: getState().config.playerId })
+  } else {
+    throw new Error('ws attempted to send data but no connection is present')
+  }
 }
 
 function onMessage (e: MessageEvent) {

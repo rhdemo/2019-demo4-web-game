@@ -6,6 +6,10 @@ import {
 } from '@app/orientation-and-motion'
 import * as ws from '@app/websocks/ws'
 import nanoid from 'nanoid'
+import { ApplicationEventTypes, emitter } from '@app/store'
+import getLogger from '../../log'
+
+const log = getLogger('training-page')
 
 interface Gesture {
   name: string
@@ -58,6 +62,8 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     this.setState({
       mode: TrainingViewMode.CaptureList
     })
+
+    ws.connect().catch((err) => this.wsAlert(err))
   }
 
   componentWillMount () {
@@ -120,25 +126,31 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     }, 3500)
   }
 
+  wsAlert (err: any) {
+    log('error ion websocket')
+    log(err)
+
+    alert('WebSocket Error: Please refresh the page and try again.')
+  }
+
   async uploadMotionData () {
     this.setState({ mode: TrainingViewMode.CaptureList })
 
-    ws.connect()
-      .then(() => {
-        if (!this.state.selectedGesture) {
-          throw new Error(
-            'selectedGesture was not set, cannot send training data'
-          )
-        }
+    if (ws.isConnected()) {
+      if (!this.state.selectedGesture) {
+        throw new Error(
+          'selectedGesture was not set, cannot send training data'
+        )
+      }
 
-        ws.sendMotionAndOrientationData({
-          ...this.state.capturedMotionVectors,
-          gesture: this.state.selectedGesture.id,
-          uuid: nanoid()
-        })
+      ws.sendMotionAndOrientationData({
+        ...this.state.capturedMotionVectors,
+        gesture: this.state.selectedGesture.id,
+        uuid: nanoid()
       })
-      .then(() => setTimeout(() => ws.disconnect(), 5000))
-      .catch(() => alert('Failed to upload motion data'))
+    } else {
+      this.wsAlert('WebSocket is not connected!')
+    }
   }
 
   render () {
