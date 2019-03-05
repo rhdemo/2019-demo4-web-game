@@ -142,8 +142,11 @@ export class TrainingView extends Component<{}, TrainingViewState> {
           <h2>Gesture Model Training</h2>
           <p>
             Please select a gesture from the list below. When you select the
-            gesture a countdown begins, a beep will then sound. Keep going until
-            you hear a second beep.
+            gesture a series of countdown "beep" sounds begin. A longer beep
+            will then sound - start doing the motion when you hear it! Keep
+            going until you hear a second beep. The second beep means you're
+            done and you can confirm you performed the gesture accurately, or
+            try again.
           </p>
           <hr />
           {els}
