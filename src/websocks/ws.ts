@@ -52,8 +52,7 @@ export function connect (isAdmin = false) {
       onmaximum: (e) => log('Stop Attempting!', e),
       onclose: (e) => log('Closed!', e),
       onerror: (e) => {
-        alert('wss close' + e)
-        log('Error:', e)
+        log('WebSocket Error:', e)
         reject(e)
       }
     }))
