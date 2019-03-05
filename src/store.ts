@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
-import { ConfigGameMode, GameConfiguration, WSS } from './interfaces'
+import nanoid from 'nanoid'
+import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
 import getLogger from '@app/log'
 
 const log = getLogger('store')
@@ -35,12 +36,14 @@ export const emitter: StrictEventEmitter<EventEmitter, ApplicationEventHandlers>
 export interface ApplicationState {
   config: GameConfiguration
   error?: Error
+  gestureHistory: GestureHistoryEntry[]
 }
 
 const playerId = localStorage.getItem('playerId') || undefined
 const state: ApplicationState = {
   // Always initialise in loading state
-  config: { gameState: ConfigGameMode.Loading, playerId }
+  config: { gameState: ConfigGameMode.Loading, playerId },
+  gestureHistory: []
 }
 
 export function getState () {
@@ -62,4 +65,11 @@ export function setGameConfiguration (config: GameConfiguration) {
   state.config = config
 
   emitter.emit(ApplicationEventTypes.ConfigUpdate, config)
+}
+
+export function addGestureToHistory (type: string) {
+  state.gestureHistory.push({
+    uuid: nanoid(),
+    type
+  })
 }

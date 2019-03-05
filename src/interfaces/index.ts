@@ -8,6 +8,11 @@ export enum ConfigGameMode {
   Lobby = 'lobby'
 }
 
+export interface GestureHistoryEntry {
+  type: string
+  uuid: string
+}
+
 export interface GameConfiguration {
   gameState: ConfigGameMode
   playerId?: string
@@ -36,6 +41,7 @@ export namespace WSS {
     export interface MotionDataPayload {
       motion: number[][]
       orientation: number[][]
+      gesture?: string // TODO: enums for our planned gesture types
     }
 
     export interface GameStateChangePayload {

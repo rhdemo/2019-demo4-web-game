@@ -9,6 +9,7 @@ import * as ws from '@app/websocks/ws'
 interface Gesture {
   name: string
   gif: string
+  id: string
 }
 
 enum TrainingViewMode {
@@ -20,25 +21,30 @@ enum TrainingViewMode {
 
 interface TrainingViewState {
   mode: TrainingViewMode
-  data: MotionVectors
+  capturedMotionVectors: MotionVectors
+  selectedGesture?: Gesture
 }
 
 const GESTURES: Gesture[] = [
   {
     name: 'Night Fever',
+    id: 'fever',
     gif:
       'https://media0.giphy.com/media/xULW8OyTsBLHzSzFlu/giphy.gif?cid=3640f6095c7dd1433336397a36e552ab'
   },
   {
     name: 'Phone Shake',
+    id: 'shake',
     gif: 'https://i.gifer.com/LjZz.gif'
   },
   {
     name: 'Draw an X',
+    id: 'draw-x',
     gif: 'https://i.giphy.com/media/sPvqJVzs2HCg0/giphy.webp'
   },
   {
     name: 'Draw a Circle',
+    id: 'draw-circle',
     gif:
       'https://media0.giphy.com/media/3mhQzhl6YyQ3bKIL29/giphy.gif?cid=3640f6095c7dd1aa4f7852704d138bfe'
   }
@@ -56,7 +62,9 @@ export class TrainingView extends Component<{}, TrainingViewState> {
   componentWillMount () {
     // Save the motion data to a temp variable.
     // User needs to confirm it's accurate before we send it.
-    initialiseMotionAndOrietationTracking((data) => this.setState({ data }))
+    initialiseMotionAndOrietationTracking((capturedMotionVectors) =>
+      this.setState({ capturedMotionVectors })
+    )
   }
 
   makeSound (duration = 100) {
@@ -81,7 +89,8 @@ export class TrainingView extends Component<{}, TrainingViewState> {
 
   train (gesture: Gesture) {
     this.setState({
-      mode: TrainingViewMode.CapturePrepare
+      mode: TrainingViewMode.CapturePrepare,
+      selectedGesture: gesture
     })
 
     // Perform a countdown, after a 500ms delay
@@ -114,7 +123,18 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     this.setState({ mode: TrainingViewMode.CaptureList })
 
     ws.connect()
-      .then(() => ws.sendMotionAndOrientationData(this.state.data))
+      .then(() => {
+        if (!this.state.selectedGesture) {
+          throw new Error(
+            'selectedGesture was not set, cannot send training data'
+          )
+        }
+
+        ws.sendMotionAndOrientationData({
+          ...this.state.capturedMotionVectors,
+          gesture: this.state.selectedGesture.id
+        })
+      })
       .then(() => setTimeout(() => ws.disconnect(), 5000))
       .catch(() => alert('Failed to upload motion data'))
   }
