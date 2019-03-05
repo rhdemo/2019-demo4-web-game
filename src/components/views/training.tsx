@@ -115,7 +115,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
 
     ws.connect()
       .then(() => ws.sendMotionAndOrientationData(this.state.data))
-      .then(() => ws.disconnect())
+      .then(() => setTimeout(() => ws.disconnect(), 5000))
       .catch(() => alert('Failed to upload motion data'))
   }
 
