@@ -1,6 +1,9 @@
 import { Component, h } from 'preact'
 import { MotionVectors } from '../../interfaces/index'
-import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion'
+import {
+  initialiseMotionAndOrietationTracking,
+  startSendLoop
+} from '@app/orientation-and-motion'
 import * as ws from '@app/websocks/ws'
 
 interface Gesture {
@@ -90,6 +93,9 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     setTimeout(() => {
       this.makeSound(1000)
       this.setState({ mode: TrainingViewMode.CaptureInProgress })
+
+      // Capture motion data
+      startSendLoop(3500)
 
       // Finish the capture after ~3 seconds
       setTimeout(() => {
