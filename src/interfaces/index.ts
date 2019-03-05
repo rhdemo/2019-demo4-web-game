@@ -15,6 +15,11 @@ export interface GameConfiguration {
   score?: number // users stored score. Zero if the player is new
 }
 
+export interface MotionVectors {
+  orientation: number[][]
+  motion: number[][]
+}
+
 export namespace WSS {
   export namespace OutgoingFrames {
     export enum Type {
