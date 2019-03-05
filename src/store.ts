@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
-import nanoid from 'nanoid'
 import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
 import getLogger from '@app/log'
 
@@ -67,9 +66,6 @@ export function setGameConfiguration (config: GameConfiguration) {
   emitter.emit(ApplicationEventTypes.ConfigUpdate, config)
 }
 
-export function addGestureToHistory (type: string) {
-  state.gestureHistory.push({
-    uuid: nanoid(),
-    type
-  })
+export function addGestureToHistory (entry: GestureHistoryEntry) {
+  state.gestureHistory.push(entry)
 }

@@ -5,6 +5,7 @@ import {
   startSendLoop
 } from '@app/orientation-and-motion'
 import * as ws from '@app/websocks/ws'
+import nanoid from 'nanoid'
 
 interface Gesture {
   name: string
@@ -132,7 +133,8 @@ export class TrainingView extends Component<{}, TrainingViewState> {
 
         ws.sendMotionAndOrientationData({
           ...this.state.capturedMotionVectors,
-          gesture: this.state.selectedGesture.id
+          gesture: this.state.selectedGesture.id,
+          uuid: nanoid()
         })
       })
       .then(() => setTimeout(() => ws.disconnect(), 5000))

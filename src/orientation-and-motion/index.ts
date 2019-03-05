@@ -6,6 +6,8 @@ import {
 import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
+import nanoid from 'nanoid'
+import { addGestureToHistory } from '@app/store'
 
 type EmitterCallback = (data: MotionVectors) => void
 
@@ -20,7 +22,15 @@ let mBuffer: MotionListenerEvent[] = []
 let emitterInterval: NodeJS.Timer | null = null
 
 // Default callback for handling device data
-let _callback: EmitterCallback = (data) => sendMotionAndOrientationData(data)
+let _callback: EmitterCallback = (data) => {
+  const uuid = nanoid()
+  // TODO - Need to get this from our central state store
+  // TODO - The server will eventually send us the motion
+  const gesture = 'todo'
+
+  sendMotionAndOrientationData({ ...data, uuid })
+  addGestureToHistory({ uuid, gesture })
+}
 
 /**
  * Stops the periodic sending of data to WSS

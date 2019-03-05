@@ -9,7 +9,7 @@ export enum ConfigGameMode {
 }
 
 export interface GestureHistoryEntry {
-  type: string
+  gesture: string
   uuid: string
 }
 
@@ -41,6 +41,7 @@ export namespace WSS {
     export interface MotionDataPayload {
       motion: number[][]
       orientation: number[][]
+      uuid: string
       gesture?: string // TODO: enums for our planned gesture types
     }
 
