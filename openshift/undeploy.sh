@@ -3,8 +3,6 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-SECRET_NAME=demo4-scm-key
+source "${DIR}/../.secrets"
 
-oc process -f ${DIR}/application.yml | oc delete -f -
-
-oc delete secret ${SECRET_NAME}
+oc process -f ${DIR}/simple.yml | oc delete -f -
