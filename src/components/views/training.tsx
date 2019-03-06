@@ -9,6 +9,13 @@ import nanoid from 'nanoid'
 import { ApplicationEventTypes, emitter } from '@app/store'
 import getLogger from '../../log'
 
+import twists from '../../../public/assets/images/twists.gif'
+import circles from '../../../public/assets/images/circles.gif'
+import triangles from '../../../public/assets/images/triangles.gif'
+import disco from '../../../public/assets/images/disco.gif'
+import rolls from '../../../public/assets/images/rolls.gif'
+import floss from '../../../public/assets/images/floss.gif'
+
 const log = getLogger('training-page')
 
 interface Gesture {
@@ -32,26 +39,34 @@ interface TrainingViewState {
 
 const GESTURES: Gesture[] = [
   {
-    name: 'Night Fever',
-    id: 'fever',
-    gif:
-      'https://media0.giphy.com/media/xULW8OyTsBLHzSzFlu/giphy.gif?cid=3640f6095c7dd1433336397a36e552ab'
-  },
-  {
     name: 'Phone Shake',
     id: 'shake',
-    gif: 'https://i.gifer.com/LjZz.gif'
-  },
-  {
-    name: 'Draw an X',
-    id: 'draw-x',
-    gif: 'https://i.giphy.com/media/sPvqJVzs2HCg0/giphy.webp'
+    gif: twists
   },
   {
     name: 'Draw a Circle',
     id: 'draw-circle',
-    gif:
-      'https://media0.giphy.com/media/3mhQzhl6YyQ3bKIL29/giphy.gif?cid=3640f6095c7dd1aa4f7852704d138bfe'
+    gif: circles
+  },
+  {
+    name: 'Draw an Triangle',
+    id: 'draw-triangle',
+    gif: triangles
+  },
+  {
+    name: 'Roll',
+    id: 'roll',
+    gif: rolls
+  },
+  {
+    name: 'Night Fever',
+    id: 'fever',
+    gif: disco
+  },
+  {
+    name: 'Floss',
+    id: 'floss',
+    gif: floss
   }
 ]
 
