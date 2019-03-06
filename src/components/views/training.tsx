@@ -17,6 +17,7 @@ import rolls from '../../../public/assets/images/rolls.gif'
 import floss from '../../../public/assets/images/floss.gif'
 
 const log = getLogger('training-page')
+const AC = (window as any).webkitAudioContext || AudioContext
 
 interface Gesture {
   name: string
@@ -71,8 +72,18 @@ const GESTURES: Gesture[] = [
 ]
 
 export class TrainingView extends Component<{}, TrainingViewState> {
+  aCtx: AudioContext | undefined
+
   constructor () {
     super()
+
+    if (AC) {
+      this.aCtx = new AC()
+    } else {
+      alert(
+        'Your device does not support the Audio API. Motion capture will work, but no sounds will play.'
+      )
+    }
 
     this.setState({
       mode: TrainingViewMode.CaptureList
@@ -90,23 +101,24 @@ export class TrainingView extends Component<{}, TrainingViewState> {
   }
 
   makeSound (duration = 100) {
-    // More info at: https://odino.org/emit-a-beeping-sound-with-javascript/
-    const aCtx = new AudioContext()
-    const SOUND_VOLUME = 75 // of 100 percent, decibels?
+    if (this.aCtx) {
+      // More info at: https://odino.org/emit-a-beeping-sound-with-javascript/
+      const SOUND_VOLUME = 75 // of 100 percent, decibels?
 
-    const oscillator = aCtx.createOscillator()
-    const gain = aCtx.createGain()
+      const oscillator = this.aCtx.createOscillator()
+      const gain = this.aCtx.createGain()
 
-    oscillator.connect(gain)
+      oscillator.connect(gain)
 
-    oscillator.frequency.value = 900
-    oscillator.type = 'sine'
+      oscillator.frequency.value = 900
+      oscillator.type = 'sine'
 
-    gain.connect(aCtx.destination)
+      gain.connect(this.aCtx.destination)
 
-    gain.gain.value = SOUND_VOLUME * 0.01
-    oscillator.start(aCtx.currentTime)
-    oscillator.stop(aCtx.currentTime + duration / 1000)
+      gain.gain.value = SOUND_VOLUME * 0.01
+      oscillator.start(this.aCtx.currentTime)
+      oscillator.stop(this.aCtx.currentTime + duration / 1000)
+    }
   }
 
   train (gesture: Gesture) {
