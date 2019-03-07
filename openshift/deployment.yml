@@ -10,6 +10,7 @@ parameters:
     required: true
   - name: IMAGE_REPOSITORY
     displayName: Image Repository (quay.io/user/demo4-web-game-nginx:latest)
+    value: quay.io/redhatdemo/demo4-web-game-nginx:latest
     required: true
 
 
