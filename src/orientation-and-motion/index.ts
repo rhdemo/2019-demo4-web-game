@@ -1,10 +1,15 @@
 import * as webmo from 'webmo'
-import * as ws from '@app/websocks/ws'
 import {
   OrientationListener,
   OrientationListenerEvent
 } from 'webmo/src/orientation'
 import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
+import { MotionVectors } from '@app/interfaces'
+import { sendMotionAndOrientationData } from '@app/websocks/ws'
+import nanoid from 'nanoid'
+import { addGestureToHistory } from '@app/store'
+
+type EmitterCallback = (data: MotionVectors) => void
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -15,6 +20,17 @@ let oBuffer: OrientationListenerEvent[] = []
 let mBuffer: MotionListenerEvent[] = []
 
 let emitterInterval: NodeJS.Timer | null = null
+
+// Default callback for handling device data
+let _callback: EmitterCallback = (data) => {
+  const uuid = nanoid()
+  // TODO - Need to get this from our central state store
+  // TODO - The server will eventually send us the motion
+  const gesture = 'todo'
+
+  sendMotionAndOrientationData({ ...data, uuid })
+  addGestureToHistory({ uuid, gesture })
+}
 
 /**
  * Stops the periodic sending of data to WSS
@@ -36,7 +52,7 @@ export function stopSendLoop () {
 /**
  * Starts sending data to the WSS on an interval
  */
-export function startSendLoop () {
+export function startSendLoop (timeout = 1000) {
   if (emitterInterval) {
     console.warn('startSendLoop was called, but tracking is currently active')
   } else {
@@ -45,15 +61,21 @@ export function startSendLoop () {
     ml.start()
     ol.start()
 
-    // Emit motion data every second...for now
-    emitterInterval = setInterval(emitMotionAndOrientation, 1000)
+    emitterInterval = setInterval(emitMotionAndOrientation, timeout)
   }
 }
 
 /**
  * Verifies that the current device supports motion and orientation APIs
+ * Sets us up to send data to the backend
  */
-export async function initialiseMotionAndOrietationTracking () {
+export async function initialiseMotionAndOrietationTracking (
+  callback?: EmitterCallback
+) {
+  if (callback) {
+    _callback = callback
+  }
+
   const supports = await Promise.all([
     webmo.motion.deviceHasMotionSupport(),
     webmo.orientation.deviceHasOrientationSupport()
@@ -112,5 +134,5 @@ function emitMotionAndOrientation () {
 
   clearBuffers()
 
-  ws.sendMotionAndOrientationData(data)
+  _callback(data)
 }

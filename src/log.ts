@@ -8,5 +8,13 @@ if (process.env.NODE_ENV === 'production') {
 import debug from 'debug'
 
 export default function getLogger (name: string) {
-  return debug(name)
+  const log = debug(name)
+
+  return (...args: any[]) => {
+    // Add a timestamp
+    args.unshift(new Date().toJSON())
+
+    // Print the log
+    log.apply(log, args as any)
+  }
 }

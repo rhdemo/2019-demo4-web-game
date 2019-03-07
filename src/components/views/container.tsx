@@ -6,13 +6,14 @@ import { GameStoppedView } from './game.stopped'
 import { GameActiveView } from './game.active'
 import { GameReadyView } from './game.ready'
 import { GameLobbyView } from './game.lobby'
-import { connect, sendConnection } from '@app/websocks/ws'
+import { connect } from '@app/websocks/ws'
 import {
   ApplicationEventTypes,
   emitter,
   getState,
   setError,
-  setGameConfiguration
+  setGameConfiguration,
+  setGameMode
 } from '@app/store'
 import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
@@ -35,8 +36,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     initialiseMotionAndOrietationTracking()
       .then(() => connect())
-      .then(() => sendConnection(this.state.playerId))
-      .then(() => setGameConfiguration({ gameState: ConfigGameMode.Ready }))
+      .then(() => setGameMode(ConfigGameMode.Ready))
       .catch((err) => {
         setError(err)
         setGameConfiguration({ gameState: ConfigGameMode.Borked })
