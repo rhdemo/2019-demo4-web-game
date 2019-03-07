@@ -9,7 +9,7 @@ import { classify } from './message-classifier'
 import { WSS } from '@app/interfaces'
 import getLogger from '@app/log'
 
-const log = getLogger('ws')
+const log = getLogger('wsocket')
 
 let sock: Sockette | null = null
 
@@ -37,10 +37,9 @@ export function connect (isAdmin = false) {
     const url = getSocketUrl(isAdmin)
 
     const _sock = (sock = new Sockette(url, {
-      timeout: 60000,
-      maxAttempts: 10,
+      timeout: 2500,
       onopen: (e) => {
-        log('Connected!', e)
+        log('connected!', e)
 
         // Immediately send connection payload with playerId
         sendConnection(getState().config.playerId)
@@ -48,9 +47,16 @@ export function connect (isAdmin = false) {
         resolve(_sock)
       },
       onmessage: (e) => onMessage(e),
-      onreconnect: (e) => log('Reconnecting...', e),
-      onmaximum: (e) => log('Stop Attempting!', e),
-      onclose: (e) => log('Closed!', e),
+      onreconnect: (e) => log('reconnecting...', e),
+      onmaximum: (e) => log('reached maximum number of reconnect attempts'),
+      onclose: (e) => {
+        log('close event detected', e)
+        if (!e.wasClean) {
+          log(
+            'did not close cleanly. this indicates a dropped connection. reconnection will be attempted automatically'
+          )
+        }
+      },
       onerror: (e) => {
         log('WebSocket Error:', e)
         reject(e)
@@ -110,7 +116,7 @@ function sendJsonPayload (payload: WSS.OutgoingFrames.OutgoingFrame) {
 }
 
 function onMessage (e: MessageEvent) {
-  log('received socket message', e)
+  log('received message', e)
   const classified = classify(e.data)
 
   if (!classified) {

@@ -6,15 +6,14 @@ import {
 } from '@app/orientation-and-motion'
 import * as ws from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import { ApplicationEventTypes, emitter } from '@app/store'
 import getLogger from '../../log'
 
-import twists from '../../../public/assets/images/twists.gif'
-import circles from '../../../public/assets/images/circles.gif'
-import triangles from '../../../public/assets/images/triangles.gif'
-import disco from '../../../public/assets/images/disco.gif'
-import rolls from '../../../public/assets/images/rolls.gif'
-import floss from '../../../public/assets/images/floss.gif'
+import twists from '@public/assets/images/twists.gif'
+import circles from '@public/assets/images/circles.gif'
+import triangles from '@public/assets/images/triangles.gif'
+import disco from '@public/assets/images/disco.gif'
+import rolls from '@public/assets/images/rolls.gif'
+import floss from '@public/assets/images/floss.gif'
 
 const log = getLogger('training-page')
 const AC = (window as any).webkitAudioContext || AudioContext
