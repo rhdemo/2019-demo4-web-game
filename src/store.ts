@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
-import { ConfigGameMode, GameConfiguration, WSS } from './interfaces'
+import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
 import getLogger from '@app/log'
 
 const log = getLogger('store')
@@ -35,12 +35,14 @@ export const emitter: StrictEventEmitter<EventEmitter, ApplicationEventHandlers>
 export interface ApplicationState {
   config: GameConfiguration
   error?: Error
+  gestureHistory: GestureHistoryEntry[]
 }
 
 const playerId = localStorage.getItem('playerId') || undefined
 const state: ApplicationState = {
   // Always initialise in loading state
-  config: { gameState: ConfigGameMode.Loading, playerId }
+  config: { gameState: ConfigGameMode.Loading, playerId },
+  gestureHistory: []
 }
 
 export function getState () {
@@ -53,6 +55,20 @@ export function setError (err: Error) {
   state.error = err
 }
 
+/**
+ * Set the game mode, e.g "paused"
+ * @param mode
+ */
+export function setGameMode (mode: ConfigGameMode) {
+  state.config.gameState = mode
+
+  emitter.emit(ApplicationEventTypes.ConfigUpdate, state.config)
+}
+
+/**
+ * Replace the full game configuration
+ * @param config
+ */
 export function setGameConfiguration (config: GameConfiguration) {
   log('setting game configuration to:', config)
   if (config.playerId) {
@@ -62,4 +78,20 @@ export function setGameConfiguration (config: GameConfiguration) {
   state.config = config
 
   emitter.emit(ApplicationEventTypes.ConfigUpdate, config)
+}
+
+/**
+ * Tracks gesture history so we can match server confirmations to a previously performed gesture
+ * @param entry
+ */
+export function addGestureToHistory (entry: GestureHistoryEntry) {
+  state.gestureHistory.push(entry)
+}
+
+/**
+ * Deletes all stored gestures. Required on certain mode changes
+ * @param entry
+ */
+export function clearGestureToHistory (entry: GestureHistoryEntry) {
+  state.gestureHistory = []
 }

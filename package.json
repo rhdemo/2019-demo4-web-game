@@ -9,10 +9,10 @@
   "scripts": {
     "clean": "rm -rf dist .cache",
     "format": "prettier --single-quote --single-quote --write src/**/*.ts src/**/*.tsx",
-    "start": "parcel serve public/index.html public/admin.html",
+    "start": "parcel serve public/*.html",
     "prebuild": "yarn lint && yarn clean",
-    "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/index.html ./public/admin.html",
-    "build:dev": "env NODE_ENV=development parcel build public/index.html",
+    "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/*.html",
+    "build:dev": "env NODE_ENV=development parcel build public/*.html",
     "postbuild": "cp nginx.conf dist",
     "lint": "tslint --format stylish --fix --project tsconfig.json",
     "pretest": "yarn lint",
@@ -25,13 +25,14 @@
     }
   },
   "dependencies": {
-    "@types/debug": "^4.1.2",
     "debug": "^4.1.1",
     "env-var": "^3.4.2",
-    "webmo": "^0.2.0"
+    "webmo": "0.3.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.2",
     "@types/jest": "^23.3.0",
+    "@types/nanoid": "^1.2.1",
     "@types/node": "^10.9.4",
     "@types/ws": "^6.0.1",
     "autoprefixer": "^9.0.0",
@@ -44,6 +45,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^23.4.1",
     "linkstate": "^1.1.1",
+    "nanoid": "^2.0.1",
     "node-sass": "^4.9.2",
     "parcel-bundler": "^1.9.7",
     "parcel-plugin-typescript": "^1.0.0",
