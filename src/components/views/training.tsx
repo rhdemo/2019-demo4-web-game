@@ -137,7 +137,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       this.setState({ mode: TrainingViewMode.CaptureInProgress })
 
       // Capture motion data
-      startSendLoop(3500)
+      startSendLoop(5500)
 
       // Finish the capture after ~3 seconds
       setTimeout(() => {
@@ -148,7 +148,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
         }
 
         this.setState({ mode: TrainingViewMode.CaptureReview })
-      }, 3500)
+      }, 5500)
     }, 3500)
   }
 
