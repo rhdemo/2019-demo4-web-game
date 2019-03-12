@@ -8,6 +8,9 @@ import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
 import nanoid from 'nanoid'
 import { addGestureToHistory } from '@app/store'
+import getLogger from '@app/log'
+
+const log = getLogger('motion')
 
 type EmitterCallback = (data: MotionVectors) => void
 
@@ -36,6 +39,7 @@ let _callback: EmitterCallback = (data) => {
  * Stops the periodic sending of data to WSS
  */
 export function stopSendLoop () {
+  log('stopping send loop')
   if (emitterInterval === null) {
     console.warn('stopSendLoop was called, but tracking is currently inactive')
   } else {
@@ -53,6 +57,7 @@ export function stopSendLoop () {
  * Starts sending data to the WSS on an interval
  */
 export function startSendLoop (timeout = 1000) {
+  log('starting send loop')
   if (emitterInterval) {
     console.warn('startSendLoop was called, but tracking is currently active')
   } else {
@@ -100,6 +105,7 @@ export async function initialiseMotionAndOrietationTracking (
 }
 
 function clearBuffers () {
+  log('cealring motion buffers')
   oBuffer = []
   mBuffer = []
 }
@@ -127,6 +133,7 @@ function vectoriseOrientationEvent (data: OrientationListenerEvent) {
 }
 
 function emitMotionAndOrientation () {
+  log('emitting motion data')
   const data = {
     orientation: oBuffer.map(vectoriseOrientationEvent),
     motion: mBuffer.map(vectoriseMotionEvent)
