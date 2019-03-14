@@ -2,7 +2,8 @@ import { Component, h } from 'preact'
 import { MotionVectors } from '../../interfaces/index'
 import {
   initialiseMotionAndOrietationTracking,
-  startSendLoop
+  startSendLoop,
+  stopSendLoop
 } from '@app/orientation-and-motion'
 import * as ws from '@app/websocks/ws'
 import nanoid from 'nanoid'
@@ -37,7 +38,7 @@ interface TrainingViewState {
   selectedGesture?: Gesture
 }
 
-const GESTURES: Gesture[] = [
+const GESTURES: Gesture[] = shuffle([
   {
     name: 'Phone Shake',
     id: 'shake',
@@ -49,7 +50,7 @@ const GESTURES: Gesture[] = [
     gif: circles
   },
   {
-    name: 'Draw an Triangle',
+    name: 'Draw a Triangle',
     id: 'draw-triangle',
     gif: triangles
   },
@@ -68,7 +69,27 @@ const GESTURES: Gesture[] = [
     id: 'floss',
     gif: floss
   }
-]
+])
+
+// Shuffle/randomise the gestures so each user gets a random list. This will help even out our training pool data since
+// many users will just do the first 2 or 3. Math.random() with array.sort() isn't a reliable shuffle so we use this:
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffle (array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
+
+  return array
+}
+
+function getRandomGesture () {
+  const idx = Math.floor(Math.random() * Math.floor(GESTURES.length))
+
+  return GESTURES[idx]
+}
 
 export class TrainingView extends Component<{}, TrainingViewState> {
   aCtx: AudioContext | undefined
@@ -94,9 +115,10 @@ export class TrainingView extends Component<{}, TrainingViewState> {
   componentWillMount () {
     // Save the motion data to a temp variable.
     // User needs to confirm it's accurate before we send it.
-    initialiseMotionAndOrietationTracking((capturedMotionVectors) =>
+    initialiseMotionAndOrietationTracking((capturedMotionVectors) => {
+      log('training component received motion data')
       this.setState({ capturedMotionVectors })
-    )
+    })
   }
 
   makeSound (duration = 100) {
@@ -131,16 +153,17 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     setTimeout(() => this.makeSound(), 1500)
     setTimeout(() => this.makeSound(), 2500)
 
-    // Gooo!
+    // And gooo!
     setTimeout(() => {
       this.makeSound(1000)
       this.setState({ mode: TrainingViewMode.CaptureInProgress })
 
       // Capture motion data
-      startSendLoop(3500)
+      startSendLoop(5500)
 
       // Finish the capture after ~3 seconds
       setTimeout(() => {
+        stopSendLoop()
         this.makeSound()
 
         if (navigator.vibrate) {
@@ -148,7 +171,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
         }
 
         this.setState({ mode: TrainingViewMode.CaptureReview })
-      }, 3500)
+      }, 5500)
     }, 3500)
   }
 
@@ -161,6 +184,11 @@ export class TrainingView extends Component<{}, TrainingViewState> {
 
   async uploadMotionData () {
     this.setState({ mode: TrainingViewMode.CaptureList })
+
+    // Need this timeout to ensure a render() is complete after the above state change
+    setTimeout(() => {
+      window.location.hash = `#${getRandomGesture().id}`
+    })
 
     if (ws.isConnected()) {
       if (!this.state.selectedGesture) {
@@ -186,7 +214,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       const els = GESTURES.map((g) => {
         return (
           <div>
-            <h3>{g.name}</h3>
+            <h3 id={g.id}>{g.name}</h3>
             <img
               style='border-radius: 0.5rem; border: 0.1rem solid #555; max-width: 85%;'
               src={g.gif}
