@@ -7552,10 +7552,10 @@ webidl-conversions@^4.0.2:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
   integrity sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==
 
-webmo@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/webmo/-/webmo-0.3.0.tgz#13ac55738ee37a1c5cc0c3888378ec07ec64e9f5"
-  integrity sha512-rmbxnnLDadrRpOTQ3Yyr0BpfYkyubQgeHDL2cO2fIcmQO68HLZN+2xm3v5u2Ie+S7gs0WzKrTst3k/dzmu9grA==
+webmo@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/webmo/-/webmo-0.4.0.tgz#0ad74a5019143ff105605e23cdafb3ce900333f7"
+  integrity sha512-p1VJG4ZrI8HrthxzhZ5kFbzeb9G6AbV+0EslscLCB5nz1pngP0/STF6HJySBaIYAGyWlVjPMpyduSKCFD8LGXA==
 
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3:
   version "1.0.4"

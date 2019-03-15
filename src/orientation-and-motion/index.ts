@@ -90,7 +90,11 @@ export async function initialiseMotionAndOrietationTracking (
 
   // If mode is dev then just ignore the check results, e.g running on desktop
   if (!isProduction || (supports[0] && supports[1])) {
-    ml = new MotionListener((e) => mBuffer.push(e), { autoStart, threshold: 1 })
+    ml = new MotionListener((e) => mBuffer.push(e), {
+      autoStart,
+      threshold: 2,
+      rotationRateThreshold: 2.5
+    })
     ol = new OrientationListener((e) => oBuffer.push(e), {
       autoStart,
       threshold: 0.5
@@ -105,7 +109,7 @@ export async function initialiseMotionAndOrietationTracking (
 }
 
 function clearBuffers () {
-  log('cealring motion buffers')
+  log('clearing motion buffers')
   oBuffer = []
   mBuffer = []
 }
@@ -119,6 +123,9 @@ function vectoriseMotionEvent (data: MotionListenerEvent) {
     round(data.acceleration.x),
     round(data.acceleration.y),
     round(data.acceleration.z),
+    round(data.rotationRate.alpha),
+    round(data.rotationRate.beta),
+    round(data.rotationRate.gamma),
     data.timestamp
   ]
 }
