@@ -56,7 +56,8 @@ export namespace WSS {
     export enum Type {
       Config = 'configuration',
       Score = 'score',
-      Heartbeat = 'heartbeat'
+      Heartbeat = 'heartbeat',
+      MotionFeedback = 'motion_feedback'
     }
 
     export interface FrameBase {
