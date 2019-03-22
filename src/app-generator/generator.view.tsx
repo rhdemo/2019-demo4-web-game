@@ -15,7 +15,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
 
     this.setState({
       // ...or change manually here
-      wssAddress: this.getWssParam()
+      wssAddress: this.getWssParam(),
       generating: false,
       wsConnected: false,
       sendCount: 0
@@ -77,7 +77,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
     })
 
     if (this.state.generating) {
-      startSendLoop(16)
+      startSendLoop(250)
     } else {
       stopSendLoop()
     }
