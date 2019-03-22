@@ -70,6 +70,10 @@ export function startSendLoop(timeout = 5000) {
   }
 }
 
+export function isActive () {
+  return emitterInterval !== null
+}
+
 /**
  * Verifies that the current device supports motion and orientation APIs
  * Sets us up to send data to the backend

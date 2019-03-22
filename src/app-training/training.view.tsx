@@ -1,5 +1,5 @@
 import { Component, h } from 'preact'
-import { MotionVectors } from '../../interfaces/index'
+import { MotionVectors } from '@app/interfaces/index'
 import {
   initialiseMotionAndOrietationTracking,
   startSendLoop,
@@ -7,7 +7,7 @@ import {
 } from '@app/orientation-and-motion'
 import * as ws from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import getLogger from '../../log'
+import getLogger from '@app/log'
 
 import twists from '@public/assets/images/twists.gif'
 import circles from '@public/assets/images/circles.gif'
