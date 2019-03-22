@@ -1,15 +1,25 @@
-@import "variables.scss";
+@import 'variables.scss';
 
 .game-el-container {
   .stopped {
     color: $redhat-red;
   }
+}
 
-  .paused {
-    color: $redhat-gold;
-  }
+.game.lobby {
+  margin-top: 30vh;
+}
 
-  .active {
-    color: $redhat-green;
-  }
+.game.paused {
+  margin-top: 40vh;
+}
+
+#indicator-container {
+  position: relative;
+  top: -27.5px;
+}
+
+#indicator-container canvas {
+  border-radius: 50%;
+  background: white;
 }

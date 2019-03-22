@@ -13,38 +13,44 @@ import {
   getState,
   setError,
   setGameConfiguration,
-  setGameMode
+  setGameMode,
 } from '@app/store'
 import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
+import getLogger from '@app/log'
+
+const log = getLogger('view:container')
 
 export class ViewsContainer extends Component<{}, ViewsContainerState> {
-  constructor () {
+  constructor() {
     super()
 
+    log('creating')
     this.setState({ config: getState().config })
   }
 
-  async componentWillMount () {
+  async componentWillMount() {
+    log('mounting')
     const onConfigChange = (config: GameConfiguration) => {
       this.setState({ config })
     }
 
-    emitter.on(ApplicationEventTypes.ConfigUpdate, (config) =>
+    emitter.on(ApplicationEventTypes.ConfigUpdate, config =>
       onConfigChange(config)
     )
 
     initialiseMotionAndOrietationTracking()
       .then(() => connect())
       .then(() => setGameMode(ConfigGameMode.Ready))
-      .catch((err) => {
+      .catch(err => {
         setError(err)
         setGameConfiguration({ gameState: ConfigGameMode.Borked })
       })
   }
 
-  render () {
-    let v: any
+  render() {
+    log('rendering')
+    let v: JSX.Element
 
     if (getState().error) {
       return <GameBorkedView />
@@ -78,7 +84,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = <GameBorkedView />
     }
 
-    return <div class='game-el-container'>{v}</div>
+    return <div class="game-el-container">{v}</div>
   }
 }
 

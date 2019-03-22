@@ -2,8 +2,9 @@
 
 This starter was created by [José Quintana](git.io/joseluisq)
 
-
 ## Usage
+
+### Development
 
 Clone the repository and install the dependencies:
 
@@ -18,23 +19,20 @@ Verify the `.env.development` file is pointing to a correct IP address for the w
 yarn start
 ```
 
-Now navigate to http://localhost:1234/index.html or http://localhost:1234/admin.html.
-
-### Development
-
-```
-yarn start
-```
+Now navigate to http://localhost:1234/index.html, http://localhost:1234/index.html, or http://localhost:1234/admin.html depending on the service you need to view.
 
 ### Production
+
+To create a production build of the assets run:
 
 ```
 yarn build
 ```
 
-### Testing
+Pushing a new image can be done using the scripts. Make sure you're logged into quay.io and have access to our org first, then run:
 
 ```
-yarn test
+./openshift/build-local.sh
 ```
 
+You can then trigger a rollout on the cluster for the webapp.

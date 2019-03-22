@@ -8,7 +8,7 @@
   "main": "public/index.html",
   "scripts": {
     "clean": "rm -rf dist .cache",
-    "format": "prettier --single-quote --single-quote --write src/**/*.ts src/**/*.tsx",
+    "format": "prettier src/**/*.ts src/**/*.tsx public/*.html",
     "start": "parcel serve public/*.html",
     "prebuild": "yarn lint && yarn clean",
     "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/*.html",
@@ -21,7 +21,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run format && yarn run lint && git add ."
+      "pre-commit": "pretty-quick --pattern src/**/*.ts src/**/*.tsx public/*.html --staged"
     }
   },
   "dependencies": {
@@ -51,6 +51,7 @@
     "parcel-plugin-typescript": "^1.0.0",
     "preact": "^8.3.1",
     "prettier": "^1.16.4",
+    "pretty-quick": "^1.10.0",
     "run-p": "^0.0.0",
     "sockette": "^2.0.5",
     "strict-event-emitter-types": "^2.0.0",
