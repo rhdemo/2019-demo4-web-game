@@ -57,7 +57,7 @@ export namespace WSS {
       Config = 'configuration',
       Score = 'score',
       Heartbeat = 'heartbeat',
-      MotionFeedback = 'motion_feedback',
+      MotionFeedback = 'motion_feedback'
     }
 
     export interface FrameBase {
