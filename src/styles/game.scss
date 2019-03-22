@@ -1,4 +1,4 @@
-@import "variables.scss";
+@import 'variables.scss';
 
 .game-el-container {
   .stopped {
@@ -13,7 +13,6 @@
 .game.paused {
   margin-top: 40vh;
 }
-
 
 #indicator-container {
   position: relative;

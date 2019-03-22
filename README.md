@@ -2,7 +2,6 @@
 
 This starter was created by [José Quintana](git.io/joseluisq)
 
-
 ## Usage
 
 ### Development
@@ -21,7 +20,6 @@ yarn start
 ```
 
 Now navigate to http://localhost:1234/index.html, http://localhost:1234/index.html, or http://localhost:1234/admin.html depending on the service you need to view.
-
 
 ### Production
 

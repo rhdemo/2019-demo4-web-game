@@ -4,14 +4,14 @@ import getLogger from '@app/log'
 const log = getLogger('view:game.ready')
 
 export class GameReadyView extends Component {
-  constructor () {
+  constructor() {
     super()
     log('creating')
   }
-  render () {
+  render() {
     log('rendering')
     return (
-      <div class='game ready'>
+      <div class="game ready">
         <h2>GAME READY</h2>
       </div>
     )
