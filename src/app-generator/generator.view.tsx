@@ -1,16 +1,16 @@
-import { h, Component } from 'preact'
+import { Component, h } from 'preact'
 import Sockette from 'sockette'
 import getLogger from '@app/log'
-import { initialiseMotionAndOrietationTracking, startSendLoop, stopSendLoop } from '@app/orientation-and-motion';
+import { initialiseMotionAndOrietationTracking, startSendLoop, stopSendLoop } from '@app/orientation-and-motion'
 import formatFactory from 'format-number'
 
 const formatNumber = formatFactory()
 const log = getLogger('view:generator')
 
 export class GeneratorView extends Component<{}, GeneratorState> {
-  private sock: Sockette
+  private readonly sock: Sockette
 
-  constructor() {
+  constructor () {
     super()
 
     this.setState({
@@ -71,7 +71,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
     return wssHost
   }
 
-  toggleGenerating() {
+  toggleGenerating () {
     this.setState({
       generating: !this.state.generating
     })
@@ -85,7 +85,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
 
   render () {
     let primaryContent: JSX.Element
-    let secondaryContent: JSX.Element|null
+    let secondaryContent: JSX.Element | null
 
     if (!this.state.wsConnected) {
       primaryContent = (
@@ -96,9 +96,9 @@ export class GeneratorView extends Component<{}, GeneratorState> {
       secondaryContent = null
     } else {
       primaryContent = (
-        <div style="margin-top: 15vh;">
-          <p style="font-size: 1.2em;">You can use the button below to toggle sending motion data.</p>
-          <button style="font-size: 12pt" onClick={() => this.toggleGenerating()} class="button-primary">{this.state.generating ? 'Stop' : 'Start'}</button>
+        <div style='margin-top: 15vh;'>
+          <p style='font-size: 1.2em;'>You can use the button below to toggle sending motion data.</p>
+          <button style='font-size: 12pt' onClick={() => this.toggleGenerating()} class='button-primary'>{this.state.generating ? 'Stop' : 'Start'}</button>
         </div>
       )
       secondaryContent = (
@@ -118,23 +118,23 @@ export class GeneratorView extends Component<{}, GeneratorState> {
     }
 
     return (
-      <div class="container" style="text-align: center;">
+      <div class='container' style='text-align: center;'>
         <br/>
         <h3>Motion Data Generator</h3>
         <hr/>
         {primaryContent}
         {secondaryContent}
 
-        <div class="row" style="position: fixed;
+        <div class='row' style='position: fixed;
     text-align: left;
     bottom: 0;
     background: #444;
     color: white;
     width: 100vw;
     left: 0;
-    padding: 1em;">
-          <div class="one-half column">WS Address: {this.state.wssAddress}</div>
-          <div class="one-half column">WS State: <div style={style}></div> </div>
+    padding: 1em;'>
+          <div class='one-half column'>WS Address: {this.state.wssAddress}</div>
+          <div class='one-half column'>WS State: <div style={style}></div> </div>
         </div>
       </div>
     )

@@ -1,7 +1,7 @@
 import * as webmo from 'webmo'
 import {
   OrientationListener,
-  OrientationListenerEvent,
+  OrientationListenerEvent
 } from 'webmo/src/orientation'
 import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
@@ -25,7 +25,7 @@ let mBuffer: MotionListenerEvent[] = []
 let emitterInterval: NodeJS.Timer | null = null
 
 // Default callback for handling device data
-let _callback: EmitterCallback = data => {
+let _callback: EmitterCallback = (data) => {
   const uuid = nanoid()
   // TODO - Need to get this from our central state store
   // TODO - The server will eventually send us the motion
@@ -38,7 +38,7 @@ let _callback: EmitterCallback = data => {
 /**
  * Stops the periodic sending of data to WSS
  */
-export function stopSendLoop() {
+export function stopSendLoop () {
   log('stopping send loop')
   if (emitterInterval === null) {
     console.warn('stopSendLoop was called, but tracking is currently inactive')
@@ -56,7 +56,7 @@ export function stopSendLoop() {
 /**
  * Starts sending data to the WSS on an interval
  */
-export function startSendLoop(timeout = 5000) {
+export function startSendLoop (timeout = 5000) {
   log('starting send loop')
   if (emitterInterval) {
     console.warn('startSendLoop was called, but tracking is currently active')
@@ -78,7 +78,7 @@ export function isActive () {
  * Verifies that the current device supports motion and orientation APIs
  * Sets us up to send data to the backend
  */
-export async function initialiseMotionAndOrietationTracking(
+export async function initialiseMotionAndOrietationTracking (
   callback?: EmitterCallback
 ) {
   if (callback) {
@@ -87,7 +87,7 @@ export async function initialiseMotionAndOrietationTracking(
 
   const supports = await Promise.all([
     webmo.motion.deviceHasMotionSupport(),
-    webmo.orientation.deviceHasOrientationSupport(),
+    webmo.orientation.deviceHasOrientationSupport()
   ])
 
   const autoStart = false
@@ -103,11 +103,11 @@ export async function initialiseMotionAndOrietationTracking(
     ol = new OrientationListener((e) => oBuffer.push(e), {
       autoStart,
       threshold: 2,
-      rotationRateThreshold: 2.5,
+      rotationRateThreshold: 2.5
     })
-    ol = new OrientationListener(e => oBuffer.push(e), {
+    ol = new OrientationListener((e) => oBuffer.push(e), {
       autoStart,
-      threshold: 0.5,
+      threshold: 0.5
     })
   } else {
     throw new Error(
@@ -118,17 +118,17 @@ export async function initialiseMotionAndOrietationTracking(
   }
 }
 
-function clearBuffers() {
+function clearBuffers () {
   log('clearing motion buffers')
   oBuffer = []
   mBuffer = []
 }
 
-function round(n: number) {
+function round (n: number) {
   return parseFloat(n.toFixed(5))
 }
 
-function vectoriseMotionEvent(data: MotionListenerEvent) {
+function vectoriseMotionEvent (data: MotionListenerEvent) {
   return [
     round(data.acceleration.x),
     round(data.acceleration.y),
@@ -140,20 +140,20 @@ function vectoriseMotionEvent(data: MotionListenerEvent) {
   ]
 }
 
-function vectoriseOrientationEvent(data: OrientationListenerEvent) {
+function vectoriseOrientationEvent (data: OrientationListenerEvent) {
   return [
     round(data.alpha),
     round(data.beta),
     round(data.gamma),
-    data.timestamp,
+    data.timestamp
   ]
 }
 
-function emitMotionAndOrientation() {
+function emitMotionAndOrientation () {
   log('emitting motion data')
   const data = {
     orientation: oBuffer.map(vectoriseOrientationEvent),
-    motion: mBuffer.map(vectoriseMotionEvent),
+    motion: mBuffer.map(vectoriseMotionEvent)
   }
 
   clearBuffers()
