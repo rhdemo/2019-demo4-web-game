@@ -3,7 +3,7 @@ import {
   ApplicationEventTypes,
   emitter,
   getState,
-  setGameConfiguration
+  setGameConfiguration,
 } from '@app/store'
 import { classify } from './message-classifier'
 import { WSS } from '@app/interfaces'
@@ -13,7 +13,7 @@ const log = getLogger('wsocket')
 
 let sock: Sockette | null = null
 
-export function disconnect () {
+export function disconnect() {
   if (sock) {
     log('closing socket')
     sock.close()
@@ -23,11 +23,11 @@ export function disconnect () {
   }
 }
 
-export function isConnected () {
+export function isConnected() {
   return sock ? true : false
 }
 
-export function connect (isAdmin = false) {
+export function connect(isAdmin = false) {
   if (sock) {
     log('already connected. returning existing socket')
     return Promise.resolve(sock)
@@ -38,7 +38,7 @@ export function connect (isAdmin = false) {
 
     const _sock = (sock = new Sockette(url, {
       timeout: 2500,
-      onopen: (e) => {
+      onopen: e => {
         log('connected!', e)
 
         // Immediately send connection payload with playerId
@@ -46,10 +46,10 @@ export function connect (isAdmin = false) {
 
         resolve(_sock)
       },
-      onmessage: (e) => onMessage(e),
-      onreconnect: (e) => log('reconnecting...', e),
-      onmaximum: (e) => log('reached maximum number of reconnect attempts'),
-      onclose: (e) => {
+      onmessage: e => onMessage(e),
+      onreconnect: e => log('reconnecting...', e),
+      onmaximum: e => log('reached maximum number of reconnect attempts'),
+      onclose: e => {
         log('close event detected', e)
         if (!e.wasClean) {
           log(
@@ -57,15 +57,15 @@ export function connect (isAdmin = false) {
           )
         }
       },
-      onerror: (e) => {
+      onerror: e => {
         log('WebSocket Error:', e)
         reject(e)
-      }
+      },
     }))
   })
 }
 
-function getSocketUrl (isAdmin = false) {
+function getSocketUrl(isAdmin = false) {
   const isDevelopment = process.env.NODE_ENV === 'development'
   const devGameSocket = process.env.GAME_SOCKET
   const devAdminSocket = process.env.ADMIN_SOCKET
@@ -82,32 +82,32 @@ function getSocketUrl (isAdmin = false) {
   return `ws://${window.location.hostname}${suffix}`
 }
 
-export function sendMotionAndOrientationData (
+export function sendMotionAndOrientationData(
   data: WSS.OutgoingFrames.MotionDataPayload
 ) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.Motion,
-    ...data
+    ...data,
   })
 }
 
-export function sendGameStateChange (
+export function sendGameStateChange(
   data: WSS.OutgoingFrames.GameStateChangePayload
 ) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.GameStateChange,
-    ...data
+    ...data,
   })
 }
 
-export function sendConnection (playerId?: string) {
+export function sendConnection(playerId?: string) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.Connection,
-    playerId
+    playerId,
   })
 }
 
-function sendJsonPayload (payload: WSS.OutgoingFrames.OutgoingFrame) {
+function sendJsonPayload(payload: WSS.OutgoingFrames.OutgoingFrame) {
   if (sock) {
     sock.json({ ...payload, playerId: getState().config.playerId })
   } else {
@@ -115,7 +115,7 @@ function sendJsonPayload (payload: WSS.OutgoingFrames.OutgoingFrame) {
   }
 }
 
-function onMessage (e: MessageEvent) {
+function onMessage(e: MessageEvent) {
   log('received message', e)
   const classified = classify(e.data)
 
