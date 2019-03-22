@@ -1,9 +1,19 @@
 import { Component, h } from 'preact'
 import { getState } from '@app/store'
+import getLogger from '@app/log'
+
+const log = getLogger('view:game.borked')
 
 export class GameBorkedView extends Component {
+  constructor () {
+    super()
+    log('creating')
+  }
   render () {
+    log('render')
+
     const err = getState().error
+
     return (
       <div class='game borked'>
         <h2>GAME BORKED</h2>

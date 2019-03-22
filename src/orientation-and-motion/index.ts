@@ -56,7 +56,7 @@ export function stopSendLoop () {
 /**
  * Starts sending data to the WSS on an interval
  */
-export function startSendLoop (timeout = 1000) {
+export function startSendLoop (timeout = 5000) {
   log('starting send loop')
   if (emitterInterval) {
     console.warn('startSendLoop was called, but tracking is currently active')

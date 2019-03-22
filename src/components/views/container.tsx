@@ -17,15 +17,20 @@ import {
 } from '@app/store'
 import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
+import getLogger from '@app/log'
+
+const log = getLogger('view:container')
 
 export class ViewsContainer extends Component<{}, ViewsContainerState> {
   constructor () {
     super()
 
+    log('creating')
     this.setState({ config: getState().config })
   }
 
   async componentWillMount () {
+    log('mounting')
     const onConfigChange = (config: GameConfiguration) => {
       this.setState({ config })
     }
@@ -44,7 +49,8 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
   }
 
   render () {
-    let v: any
+    log('rendering')
+    let v: JSX.Element
 
     if (getState().error) {
       return <GameBorkedView />
