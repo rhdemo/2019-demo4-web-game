@@ -6,23 +6,23 @@ import getLogger from '@app/log'
 const log = getLogger('view:game.lobby')
 
 export class GameLobbyView extends Component<{}, GameLobbyViewState> {
-  constructor() {
+  constructor () {
     super()
 
     log('creating')
 
     this.setState({
-      config: getState().config,
+      config: getState().config
     })
   }
 
-  render() {
+  render () {
     log('render')
     return (
-      <div class="game lobby">
+      <div class='game lobby'>
         <h2>Welcome {this.state.config.username}</h2>
         <br />
-        <h1 style="margin: 5vh 0;">It's time to WRECK IT!</h1>
+        <h1 style='margin: 5vh 0;'>It's time to WRECK IT!</h1>
         <br />
         <p>The game will begin shortly...</p>
       </div>

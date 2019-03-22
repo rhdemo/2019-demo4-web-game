@@ -5,17 +5,17 @@ import getLogger from '@app/log'
 const log = getLogger('view:game.borked')
 
 export class GameBorkedView extends Component {
-  constructor() {
+  constructor () {
     super()
     log('creating')
   }
-  render() {
+  render () {
     log('render')
 
     const err = getState().error
 
     return (
-      <div class="game borked">
+      <div class='game borked'>
         <h2>GAME BORKED</h2>
         <h4>
           Sorry! If you're see this, then something isn't working the way it

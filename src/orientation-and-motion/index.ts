@@ -70,6 +70,10 @@ export function startSendLoop(timeout = 5000) {
   }
 }
 
+export function isActive() {
+  return emitterInterval !== null
+}
+
 /**
  * Verifies that the current device supports motion and orientation APIs
  * Sets us up to send data to the backend
@@ -90,13 +94,12 @@ export async function initialiseMotionAndOrietationTracking(
 
   // If mode is dev then just ignore the check results, e.g running on desktop
   if (!isProduction || (supports[0] && supports[1])) {
-
-    ml = new MotionListener((e) => mBuffer.push(e), {
+    ml = new MotionListener(e => mBuffer.push(e), {
       autoStart,
       threshold: 2,
-      rotationRateThreshold: 2.5
+      rotationRateThreshold: 2.5,
     })
-    ol = new OrientationListener((e) => oBuffer.push(e), {
+    ol = new OrientationListener(e => oBuffer.push(e), {
       autoStart,
       threshold: 2,
       rotationRateThreshold: 2.5,
@@ -132,7 +135,7 @@ function vectoriseMotionEvent(data: MotionListenerEvent) {
     round(data.rotationRate.alpha),
     round(data.rotationRate.beta),
     round(data.rotationRate.gamma),
-    data.timestamp
+    data.timestamp,
   ]
 }
 
