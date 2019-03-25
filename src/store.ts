@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
 import getLogger from '@app/log'
+import { stat } from 'fs';
 
 const log = getLogger('store')
 
@@ -78,6 +79,18 @@ export function setGameConfiguration (config: GameConfiguration) {
   state.config = config
 
   emitter.emit(ApplicationEventTypes.ConfigUpdate, config)
+}
+
+/**
+ * Update the player score in the game configuration.
+ * This is not additive, it will overwrite it with the passed value.
+ * @param score
+ */
+export function setPlayerScore (score: number) {
+  state.config.score = score
+
+  // We don't really need a score event, can just reuse config for now...
+  emitter.emit(ApplicationEventTypes.ConfigUpdate, state.config)
 }
 
 /**

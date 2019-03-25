@@ -3,7 +3,8 @@ import {
   ApplicationEventTypes,
   emitter,
   getState,
-  setGameConfiguration
+  setGameConfiguration,
+  setPlayerScore
 } from '@app/store'
 import { classify } from './message-classifier'
 import { WSS } from '@app/interfaces'
@@ -125,15 +126,12 @@ function onMessage (e: MessageEvent) {
   } else if (WSS.IncomingFrames.Type.Config === classified.type) {
     setGameConfiguration(classified.data as WSS.IncomingFrames.Config)
   } else if (WSS.IncomingFrames.Type.Score === classified.type) {
-    emitter.emit(
-      ApplicationEventTypes.ScoreUpdate,
-      classified.data as WSS.IncomingFrames.Score
-    )
+    setPlayerScore((classified.data as WSS.IncomingFrames.Score).total)
   } else if (WSS.IncomingFrames.Type.Heartbeat === classified.type) {
     log(`${new Date()}  - received heartbeat from server`)
     emitter.emit(ApplicationEventTypes.ServerHeartBeat)
   } else {
     // TODO: oh noes, this shouldn't ever happen
-    console.error('message was classified, but was of unknown type')
+    console.error('message was classified, but was of unknown type', e)
   }
 }
