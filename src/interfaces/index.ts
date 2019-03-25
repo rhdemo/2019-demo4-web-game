@@ -73,6 +73,7 @@ export namespace WSS {
       total: number
       gesture: string // if we're recognizing gestures instead of just movement
       intensity: string // some kind of measure indicating the impact of the player's movements
+      machineId: string // we need to identify the targetted machine, though we probably know in advance
     }
 
     export interface Heartbeat extends FrameBase {
