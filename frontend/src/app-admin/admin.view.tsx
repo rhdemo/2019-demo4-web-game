@@ -3,31 +3,31 @@ import { connect, sendGameStateChange } from '@app/websocks/ws'
 import { GameModeEntry, GameModes } from '@app/interfaces/admin'
 
 export class AdminView extends Component<{}, AdminViewState> {
-  constructor() {
+  constructor () {
     super()
 
     this.setState({
-      activeGameMode: GameModes.Lobby,
+      activeGameMode: GameModes.Lobby
     })
   }
 
-  async componentWillMount() {
+  async componentWillMount () {
     connect(true)
   }
 
-  sendMessage(mode: GameModeEntry) {
+  sendMessage (mode: GameModeEntry) {
     // Set component state
     this.setState({ activeGameMode: mode })
 
     sendGameStateChange({ state: mode.text })
   }
 
-  render() {
+  render () {
     return (
       <div>
         <h1>Admin View</h1>
 
-        {Object.keys(GameModes).map(key => {
+        {Object.keys(GameModes).map((key) => {
           return (
             <button onClick={() => this.sendMessage(GameModes[key])}>
               {key}{' '}

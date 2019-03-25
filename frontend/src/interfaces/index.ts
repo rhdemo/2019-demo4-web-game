@@ -5,7 +5,7 @@ export enum ConfigGameMode {
   Stopped = 'stopped',
   Loading = 'loading',
   Ready = 'ready',
-  Lobby = 'lobby',
+  Lobby = 'lobby'
 }
 
 export interface GestureHistoryEntry {
@@ -30,7 +30,7 @@ export namespace WSS {
     export enum Type {
       Motion = 'motion',
       GameStateChange = 'game',
-      Connection = 'connection',
+      Connection = 'connection'
     }
 
     export interface OutgoingFrame {
@@ -57,7 +57,7 @@ export namespace WSS {
       Config = 'configuration',
       Score = 'score',
       Heartbeat = 'heartbeat',
-      MotionFeedback = 'motion_feedback',
+      MotionFeedback = 'motion_feedback'
     }
 
     export interface FrameBase {

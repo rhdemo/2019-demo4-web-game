@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
 import getLogger from '@app/log'
-import { stat } from 'fs';
+import { stat } from 'fs'
 
 const log = getLogger('store')
 
