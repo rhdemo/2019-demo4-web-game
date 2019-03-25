@@ -6,7 +6,6 @@ import {
   setGameConfiguration,
   setPlayerScore
 } from '@app/store'
-import { classify } from './message-classifier'
 import { WSS } from '@app/interfaces'
 import getLogger from '@app/log'
 
@@ -118,20 +117,27 @@ function sendJsonPayload(payload: WSS.OutgoingFrames.OutgoingFrame) {
 
 function onMessage(e: MessageEvent) {
   log('received message', e)
-  const classified = classify(e.data)
 
-  if (!classified) {
-    // TODO: couldn't classify message
-    console.error('unable to classify incoming message:', e)
-  } else if (WSS.IncomingFrames.Type.Config === classified.type) {
-    setGameConfiguration(classified.data as WSS.IncomingFrames.Config)
-  } else if (WSS.IncomingFrames.Type.Score === classified.type) {
-    setPlayerScore((classified.data as WSS.IncomingFrames.Score).total)
-  } else if (WSS.IncomingFrames.Type.Heartbeat === classified.type) {
+  let parsed: WSS.IncomingFrames.FrameBase|undefined
+  let parseErr: Error|undefined
+
+  try {
+    parsed = JSON.parse(e.data) as WSS.IncomingFrames.FrameBase
+  } catch (e) {
+    parseErr = e
+  }
+
+  if (!parsed || parseErr) {
+    console.error('unable to parse incoming message JSON', parseErr)
+  } else if (WSS.IncomingFrames.Type.Config === parsed.type) {
+    setGameConfiguration(<WSS.IncomingFrames.Config>parsed)
+  } else if (WSS.IncomingFrames.Type.Score === parsed.type) {
+    setPlayerScore((<WSS.IncomingFrames.Score>parsed).total)
+  } else if (WSS.IncomingFrames.Type.Heartbeat === parsed.type) {
     log(`${new Date()}  - received heartbeat from server`)
     emitter.emit(ApplicationEventTypes.ServerHeartBeat)
   } else {
     // TODO: oh noes, this shouldn't ever happen
-    console.error('message was classified, but was of unknown type', e)
+    console.error('message JSON was parsed, but was of unknown "type"', e)
   }
 }
