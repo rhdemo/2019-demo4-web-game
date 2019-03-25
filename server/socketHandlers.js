@@ -7,7 +7,7 @@ const {INCOMING_MESSAGE_TYPES} = require("./message-types");
 const {Player} = require("./models");
 const {gestureProducer, GESTURE_TOPIC_NAME} = require("./gestureProducer");
 
-const GESTURE_API_URL = env.get("GESTURE_API_URL", "http://demo4-gesture:8080");
+const GESTURE_API_URL = env.get("GESTURE_API_URL", "http://demo4-gesture:8080").asString();
 
 function processSocketMessage(ws, messageStr) {
     let messageObj = JSON.parse(messageStr);
