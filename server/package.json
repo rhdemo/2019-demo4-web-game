@@ -1,0 +1,30 @@
+{
+  "name": "demo4-nodejs-server",
+  "version": "0.0.1",
+  "description": "Summit 2019 - Demo 4 game server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js | pino-pretty -t",
+    "dev": "LOG_LEVEL=trace NODE_ENV=development nodemon server.js | pino-pretty -t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhdemo/2019-demo4-nodejs-server.git"
+  },
+  "author": "cchase",
+  "license": "ISC",
+  "homepage": "https://github.com/rhdemo/2019-demo4-nodejs-server",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "env-var": "~3.5.0",
+    "infinispan": "^0.6.0",
+    "node-rdkafka": "^2.5.1",
+    "pino": "~5.11.1",
+    "pino-pretty": "~2.5.0",
+    "uuid": "^3.3.2",
+    "ws": "^6.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
