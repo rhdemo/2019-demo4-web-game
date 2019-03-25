@@ -5,7 +5,7 @@ import { GameConfiguration, WSS } from '@app/interfaces'
  * their given type classification and original payload
  * @param payload
  */
-export function classify (
+export function classify(
   payload: string
 ): WSS.IncomingFrames.ClassifiedFrame | null {
   try {
@@ -14,17 +14,17 @@ export function classify (
     if (parsed.type === WSS.IncomingFrames.Type.Config) {
       return {
         type: WSS.IncomingFrames.Type.Config,
-        data: parsed as WSS.IncomingFrames.Config
+        data: parsed as WSS.IncomingFrames.Config,
       }
     } else if (parsed.type === WSS.IncomingFrames.Type.Score) {
       return {
         type: WSS.IncomingFrames.Type.Score,
-        data: parsed as WSS.IncomingFrames.Score
+        data: parsed as WSS.IncomingFrames.Score,
       }
     } else if (parsed.type === WSS.IncomingFrames.Type.Heartbeat) {
       return {
         type: WSS.IncomingFrames.Type.Heartbeat,
-        data: {} as WSS.IncomingFrames.Heartbeat
+        data: {} as WSS.IncomingFrames.Heartbeat,
       }
     } else {
       return null

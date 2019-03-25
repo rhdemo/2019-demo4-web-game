@@ -4,6 +4,9 @@ This starter was created by [José Quintana](git.io/joseluisq)
 
 ## Usage
 
+### Prerequisites
+Install Node.js 8 or higher. This will make `npm` and `node` available on your system. Now run `npm install -g yarn`. You're good to go now.
+
 ### Development
 
 Clone the repository and install the dependencies:
