@@ -4,7 +4,7 @@ import getLogger from '@app/log'
 import {
   initialiseMotionAndOrietationTracking,
   startSendLoop,
-  stopSendLoop,
+  stopSendLoop
 } from '@app/orientation-and-motion'
 import formatFactory from 'format-number'
 
@@ -14,7 +14,7 @@ const log = getLogger('view:generator')
 export class GeneratorView extends Component<{}, GeneratorState> {
   private readonly sock: Sockette
 
-  constructor() {
+  constructor () {
     super()
 
     this.setState({
@@ -22,26 +22,26 @@ export class GeneratorView extends Component<{}, GeneratorState> {
       wssAddress: this.getWssParam(),
       generating: false,
       wsConnected: false,
-      sendCount: 0,
+      sendCount: 0
     })
 
     this.sock = new Sockette(this.state.wssAddress, {
       timeout: 2500,
-      onopen: e => {
+      onopen: (e) => {
         log('ws:connected!', e)
         this.setState({
-          wsConnected: true,
+          wsConnected: true
         })
       },
-      onmessage: e => {
+      onmessage: (e) => {
         log('ws:received message', e)
       },
-      onreconnect: e => log('ws:reconnecting...', e),
-      onmaximum: e => log('ws:reached maximum number of reconnect attempts'),
-      onclose: e => {
+      onreconnect: (e) => log('ws:reconnecting...', e),
+      onmaximum: (e) => log('ws:reached maximum number of reconnect attempts'),
+      onclose: (e) => {
         log('ws:close event detected', e)
         this.setState({
-          wsConnected: false,
+          wsConnected: false
         })
         if (!e.wasClean) {
           log(
@@ -49,23 +49,23 @@ export class GeneratorView extends Component<{}, GeneratorState> {
           )
         }
       },
-      onerror: e => {
+      onerror: (e) => {
         this.setState({
-          wsConnected: false,
+          wsConnected: false
         })
         log('WebSocket Error:', e)
-      },
+      }
     })
 
-    initialiseMotionAndOrietationTracking(data => {
+    initialiseMotionAndOrietationTracking((data) => {
       this.setState({
-        sendCount: this.state.sendCount + 1,
+        sendCount: this.state.sendCount + 1
       })
       this.sock.json(data)
     })
   }
 
-  getWssParam() {
+  getWssParam () {
     const wssHost =
       new URL(window.location.href).searchParams.get('wss') ||
       `ws://${window.location.host}`
@@ -77,9 +77,9 @@ export class GeneratorView extends Component<{}, GeneratorState> {
     return wssHost
   }
 
-  toggleGenerating() {
+  toggleGenerating () {
     this.setState({
-      generating: !this.state.generating,
+      generating: !this.state.generating
     })
 
     if (this.state.generating) {
@@ -89,7 +89,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
     }
   }
 
-  render() {
+  render () {
     let primaryContent: JSX.Element
     let secondaryContent: JSX.Element | null
 
@@ -102,14 +102,14 @@ export class GeneratorView extends Component<{}, GeneratorState> {
       secondaryContent = null
     } else {
       primaryContent = (
-        <div style="margin-top: 15vh;">
-          <p style="font-size: 1.2em;">
+        <div style='margin-top: 15vh;'>
+          <p style='font-size: 1.2em;'>
             You can use the button below to toggle sending motion data.
           </p>
           <button
-            style="font-size: 12pt"
+            style='font-size: 12pt'
             onClick={() => this.toggleGenerating()}
-            class="button-primary"
+            class='button-primary'
           >
             {this.state.generating ? 'Stop' : 'Start'}
           </button>
@@ -130,11 +130,11 @@ export class GeneratorView extends Component<{}, GeneratorState> {
       height: '1em',
       width: '1em',
       display: 'inline-block',
-      'vertical-align': 'text-bottom',
+      'vertical-align': 'text-bottom'
     }
 
     return (
-      <div class="container" style="text-align: center;">
+      <div class='container' style='text-align: center;'>
         <br />
         <h3>Motion Data Generator</h3>
         <hr />
@@ -142,18 +142,18 @@ export class GeneratorView extends Component<{}, GeneratorState> {
         {secondaryContent}
 
         <div
-          class="row"
-          style="position: fixed;
+          class='row'
+          style='position: fixed;
     text-align: left;
     bottom: 0;
     background: #444;
     color: white;
     width: 100vw;
     left: 0;
-    padding: 1em;"
+    padding: 1em;'
         >
-          <div class="one-half column">WS Address: {this.state.wssAddress}</div>
-          <div class="one-half column">
+          <div class='one-half column'>WS Address: {this.state.wssAddress}</div>
+          <div class='one-half column'>
             WS State: <div style={style} />{' '}
           </div>
         </div>

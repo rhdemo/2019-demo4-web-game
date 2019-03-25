@@ -17,15 +17,15 @@ export interface GameModesInterface {
 
 export const GameModes: GameModesInterface = {
   Lobby: {
-    text: ConfigGameMode.Lobby,
+    text: ConfigGameMode.Lobby
   },
   Active: {
-    text: ConfigGameMode.Active,
+    text: ConfigGameMode.Active
   },
   Paused: {
-    text: ConfigGameMode.Paused,
+    text: ConfigGameMode.Paused
   },
   Stopped: {
-    text: ConfigGameMode.Stopped,
-  },
+    text: ConfigGameMode.Stopped
+  }
 }
