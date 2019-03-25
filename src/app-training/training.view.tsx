@@ -1,13 +1,13 @@
 import { Component, h } from 'preact'
-import { MotionVectors } from '../../interfaces/index'
+import { MotionVectors } from '@app/interfaces/index'
 import {
   initialiseMotionAndOrietationTracking,
   startSendLoop,
-  stopSendLoop
+  stopSendLoop,
 } from '@app/orientation-and-motion'
 import * as ws from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import getLogger from '../../log'
+import getLogger from '@app/log'
 
 import twists from '@public/assets/images/twists.gif'
 import circles from '@public/assets/images/circles.gif'
@@ -29,7 +29,7 @@ enum TrainingViewMode {
   CaptureList,
   CapturePrepare,
   CaptureInProgress,
-  CaptureReview
+  CaptureReview,
 }
 
 interface TrainingViewState {
@@ -42,39 +42,39 @@ const GESTURES: Gesture[] = shuffle([
   {
     name: 'Phone Shake',
     id: 'shake',
-    gif: twists
+    gif: twists,
   },
   {
     name: 'Draw a Circle',
     id: 'draw-circle',
-    gif: circles
+    gif: circles,
   },
   {
     name: 'Draw a Triangle',
     id: 'draw-triangle',
-    gif: triangles
+    gif: triangles,
   },
   {
     name: 'Roll',
     id: 'roll',
-    gif: rolls
+    gif: rolls,
   },
   {
     name: 'Night Fever',
     id: 'fever',
-    gif: disco
+    gif: disco,
   },
   {
     name: 'Floss',
     id: 'floss',
-    gif: floss
-  }
+    gif: floss,
+  },
 ])
 
 // Shuffle/randomise the gestures so each user gets a random list. This will help even out our training pool data since
 // many users will just do the first 2 or 3. Math.random() with array.sort() isn't a reliable shuffle so we use this:
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-function shuffle (array: any[]) {
+function shuffle(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     const temp = array[i]
@@ -85,7 +85,7 @@ function shuffle (array: any[]) {
   return array
 }
 
-function getRandomGesture () {
+function getRandomGesture() {
   const idx = Math.floor(Math.random() * Math.floor(GESTURES.length))
 
   return GESTURES[idx]
@@ -94,7 +94,7 @@ function getRandomGesture () {
 export class TrainingView extends Component<{}, TrainingViewState> {
   aCtx: AudioContext | undefined
 
-  constructor () {
+  constructor() {
     super()
 
     if (AC) {
@@ -106,22 +106,22 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     }
 
     this.setState({
-      mode: TrainingViewMode.CaptureList
+      mode: TrainingViewMode.CaptureList,
     })
 
-    ws.connect().catch((err) => this.wsAlert(err))
+    ws.connect().catch(err => this.wsAlert(err))
   }
 
-  componentWillMount () {
+  componentWillMount() {
     // Save the motion data to a temp variable.
     // User needs to confirm it's accurate before we send it.
-    initialiseMotionAndOrietationTracking((capturedMotionVectors) => {
+    initialiseMotionAndOrietationTracking(capturedMotionVectors => {
       log('training component received motion data')
       this.setState({ capturedMotionVectors })
     })
   }
 
-  makeSound (duration = 100) {
+  makeSound(duration = 100) {
     if (this.aCtx) {
       // More info at: https://odino.org/emit-a-beeping-sound-with-javascript/
       const SOUND_VOLUME = 75 // of 100 percent, decibels?
@@ -142,10 +142,10 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     }
   }
 
-  train (gesture: Gesture) {
+  train(gesture: Gesture) {
     this.setState({
       mode: TrainingViewMode.CapturePrepare,
-      selectedGesture: gesture
+      selectedGesture: gesture,
     })
 
     // Perform a countdown, after a 500ms delay
@@ -167,7 +167,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
         this.makeSound()
 
         if (navigator.vibrate) {
-          navigator.vibrate([ 250, 30, 250, 30, 250 ])
+          navigator.vibrate([250, 30, 250, 30, 250])
         }
 
         this.setState({ mode: TrainingViewMode.CaptureReview })
@@ -175,14 +175,14 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     }, 3500)
   }
 
-  wsAlert (err: any) {
+  wsAlert(err: any) {
     log('error ion websocket')
     log(err)
 
     alert('WebSocket Error: Please refresh the page and try again.')
   }
 
-  async uploadMotionData () {
+  async uploadMotionData() {
     this.setState({ mode: TrainingViewMode.CaptureList })
 
     // Need this timeout to ensure a render() is complete after the above state change
@@ -200,29 +200,29 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       ws.sendMotionAndOrientationData({
         ...this.state.capturedMotionVectors,
         gesture: this.state.selectedGesture.id,
-        uuid: nanoid()
+        uuid: nanoid(),
       })
     } else {
       this.wsAlert('WebSocket is not connected!')
     }
   }
 
-  render () {
+  render() {
     let content
 
     if (this.state.mode === TrainingViewMode.CaptureList) {
-      const els = GESTURES.map((g) => {
+      const els = GESTURES.map(g => {
         return (
           <div>
             <h3 id={g.id}>{g.name}</h3>
             <img
-              style='border-radius: 0.5rem; border: 0.1rem solid #555; max-width: 85%;'
+              style="border-radius: 0.5rem; border: 0.1rem solid #555; max-width: 85%;"
               src={g.gif}
               alt={g.name}
             />
             <br />
             <br />
-            <button class='button-primary' onClick={() => this.train(g)}>
+            <button class="button-primary" onClick={() => this.train(g)}>
               Train Model
             </button>
             <hr />
@@ -248,34 +248,34 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       )
     } else if (this.state.mode === TrainingViewMode.CapturePrepare) {
       content = (
-        <div style='margin-top: 40vh'>
+        <div style="margin-top: 40vh">
           <h2>Get Set!</h2>
         </div>
       )
     } else if (this.state.mode === TrainingViewMode.CaptureInProgress) {
       content = (
-        <div style='margin-top: 40vh'>
+        <div style="margin-top: 40vh">
           <h2>Go!</h2>
         </div>
       )
     } else {
       content = (
-        <div style='margin-top: 30vh'>
+        <div style="margin-top: 30vh">
           <h2>Finished</h2>
           <p>
             Were you happy with the motion you made? If so, click yes to help
             train our models!
           </p>
           <button
-            style='margin: 0.5rem;'
-            class='button-primary'
+            style="margin: 0.5rem;"
+            class="button-primary"
             onClick={() => this.uploadMotionData()}
           >
             Yes
           </button>
           <button
-            style='margin: 0.5rem;'
-            class='button-primary'
+            style="margin: 0.5rem;"
+            class="button-primary"
             onClick={() =>
               this.setState({ mode: TrainingViewMode.CaptureList })
             }
@@ -287,7 +287,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     }
 
     return (
-      <div class='container' style='font-size: 13pt; text-align: center;'>
+      <div class="container" style="font-size: 13pt; text-align: center;">
         {content}
       </div>
     )

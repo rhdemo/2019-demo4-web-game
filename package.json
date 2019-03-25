@@ -8,7 +8,7 @@
   "main": "public/index.html",
   "scripts": {
     "clean": "rm -rf dist .cache",
-    "format": "prettier src/**/*.ts src/**/*.tsx public/*.html",
+    "format": "prettier src/**/*.ts src/**/*.tsx public/*.html --write",
     "start": "parcel serve public/*.html",
     "prebuild": "yarn lint && yarn clean",
     "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/*.html",
@@ -21,7 +21,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --pattern src/**/*.ts src/**/*.tsx public/*.html --staged"
+      "pre-commit": "pretty-quick --pattern \"src/**/*.ts src/**/*.tsx public/*.html\" --staged"
     }
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "babel-preset-preact": "^1.1.0",
     "dotenv": "^6.2.0",
     "events": "^3.0.0",
+    "format-number": "^3.0.0",
     "gyronorm": "evanshortiss/gyronorm.js#types",
     "husky": "^1.3.1",
     "identity-obj-proxy": "^3.0.0",
