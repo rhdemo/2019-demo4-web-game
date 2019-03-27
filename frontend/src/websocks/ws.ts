@@ -82,6 +82,15 @@ function getSocketUrl (isAdmin = false) {
   return `ws://${window.location.hostname}${suffix}`
 }
 
+export function sendTrainingData (
+    data: WSS.OutgoingFrames.MotionDataPayload
+) {
+  sendJsonPayload({
+    type: WSS.OutgoingFrames.Type.Training,
+    ...data
+  })
+}
+
 export function sendMotionAndOrientationData (
   data: WSS.OutgoingFrames.MotionDataPayload
 ) {

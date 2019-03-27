@@ -15,7 +15,7 @@ import {
   setGameConfiguration,
   setGameMode
 } from '@app/store'
-import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion'
+import { initialiseMotionAndOrientationTracking } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import getLogger from '@app/log'
 import { DeviceUnsupportedView } from './device-unsupported';
@@ -40,7 +40,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       onConfigChange()
     )
 
-    initialiseMotionAndOrietationTracking()
+    initialiseMotionAndOrientationTracking()
       .then(() => connect())
       .then(() => setGameMode(ConfigGameMode.Ready))
       .catch((err) => {

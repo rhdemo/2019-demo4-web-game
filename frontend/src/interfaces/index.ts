@@ -33,6 +33,8 @@ export namespace WSS {
   export namespace OutgoingFrames {
     export enum Type {
       Motion = 'motion',
+      MotionRaw = 'motion-raw',
+      Training = 'training',
       GameStateChange = 'game',
       Connection = 'connection'
     }
