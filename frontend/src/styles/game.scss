@@ -14,12 +14,55 @@
   margin-top: 40vh;
 }
 
-#indicator-container {
-  position: relative;
-  top: -27.5px;
+.move-selector {
+  align-items: center;
+  margin-top: 20vh;
+  display: flex;
 }
 
-#indicator-container canvas {
-  border-radius: 50%;
-  background: white;
+.game.active {
+  .header {
+    display: flex;
+    width: 100vw;
+
+    div {
+      z-index: 2;
+    }
+
+    img {
+      z-index: 1;
+      position: absolute;
+    }
+  }
+  .machine-info-container {
+    width: 100%;
+    display: flex;
+    bottom: 0;
+    position: absolute;
+  }
+
+  /* CSS specific to iOS devices becuase Safari is garbage */
+  @supports (-webkit-overflow-scrolling: touch) {
+    .machine-info-container {
+      // iOS menu obscures the bottom of the page
+      bottom: 88px;
+    }
+
+    .move-selector {
+      // iOS won't scroll elements without this
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  #indicator-container canvas {
+    margin-top: 5vh;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 5px rgba(51, 51, 51, 0.25);
+  }
+
+  .machine-container svg {
+    margin-top: 10%;
+  }
+
 }
