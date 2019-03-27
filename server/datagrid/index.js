@@ -1,8 +1,10 @@
 const infinispan = require("infinispan");
-const WebSocket = require("ws");
 const env = require("env-var");
-const log = require("./utils/log")("datagrid");
-const {OUTGOING_MESSAGE_TYPES} = require("./message-types");
+
+const log = require("../utils/log")("datagrid");
+const {DATAGRID_KEYS, DATAGRID_KEY_PREFIXES} = require("./constants");
+const readGame = require("./read-game");
+const gameHandler = require("./game");
 
 const DATAGRID_HOST = env.get("DATAGRID_HOTROD_SERVICE_HOST").asString();
 const DATAGRID_PORT = env.get("DATAGRID_HOTROD_SERVICE_PORT").asIntPositive();
@@ -21,55 +23,26 @@ async function initClient() {
   return client;
 }
 
-
 async function handleDataChange(client, changeType, key) {
   log.info(`Data change: ${changeType} ${key}`);
-  let value;
-  // value = await client.get(key);
-  // log.debug(`value = ${value}`);
   switch (key) {
-    case "game":
-      log.info("Game change");
-      value = await client.get(key);
-      log.debug(`value = ${value}`);
-      global.game = JSON.parse(value);
-      sendGameConfigs();
+    case DATAGRID_KEYS.GAME:
+      gameHandler();
       break;
   }
 }
 
-function sendGameConfigs() {
-  //TODO read player data from datagrid
-  const game = global.game;
-  const players = global.players;
-  for (let idKey in players) {
-    if (players.hasOwnProperty(idKey)) {
-      let player = players[idKey];
-      let configuration = {
-        type: OUTGOING_MESSAGE_TYPES.CONFIGURATION,
-        gameState: game.state,
-        playerId: player.id,
-        username: player.username,
-        score: player.score,
-        machineId: player.machineId
-      };
-
-      if (player.ws.readyState === WebSocket.OPEN) {
-        player.ws.send(JSON.stringify(configuration));
-      }
-    }
-  }
-}
-
 async function initData() {
-  let dataClient = null;
   try {
-    dataClient = await initClient();
-    //TODO init data
+    global.dataClient = await initClient();
+    readGame();
   } catch (error) {
     log.error(`Error connecting to Infinispan admin data: ${error.message}`);
     log.error(error);
   }
   return dataClient;
 }
+
 module.exports.initData = initData;
+module.exports.DATAGRID_KEYS = DATAGRID_KEYS;
+module.exports.DATAGRID_KEY_PREFIXES = DATAGRID_KEY_PREFIXES;

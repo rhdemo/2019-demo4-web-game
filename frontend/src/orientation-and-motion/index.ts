@@ -78,7 +78,7 @@ export function isActive () {
  * Verifies that the current device supports motion and orientation APIs
  * Sets us up to send data to the backend
  */
-export async function initialiseMotionAndOrietationTracking (
+export async function initialiseMotionAndOrientationTracking (
   callback?: EmitterCallback
 ) {
   if (callback) {
