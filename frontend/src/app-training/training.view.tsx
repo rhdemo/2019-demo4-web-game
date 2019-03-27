@@ -1,7 +1,7 @@
 import { Component, h } from 'preact'
 import { MotionVectors } from '@app/interfaces/index'
 import {
-  initialiseMotionAndOrietationTracking,
+  initialiseMotionAndOrientationTracking,
   startSendLoop,
   stopSendLoop
 } from '@app/orientation-and-motion'
@@ -115,7 +115,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
   componentWillMount () {
     // Save the motion data to a temp variable.
     // User needs to confirm it's accurate before we send it.
-    initialiseMotionAndOrietationTracking((capturedMotionVectors) => {
+    initialiseMotionAndOrientationTracking((capturedMotionVectors) => {
       log('training component received motion data')
       this.setState({ capturedMotionVectors })
     })
@@ -201,7 +201,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
         )
       }
 
-      ws.sendMotionAndOrientationData({
+      ws.sendTrainingData({
         ...this.state.capturedMotionVectors,
         gesture: this.state.selectedGesture.id,
         uuid: nanoid()

@@ -2,7 +2,7 @@ import { Component, h } from 'preact'
 import Sockette from 'sockette'
 import getLogger from '@app/log'
 import {
-  initialiseMotionAndOrietationTracking,
+  initialiseMotionAndOrientationTracking,
   startSendLoop,
   stopSendLoop
 } from '@app/orientation-and-motion'
@@ -57,7 +57,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
       }
     })
 
-    initialiseMotionAndOrietationTracking((data) => {
+    initialiseMotionAndOrientationTracking((data) => {
       this.setState({
         sendCount: this.state.sendCount + 1
       })
