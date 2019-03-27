@@ -1,13 +1,20 @@
 @import 'variables.scss';
 
+@media all and (orientation:landscape) {
+  #root {
+    max-width: 30%;
+    min-width: 450px;
+  }
+}
+
 #root {
   width: 100vw;
   height: 100vh;
-  background: $color-bg;
+  background: $color-machine-yellow;
 }
 
 html {
-  backface-visibility: $color-bg;
+  backface-visibility: $color-machine-yellow;
 }
 
 body {

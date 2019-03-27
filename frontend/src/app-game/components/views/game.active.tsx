@@ -4,6 +4,10 @@ import { GameConfiguration } from '@app/interfaces'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import getLogger from '@app/log'
 
+import GameHeaderSVG from '@public/assets/images/svg/game-header.svg'
+import MachineYellowSVG from '@public/assets/images/svg/machines/yellow.svg'
+import { MoveSelector } from '../move-selector';
+
 const log = getLogger('view:game.active')
 
 export class GameActiveView extends Component<{}, GameActiveViewState> {
@@ -40,8 +44,9 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
   componentDidMount () {
     log('did mount')
     const container = window.radialIndicator('#indicator-container', {
-      initValue: 75,
-      radius: 22.5,
+      initValue: 100,
+      barColor: '#33FF66',
+      radius: 30,
       fontColor: '#111',
       format: (value: number) => {
         // Complete hack...but hey, that's what we be doin'
@@ -56,18 +61,25 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     log('render')
     return (
       <div class='game active'>
-        <div style='padding: 1em 0 2em; background: white;'>
-          <p>{this.state.config.username}</p>
-          <h4>Wreck Machine</h4>
+        <div class="header">
+          <img src={GameHeaderSVG}/>
+          <div style="color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: left;">
+            <p>{this.state.config.username}</p>
+          </div>
+          <div style="color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: right;">
+            <p>{this.state.config.score} POINTS</p>
+          </div>
         </div>
 
-        <div id='indicator-container' />
 
-        <div>{/* Dance moves will go here */}</div>
+        <MoveSelector/>
 
-        <div style='position: absolute;bottom: 0;background: white;padding: 1em 0;width: 100vw;'>
-          <h4>You Have</h4>
-          <h2>{this.state.config.score} Points</h2>
+        <div class="machine-info-container">
+          <div style="flex: 0.65;" class="machine-container">
+            <object data={MachineYellowSVG} type="image/svg+xml"></object>
+          </div>
+
+          <div style="flex: 0.35;" id='indicator-container' />
         </div>
       </div>
     )

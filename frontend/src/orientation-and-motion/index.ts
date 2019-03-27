@@ -101,11 +101,6 @@ export async function initialiseMotionAndOrietationTracking (
     })
     ol = new OrientationListener((e) => oBuffer.push(e), {
       autoStart,
-      threshold: 2,
-      rotationRateThreshold: 2.5
-    })
-    ol = new OrientationListener((e) => oBuffer.push(e), {
-      autoStart,
       threshold: 0.5
     })
   } else {

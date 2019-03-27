@@ -18,6 +18,7 @@ import {
 import { initialiseMotionAndOrietationTracking } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import getLogger from '@app/log'
+import { DeviceUnsupportedView } from './device-unsupported';
 
 const log = getLogger('view:container')
 
@@ -31,12 +32,12 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
   async componentWillMount () {
     log('mounting')
-    const onConfigChange = (config: GameConfiguration) => {
-      this.setState({ config })
+    const onConfigChange = () => {
+      this.setState({ config: getState().config })
     }
 
-    emitter.on(ApplicationEventTypes.ConfigUpdate, (config) =>
-      onConfigChange(config)
+    emitter.on(ApplicationEventTypes.ConfigUpdate, () =>
+      onConfigChange()
     )
 
     initialiseMotionAndOrietationTracking()
@@ -44,7 +45,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       .then(() => setGameMode(ConfigGameMode.Ready))
       .catch((err) => {
         setError(err)
-        setGameConfiguration({ gameState: ConfigGameMode.Borked })
+        setGameConfiguration(Object.create({ gameState: ConfigGameMode.Borked }))
       })
   }
 
@@ -54,6 +55,10 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     if (getState().error) {
       return <GameBorkedView />
+    }
+
+    if (getState().unsupportedDevice) {
+      return <DeviceUnsupportedView />
     }
 
     switch (this.state.config.gameState) {

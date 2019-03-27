@@ -119,6 +119,10 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       log('training component received motion data')
       this.setState({ capturedMotionVectors })
     })
+    .catch((e) => {
+      alert('It looks as though this device lacks support for motion and orientation APIs/Sensors')
+      alert(e.toString())
+    })
   }
 
   makeSound (duration = 100) {
