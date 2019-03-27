@@ -2,6 +2,7 @@ module.exports.INCOMING_MESSAGE_TYPES = {
   CONNECTION: "connection",
   PING: "ping",
   MOTION: "motion",
+  MOTION_RAW: "motion-raw",
   TRAINING: "training",
   LOAD_TEST: "load-test"
 };

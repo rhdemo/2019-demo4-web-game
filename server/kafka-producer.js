@@ -12,14 +12,9 @@ const producer = new Kafka.Producer({
   "dr_cb": true
 });
 
-// new topic names expected
-const GESTURE_TOPIC_NAME = "data-filtered";
-const LOAD_TEST_TOPIC_NAME = "data-filtered-load";
-
 producer.on("event.log", function(log) {
   log.debug(log);
 });
-
 
 producer.on("event.error", function(err) {
   log.error("Error from producer");
@@ -45,6 +40,10 @@ producer.on("disconnected", function(arg) {
 producer.connect();
 
 module.exports.kafkaProducer = producer;
-module.exports.GESTURE_TOPIC_NAME = GESTURE_TOPIC_NAME;
-module.exports.LOAD_TEST_TOPIC_NAME = LOAD_TEST_TOPIC_NAME;
+module.exports.TOPICS = {
+  MOTION: "sensorstream-ai",
+  MOTION_RAW: "sensorstream-raw",
+  LOAD_TEST: "sensorstream-raw"
+}
+
 
