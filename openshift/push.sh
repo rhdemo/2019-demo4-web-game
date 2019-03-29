@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x
+#set -x
 
 [[ -z "${SERVER_IMAGE_REPOSITORY}" ]] && { SERVER_IMAGE_REPOSITORY="quay.io/redhatdemo/demo4-web-game-server:latest"; }
 
