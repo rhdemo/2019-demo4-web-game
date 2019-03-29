@@ -1,5 +1,6 @@
 const log = require("../utils/log")("socket-handlers/connection");
-const {Player, Configuration} = require("../models");
+const Player = require("../models/player");
+const Configuration = require("../models/configuration");
 
 async function connectionHandler(ws, messageObj) {
     log.debug("connectionHandler", messageObj);

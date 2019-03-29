@@ -6,8 +6,8 @@ const {DATAGRID_KEYS, DATAGRID_KEY_PREFIXES} = require("./constants");
 const readGame = require("./read-game");
 const gameHandler = require("./game");
 
-const DATAGRID_HOST = env.get("DATAGRID_HOTROD_SERVICE_HOST").asString();
-const DATAGRID_PORT = env.get("DATAGRID_HOTROD_SERVICE_PORT").asIntPositive();
+const DATAGRID_HOST = env.get("DATAGRID_HOST").asString();
+const DATAGRID_PORT = env.get("DATAGRID_HOTROD_PORT").asIntPositive();
 
 async function initClient() {
   let client = await infinispan.client({port: DATAGRID_PORT, host: DATAGRID_HOST});
