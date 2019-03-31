@@ -9,11 +9,11 @@ const IP = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0";
 
 global.game = {
     id: null,
-    state: "lobby",
+    state: "loading",
     motions: {
         shake: false,
         circle: false,
-        triangle: false,
+        x: false,
         roll: false,
         fever: false,
         floss: false,
