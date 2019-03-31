@@ -9,7 +9,7 @@ parameters:
     value: demo4-web-game-ui
     required: true
   - name: REPLICAS
-    value: 1
+    value: "1"
     required: true
   - name: IMAGE_REPOSITORY
     displayName: Image Repository
