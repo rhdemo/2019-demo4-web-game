@@ -8,7 +8,12 @@ function loadTestHandler(ws, messageObj) {
     let jsonMsg = JSON.stringify(messageObj);
     let kafkaMsg = Buffer.from(jsonMsg)
     log.debug(`kafka produce topic: ${TOPICS.MOTION_RAW}; key: ${kafkaKey}; msg: ${jsonMsg}`)
-    kafkaProducer.produce(TOPICS.MOTION_RAW, -1, kafkaMsg, kafkaKey)
+
+    if (kafkaProducer.isConnected()) {
+        kafkaProducer.produce(TOPICS.MOTION_RAW, -1, kafkaMsg, kafkaKey)
+    } else {
+        log.warn('kafka producer is not connected. not sending "motion-raw" payload')
+    }
 }
 
 module.exports = loadTestHandler
