@@ -15,7 +15,7 @@ const log = getLogger('view:generator')
 
 // Send motion data every 20ms, this is the lowest setting that you should use.
 // Devices can only provide data every ~16ms so rounding up to simplify and give room
-const SEND_RATE = 20
+const SEND_RATE = 250
 
 export class GeneratorView extends Component<{}, GeneratorState> {
   private readonly sock: Sockette
@@ -63,16 +63,30 @@ export class GeneratorView extends Component<{}, GeneratorState> {
       }
     })
 
-    initialiseMotionAndOrientationTracking((data) => {
-      this.setState({
-        sendCount: this.state.sendCount + 1
-      })
+    initialiseMotionAndOrientationTracking(
+      // We need a custom callback to send to as "motion-raw"
+      (data) => {
+        this.setState({
+          sendCount: this.state.sendCount + 1
+        })
 
-      this.sock.json({
-        type: WSS.OutgoingFrames.Type.MotionRaw,
-        ...data
-      })
-    })
+        this.sock.json({
+          type: WSS.OutgoingFrames.Type.MotionRaw,
+
+          // Strip timestamps and orientation from motion data
+          motion: data.motion.map(m => [m[0], m[1], m[2]])
+        })
+      },
+
+      // The generator should only trigger on intense shaking movements
+      {
+        mOpts: {
+          autoStart: false,
+          threshold: 10,
+          rotationRateThreshold: Infinity
+        }
+      }
+    )
   }
 
   getWssParam () {

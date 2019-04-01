@@ -12,7 +12,16 @@ import getLogger from '@app/log'
 
 const log = getLogger('motion')
 
-type EmitterCallback = (data: MotionVectors) => void
+const DEFAULT_MOTION_OPTS = {
+  autoStart: false,
+  threshold: 15,
+  rotationRateThreshold: Infinity
+}
+
+const DEFAULT_ORIENTATION_OPTS = {
+  autoStart: false,
+  threshold: 0.5
+}
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -25,6 +34,8 @@ let mBuffer: MotionListenerEvent[] = []
 let emitterInterval: NodeJS.Timer | null = null
 
 // Default callback for handling device data
+type EmitterCallback = (data: MotionVectors) => void
+
 let _callback: EmitterCallback = (data) => {
   const uuid = nanoid()
   // TODO - Need to get this from our central state store
@@ -79,7 +90,8 @@ export function isActive () {
  * Sets us up to send data to the backend
  */
 export async function initialiseMotionAndOrientationTracking (
-  callback?: EmitterCallback
+  callback?: EmitterCallback,
+  options?: { mOpts?: webmo.ListenerOptions, oOpts?: webmo.ListenerOptions }|undefined
 ) {
   if (callback) {
     _callback = callback
@@ -90,19 +102,17 @@ export async function initialiseMotionAndOrientationTracking (
     webmo.orientation.deviceHasOrientationSupport()
   ])
 
-  const autoStart = false
-
   // If mode is dev then just ignore the check results, e.g running on desktop
   if (!isProduction || (supports[0] && supports[1])) {
-    ml = new MotionListener((e) => mBuffer.push(e), {
-      autoStart,
-      threshold: 2,
-      rotationRateThreshold: 2.5
-    })
-    ol = new OrientationListener((e) => oBuffer.push(e), {
-      autoStart,
-      threshold: 0.5
-    })
+    ml = new MotionListener(
+      (e) => mBuffer.push(e),
+      Object.assign({}, DEFAULT_MOTION_OPTS, options ? options.mOpts : {})
+    )
+
+    ol = new OrientationListener(
+      (e) => oBuffer.push(e),
+      Object.assign({}, DEFAULT_ORIENTATION_OPTS, options ? options.oOpts : {})
+    )
   } else {
     throw new Error(
       `Device does not support motion (check: ${
