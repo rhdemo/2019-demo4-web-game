@@ -3,7 +3,7 @@ import StrictEventEmitter from 'strict-event-emitter-types'
 import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
 import getLogger from '@app/log'
 import { stat } from 'fs'
-import { isDeviceSupported } from './utils';
+import { isDeviceSupported } from './utils'
 
 const log = getLogger('store')
 
@@ -47,7 +47,7 @@ const state: ApplicationState = {
   config: {
     gameState: ConfigGameMode.Loading,
     playerId,
-    motions: {},
+    motions: {}
   },
   unsupportedDevice: !isDeviceSupported(),
   gestureHistory: []
