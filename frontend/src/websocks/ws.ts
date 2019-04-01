@@ -65,7 +65,7 @@ export function connect (isAdmin = false) {
   })
 }
 
-function getSocketUrl (isAdmin = false) {
+export function getSocketUrl (isAdmin = false) {
   const isDevelopment = process.env.NODE_ENV === 'development'
   const devGameSocket = process.env.GAME_SOCKET
   const devAdminSocket = process.env.ADMIN_SOCKET

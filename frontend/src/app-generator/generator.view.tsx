@@ -7,6 +7,7 @@ import {
   stopSendLoop
 } from '@app/orientation-and-motion'
 import formatFactory from 'format-number'
+import { getSocketUrl } from '@app/websocks/ws'
 
 const formatNumber = formatFactory()
 const log = getLogger('view:generator')
@@ -66,15 +67,18 @@ export class GeneratorView extends Component<{}, GeneratorState> {
   }
 
   getWssParam () {
-    const wssHost =
-      new URL(window.location.href).searchParams.get('wss') ||
-      `ws://${window.location.host}`
+    const wssHost = new URL(window.location.href).searchParams.get('wss')
 
-    if (wssHost.indexOf('ws://') === -1) {
-      return `ws://${wssHost}`
+    if (wssHost) {
+      if (wssHost.indexOf('ws://') === -1) {
+        return `ws://${wssHost}`
+      }
+
+      return wssHost
+    } else {
+      // Use real game socket logic
+      return getSocketUrl()
     }
-
-    return wssHost
   }
 
   toggleGenerating () {
