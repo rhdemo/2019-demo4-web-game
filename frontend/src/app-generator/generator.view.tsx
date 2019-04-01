@@ -8,6 +8,7 @@ import {
 } from '@app/orientation-and-motion'
 import formatFactory from 'format-number'
 import { getSocketUrl } from '@app/websocks/ws'
+import { WSS } from '@app/interfaces';
 
 const formatNumber = formatFactory()
 const log = getLogger('view:generator')
@@ -62,7 +63,11 @@ export class GeneratorView extends Component<{}, GeneratorState> {
       this.setState({
         sendCount: this.state.sendCount + 1
       })
-      this.sock.json(data)
+
+      this.sock.json({
+        type: WSS.OutgoingFrames.Type.MotionRaw,
+        ...data
+      })
     })
   }
 
