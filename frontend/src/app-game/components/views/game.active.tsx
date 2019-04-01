@@ -22,8 +22,10 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     this.onConfigChange = this.onConfigChange.bind(this)
   }
 
-  onConfigChange (config: GameConfiguration) {
-    this.setState({ config })
+  onConfigChange () {
+    this.setState({
+      config: getState().config
+    })
   }
 
   componentWillMount () {
