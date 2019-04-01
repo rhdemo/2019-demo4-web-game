@@ -18,7 +18,7 @@ import {
 import { initialiseMotionAndOrientationTracking } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import getLogger from '@app/log'
-import { DeviceUnsupportedView } from './device-unsupported';
+import { DeviceUnsupportedView } from './device-unsupported'
 
 const log = getLogger('view:container')
 

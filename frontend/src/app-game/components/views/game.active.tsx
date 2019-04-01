@@ -6,7 +6,7 @@ import getLogger from '@app/log'
 
 import GameHeaderSVG from '@public/assets/images/svg/game-header.svg'
 import MachineYellowSVG from '@public/assets/images/svg/machines/yellow.svg'
-import { MoveSelector } from '../move-selector';
+import { MoveSelector } from '../move-selector'
 
 const log = getLogger('view:game.active')
 
@@ -63,25 +63,24 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     log('render')
     return (
       <div class='game active'>
-        <div class="header">
+        <div class='header'>
           <img src={GameHeaderSVG}/>
-          <div style="color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: left;">
+          <div style='color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: left;'>
             <p>{this.state.config.username}</p>
           </div>
-          <div style="color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: right;">
+          <div style='color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: right;'>
             <p>{this.state.config.score} POINTS</p>
           </div>
         </div>
 
-
         <MoveSelector/>
 
-        <div class="machine-info-container">
-          <div style="flex: 0.65;" class="machine-container">
-            <object data={MachineYellowSVG} type="image/svg+xml"></object>
+        <div class='machine-info-container'>
+          <div style='flex: 0.65;' class='machine-container'>
+            <object data={MachineYellowSVG} type='image/svg+xml'></object>
           </div>
 
-          <div style="flex: 0.35;" id='indicator-container' />
+          <div style='flex: 0.35;' id='indicator-container' />
         </div>
       </div>
     )

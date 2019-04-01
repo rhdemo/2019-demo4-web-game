@@ -1,7 +1,7 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
-import { GameConfiguration } from '@app/interfaces';
-import { emitter, ApplicationEventTypes, getState } from '@app/store';
+import { GameConfiguration } from '@app/interfaces'
+import { ApplicationEventTypes, emitter, getState } from '@app/store'
 
 import ArrowLeft from '@public/assets/images/svg/arrow-left.svg'
 import ArrowRight from '@public/assets/images/svg/arrow-right.svg'
@@ -9,9 +9,9 @@ import MoveSquqare from '@public/assets/images/svg/moves/square.svg'
 
 const TMP_MOVES = {
   // TODO use server side moves object
-  "floss": true,
-  "sqaure": true,
-  "circle": true
+  'floss': true,
+  'sqaure': true,
+  'circle': true
 }
 
 const log = getLogger('component:move-selector')
@@ -62,23 +62,23 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
     log('rendering')
 
     const availableMovesEls = Object.keys(this.state.config.motions)
-      .filter(m => this.state.config.motions[m])
-      .map(m => {
+      .filter((m) => this.state.config.motions[m])
+      .map((m) => {
         // TODO: Reference move svg/images
-        return <object style="min-width: 100%; scroll-snap-align: center;" data={MoveSquqare} type="image/svg+xml"></object>
+        return <object style='min-width: 100%; scroll-snap-align: center;' data={MoveSquqare} type='image/svg+xml'></object>
       })
 
     return (
-      <div class="move-selector">
-        <div onClick={() => this.onArrowClick(-1)} style="flex: 0.15;">
+      <div class='move-selector'>
+        <div onClick={() => this.onArrowClick(-1)} style='flex: 0.15;'>
           <img src={ArrowLeft}></img>
         </div>
 
-        <div id="move-scroller" style="flex: 1; scroll-snap-type: x mandatory; overflow: hidden; overflow-x: scroll; display: flex;">
+        <div id='move-scroller' style='flex: 1; scroll-snap-type: x mandatory; overflow: hidden; overflow-x: scroll; display: flex;'>
           {availableMovesEls}
         </div>
 
-        <div onClick={() => this.onArrowClick(1)} style="flex: 0.15;">
+        <div onClick={() => this.onArrowClick(1)} style='flex: 0.15;'>
           <img src={ArrowRight}></img>
         </div>
       </div>
