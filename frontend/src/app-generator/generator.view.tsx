@@ -74,7 +74,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
           type: WSS.OutgoingFrames.Type.MotionRaw,
 
           // Strip timestamps and orientation from motion data
-          motion: data.motion.map(m => [m[0], m[1], m[2]])
+          motion: data.motion.map((m) => [ m[0], m[1], m[2] ])
         })
       },
 
