@@ -61,8 +61,8 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
   render () {
     log('rendering')
 
-    const availableMovesEls = Object.keys(TMP_MOVES)
-      // .filter(m => this.state.config.availableMoves[m])
+    const availableMovesEls = Object.keys(this.state.config.motions)
+      .filter(m => this.state.config.motions[m])
       .map(m => {
         // TODO: Reference move svg/images
         return <object style="min-width: 100%; scroll-snap-align: center;" data={MoveSquqare} type="image/svg+xml"></object>
