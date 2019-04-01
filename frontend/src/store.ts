@@ -47,7 +47,14 @@ const state: ApplicationState = {
   config: {
     gameState: ConfigGameMode.Loading,
     playerId,
-    motions: {}
+    gameMotions: {
+      circle: false,
+      fever: false,
+      floss: false,
+      roll: false,
+      shake: false,
+      x: false
+    }
   },
   unsupportedDevice: !isDeviceSupported(),
   gestureHistory: []

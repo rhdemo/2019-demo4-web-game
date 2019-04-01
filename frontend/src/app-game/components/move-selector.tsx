@@ -29,14 +29,14 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
     this.onConfigChange = this.onConfigChange.bind(this)
   }
 
-  onConfigChange (config: GameConfiguration) {
-    this.setState({ config })
+  onConfigChange () {
+    this.setState({ config: getState().config })
   }
 
   componentWillMount () {
     log('will mount')
 
-    // emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
+    emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
   }
 
   componentWillUnmount () {
@@ -61,11 +61,12 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
   render () {
     log('rendering')
 
-    const availableMovesEls = Object.keys(this.state.config.motions)
-      .filter((m) => this.state.config.motions[m])
+    const availableMovesEls = Object.keys(this.state.config.gameMotions)
+      .filter((m) => this.state.config.gameMotions[m])
       .map((m) => {
         // TODO: Reference move svg/images
-        return <object style='min-width: 100%; scroll-snap-align: center;' data={MoveSquqare} type='image/svg+xml'></object>
+        // return <object style='min-width: 100%; scroll-snap-align: center;' data={MoveSquqare} type='image/svg+xml'></object>
+        return <h3 style='min-width: 100%; scroll-snap-align: center;'>{m}</h3>
       })
 
     return (

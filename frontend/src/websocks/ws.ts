@@ -118,7 +118,9 @@ export function sendConnection (playerId?: string) {
 
 function sendJsonPayload (payload: WSS.OutgoingFrames.OutgoingFrame) {
   if (sock) {
-    sock.json({ ...payload, playerId: getState().config.playerId })
+    const data = { ...payload, playerId: getState().config.playerId }
+    log('sending payload', data)
+    sock.json(data)
   } else {
     throw new Error('ws attempted to send data but no connection is present')
   }

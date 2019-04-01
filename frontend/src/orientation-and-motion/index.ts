@@ -91,7 +91,7 @@ export function isActive () {
  */
 export async function initialiseMotionAndOrientationTracking (
   callback?: EmitterCallback,
-  options?: { mOpts?: webmo.ListenerOptions, oOpts?: webmo.ListenerOptions }|undefined
+  options?: { mOpts?: webmo.ListenerOptions, oOpts?: webmo.ListenerOptions } | undefined
 ) {
   if (callback) {
     _callback = callback
