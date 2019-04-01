@@ -1,12 +1,15 @@
 module.exports.INCOMING_MESSAGE_TYPES = {
-  MOTION: "motion",
   CONNECTION: "connection",
   PING: "ping",
-  SCORE: "score"
+  MOTION: "motion",
+  MOTION_RAW: "motion-raw",
+  TRAINING: "training",
+  LOAD_TEST: "load-test"
 };
 
 module.exports.OUTGOING_MESSAGE_TYPES = {
   HEARTBEAT: "heartbeat",
-  CONFIGURATION: "configuration"
+  CONFIGURATION: "configuration",
+  MOTION_FEEDBACK: "motion_feedback"
 };
 
