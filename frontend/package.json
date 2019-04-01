@@ -11,7 +11,7 @@
     "format": "prettier src/**/*.ts src/**/*.tsx public/*.html --write",
     "start": "parcel serve public/*.html",
     "prebuild": "yarn lint && yarn clean",
-    "build": "env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/*.html",
+    "build": "npm run clean && env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/*.html",
     "build:dev": "env NODE_ENV=development parcel build public/*.html",
     "postbuild": "cp nginx.conf dist",
     "lint": "tslint --format stylish --fix --project tsconfig.json",
