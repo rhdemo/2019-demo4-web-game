@@ -8,10 +8,14 @@ import {
 } from '@app/orientation-and-motion'
 import formatFactory from 'format-number'
 import { getSocketUrl } from '@app/websocks/ws'
-import { WSS } from '@app/interfaces';
+import { WSS } from '@app/interfaces'
 
 const formatNumber = formatFactory()
 const log = getLogger('view:generator')
+
+// Send motion data every 20ms, this is the lowest setting that you should use.
+// Devices can only provide data every ~16ms so rounding up to simplify and give room
+const SEND_RATE = 20
 
 export class GeneratorView extends Component<{}, GeneratorState> {
   private readonly sock: Sockette
@@ -92,7 +96,7 @@ export class GeneratorView extends Component<{}, GeneratorState> {
     })
 
     if (this.state.generating) {
-      startSendLoop(250)
+      startSendLoop(SEND_RATE)
     } else {
       stopSendLoop()
     }
