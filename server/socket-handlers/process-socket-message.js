@@ -57,4 +57,4 @@ const motionRawHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.MOTION_RAW, r
 const loadTestHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.LOAD_TEST, require("./load-test"));
 const trainingHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.TRAINING, require("./training"));
 
-module.exports.processSocketMessage = processSocketMessage;
+module.exports = processSocketMessage;
