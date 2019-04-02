@@ -1,19 +1,38 @@
-const uuidv4 = require('uuid/v4')
+const uuidv4 = require("uuid/v4")
 
 const log = require("../utils/log")("socket-handlers/motion")
 const {kafkaProducer, TOPICS} = require("../kafka-producer")
 
-function loadTestHandler(ws, messageObj) {
-    let kafkaKey = messageObj.uuid || uuidv4()
-    let jsonMsg = JSON.stringify(messageObj);
-    let kafkaMsg = Buffer.from(jsonMsg)
-    log.debug(`kafka produce topic: ${TOPICS.MOTION_RAW}; key: ${kafkaKey}; msg: ${jsonMsg}`)
+function motionRawHandler(ws, messageObj) {
+    log.debug("motionRawHandler");
+    log.debug(messageObj);
 
-    if (kafkaProducer.isConnected()) {
-        kafkaProducer.produce(TOPICS.MOTION_RAW, -1, kafkaMsg, kafkaKey)
-    } else {
-        log.warn('kafka producer is not connected. not sending "motion-raw" payload')
+    if (!global.game || !global.game.shakeDemo || !global.game.shakeDemo.enabled) {
+        log.info("Shake Demo not enabled. Ignoring motion-raw");
+        return;
+    }
+
+    if (!messageObj.motion) {
+        log.error("failed to process motion-raw data", messageObj);
+        return;
+    }
+
+    const sumAbs = x => x.reduce((acc, value) => acc + Math.abs(value), 0);
+    const sumVectors = vectors => sumAbs(vectors.map(v => sumAbs(v)));
+
+    const totalAcceleration = sumVectors(messageObj.motion);
+    const multiplier = global.game.shakeDemo.multiplier || 5;
+    const numMessages = Math.floor(totalAcceleration * multiplier);
+    const kafkaMsg = Buffer.from(JSON.stringify({type: "motion-raw"}))
+
+    log.info(`sending ${numMessages} to kafka topic: ${TOPICS.MOTION_RAW}`)
+    for (let i=0; i<numMessages; i++) {
+        if (kafkaProducer.isConnected()) {
+            kafkaProducer.produce(TOPICS.MOTION_RAW, -1, kafkaMsg, uuidv4())
+        } else {
+            log.warn("kafka producer is not connected. not sending motion-raw payload")
+        }
     }
 }
 
-module.exports = loadTestHandler
+module.exports = motionRawHandler;
