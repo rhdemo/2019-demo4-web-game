@@ -79,7 +79,8 @@ export function getSocketUrl (isAdmin = false) {
   }
 
   const suffix = isAdmin ? '/admin-socket' : '/game-socket'
-  return `ws://${window.location.hostname}${suffix}`
+  const proto = window.location.protocol.includes('https') ? 'wss' : 'ws'
+  return `${proto}://${window.location.hostname}${suffix}`
 }
 
 export function sendTrainingData (
@@ -140,15 +141,21 @@ function onMessage (e: MessageEvent) {
 
   if (!parsed || parseErr) {
     console.error('unable to parse incoming message JSON', parseErr)
-  } else if (WSS.IncomingFrames.Type.Config === parsed.type) {
-    setGameConfiguration(parsed as WSS.IncomingFrames.Config)
-  } else if (WSS.IncomingFrames.Type.Score === parsed.type) {
-    setPlayerScore((parsed as WSS.IncomingFrames.Score).total)
-  } else if (WSS.IncomingFrames.Type.Heartbeat === parsed.type) {
-    log(`${new Date()}  - received heartbeat from server`)
-    emitter.emit(ApplicationEventTypes.ServerHeartBeat)
   } else {
-    // TODO: oh noes, this shouldn't ever happen
-    console.error('message JSON was parsed, but was of unknown "type"', e)
+    log('parsed ws payload contains - ', parsed)
+
+    if (WSS.IncomingFrames.Type.Config === parsed.type) {
+      setGameConfiguration(parsed as WSS.IncomingFrames.Config)
+    } else if (WSS.IncomingFrames.Type.Score === parsed.type) {
+      setPlayerScore((parsed as WSS.IncomingFrames.Score).total)
+    } else if (WSS.IncomingFrames.Type.Heartbeat === parsed.type) {
+      log(`${new Date()}  - received heartbeat from server`)
+      emitter.emit(ApplicationEventTypes.ServerHeartBeat)
+    } else if (WSS.IncomingFrames.Type.MotionFeedback) {
+      // TODO: motion feedback in UI
+    } else {
+      // TODO: oh noes, this shouldn't ever happen
+      console.error(`message JSON was parsed, but was of unknown type "${parsed.type}"`, e)
+    }
   }
 }
