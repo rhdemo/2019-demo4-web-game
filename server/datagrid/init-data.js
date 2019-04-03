@@ -2,7 +2,7 @@ const infinispan = require("infinispan");
 const env = require("env-var");
 
 const log = require("../utils/log")("datagrid");
-const {DATAGRID_KEYS, DATAGRID_KEY_PREFIXES} = require("./constants");
+const {DATAGRID_KEYS} = require("./constants");
 const readGame = require("./read-game");
 const gameHandler = require("./game");
 
@@ -24,10 +24,10 @@ async function initClient() {
 }
 
 async function handleDataChange(client, changeType, key) {
-  log.info(`Data change: ${changeType} ${key}`);
+  log.debug(`Data change: ${changeType} ${key}`);
   switch (key) {
     case DATAGRID_KEYS.GAME:
-      gameHandler();
+      gameHandler(client, changeType, key);
       break;
   }
 }
@@ -43,6 +43,4 @@ async function initData() {
   return dataClient;
 }
 
-module.exports.initData = initData;
-module.exports.DATAGRID_KEYS = DATAGRID_KEYS;
-module.exports.DATAGRID_KEY_PREFIXES = DATAGRID_KEY_PREFIXES;
+module.exports = initData;

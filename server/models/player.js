@@ -1,5 +1,5 @@
 const uuidv4 = require('uuid/v4');
-const {DATAGRID_KEY_PREFIXES} = require("../datagrid");
+const {DATAGRID_KEY_PREFIXES} = require("../datagrid/constants");
 const {generateUserName} = require("../utils/username");
 const NUM_MACHINES = 10;
 
