@@ -71,6 +71,8 @@ objects:
         app: ${APPLICATION_NAME}
       name: demo4-web-game
     spec:
+      tls:
+        termination: edge
       port:
         targetPort: 8080
       to:
