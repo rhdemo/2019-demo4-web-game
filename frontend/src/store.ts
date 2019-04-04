@@ -41,12 +41,21 @@ export interface ApplicationState {
   unsupportedDevice: boolean
 }
 
-const playerId = localStorage.getItem('playerId') || undefined
+const playerId = localStorage.getItem('playerId')
 const state: ApplicationState = {
   // Always initialise in loading state
   config: {
     gameState: ConfigGameMode.Loading,
-    playerId,
+
+    // Initially zero
+    score: 0,
+
+    // Just empty string by default
+    playerId: playerId || '',
+    username: '',
+    machineId: '?',
+
+    // All disabled by default
     gameMotions: {
       circle: false,
       fever: false,
