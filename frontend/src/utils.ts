@@ -8,5 +8,5 @@ export function isDeviceSupported () {
 
 export function isAppleTwelveDevice () {
   // TODO: check for minor version number
-  return navigator.userAgent.match(/iPhone OS 12/gi)
+  return navigator.userAgent.match(/iPhone OS 12_2/gi)
 }
