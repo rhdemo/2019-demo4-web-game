@@ -46,6 +46,12 @@ let _callback: EmitterCallback = (data) => {
   addGestureToHistory({ uuid, gesture })
 }
 
+export class DeviceMotionUnavailableError extends Error {
+  constructor (public readonly motionSupported: boolean, public readonly orientationSupported: boolean) {
+    super()
+  }
+}
+
 /**
  * Stops the periodic sending of data to WSS
  */
@@ -114,10 +120,9 @@ export async function initialiseMotionAndOrientationTracking (
       Object.assign({}, DEFAULT_ORIENTATION_OPTS, options ? options.oOpts : {})
     )
   } else {
-    throw new Error(
-      `Device does not support motion (check: ${
-        supports[0]
-      }) or orientation (check: ${supports[1]})`
+    throw new DeviceMotionUnavailableError(
+      supports[0],
+      supports[1]
     )
   }
 }

@@ -53,12 +53,12 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     log('rendering')
     let v: JSX.Element
 
-    if (getState().error) {
-      return <GameBorkedView />
-    }
-
     if (getState().unsupportedDevice) {
       return <DeviceUnsupportedView />
+    }
+
+    if (getState().error) {
+      return <GameBorkedView />
     }
 
     switch (this.state.config.gameState) {

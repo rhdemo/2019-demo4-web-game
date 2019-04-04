@@ -50,11 +50,9 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
       barColor: '#33FF66',
       radius: 30,
       fontColor: '#111',
-      format: (value: number) => {
-        // Complete hack...but hey, that's what we be doin'
-        // Just return the machine assigned to this user...
-        // TODO
-        return '5'
+      format: () => {
+        // Must call to string or the font size gets messed up (seriously)
+        return this.state.config.machineId.toString()
       }
     })
   }
