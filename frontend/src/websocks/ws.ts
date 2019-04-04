@@ -59,7 +59,7 @@ export function connect (isAdmin = false) {
       },
       onerror: (e) => {
         log('WebSocket Error:', e)
-        reject(e)
+        reject(new Error('WebSocket connection error. Please verify connection settings and refresh the page.'))
       }
     }))
   })
