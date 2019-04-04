@@ -14,13 +14,13 @@ const log = getLogger('motion')
 
 const DEFAULT_MOTION_OPTS = {
   autoStart: false,
-  threshold: 15,
+  threshold: 2.5,
   rotationRateThreshold: Infinity
 }
 
 const DEFAULT_ORIENTATION_OPTS = {
   autoStart: false,
-  threshold: 0.5
+  threshold: 5
 }
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -49,6 +49,8 @@ let _callback: EmitterCallback = (data) => {
 export class DeviceMotionUnavailableError extends Error {
   constructor (public readonly motionSupported: boolean, public readonly orientationSupported: boolean) {
     super()
+
+    Object.setPrototypeOf(this, DeviceMotionUnavailableError.prototype)
   }
 }
 

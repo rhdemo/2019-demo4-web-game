@@ -6,6 +6,12 @@
   }
 }
 
+.game {
+  p, small {
+    line-height: 1.2em;
+  }
+}
+
 .game.lobby {
   margin-top: 30vh;
 }
@@ -18,6 +24,14 @@
   align-items: center;
   margin-top: 20vh;
   display: flex;
+}
+
+.game.borked {
+  padding: 15vh 1em;
+
+  ol li {
+    padding-top: 0.5em;
+  }
 }
 
 .game.active {
