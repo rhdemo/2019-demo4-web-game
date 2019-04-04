@@ -23,7 +23,7 @@ export class GameBorkedView extends Component {
             HEY THERE!
           </h2>
 
-          <div style="text-align: left;">
+          <div style='text-align: left;'>
             <p>
               Looks like you're using iOS 12. You'll need to make a quick settings change to play this game on your device.
             </p>
