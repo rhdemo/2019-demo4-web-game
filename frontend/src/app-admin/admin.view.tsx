@@ -1,49 +1,91 @@
 import { Component, h } from 'preact'
-import { connect, sendGameStateChange } from '@app/websocks/ws'
-import { GameModeEntry, GameModes } from '@app/interfaces/admin'
+import nanoid from 'nanoid'
+import * as ws from '@app/websocks/ws'
+import { MockGestures } from '@app/interfaces/admin'
+
+import getLogger from '@app/log'
+import { ApplicationEventTypes, emitter, getState } from '@app/store'
+import { WSS } from '@app/interfaces'
+
+const log = getLogger('admin-page')
 
 export class AdminView extends Component<{}, AdminViewState> {
   constructor () {
     super()
-
     this.setState({
-      activeGameMode: GameModes.Lobby
+      feedbackHistory: getState().feedbackHistory
     })
+    this.onFeedbackUpdate = this.onFeedbackUpdate.bind(this)
   }
 
   async componentWillMount () {
-    connect(true)
+    emitter.addListener(ApplicationEventTypes.FeedbackUpdate, this.onFeedbackUpdate)
+    return ws.connect()
   }
 
-  sendMessage (mode: GameModeEntry) {
-    // Set component state
-    this.setState({ activeGameMode: mode })
+  onFeedbackUpdate () {
+    this.setState({
+      feedbackHistory: getState().feedbackHistory
+    })
+  }
 
-    sendGameStateChange({ state: mode.text })
+  componentWillUnmount () {
+    emitter.removeListener(
+      ApplicationEventTypes.FeedbackUpdate,
+      this.onFeedbackUpdate
+    )
+  }
+
+  wsAlert (err: any) {
+    log('error ion websocket')
+    log(err)
+
+    alert('WebSocket Error: Please refresh the page and try again.')
+  }
+
+  async uploadMotionData (gesture: string) {
+    if (ws.isConnected()) {
+
+      const { motion, orientation } = MockGestures[gesture]
+
+      ws.sendMotionAndOrientationData({
+        uuid: nanoid(),
+        gesture,
+        motion,
+        orientation
+      })
+    } else {
+      this.wsAlert('WebSocket is not connected!')
+    }
   }
 
   render () {
     return (
       <div>
-        <h1>Admin View</h1>
+        <h1>Test Motions</h1>
 
-        {Object.keys(GameModes).map((key) => {
+        {Object.keys(MockGestures).map((key) => {
           return (
-            <button onClick={() => this.sendMessage(GameModes[key])}>
-              {key}{' '}
-              {this.state.activeGameMode === GameModes[key] ? (
-                <span>(active)</span>
-              ) : (
-                <span />
-              )}
+            <button
+              style='margin: 0.5rem;'
+              className='button'
+              onClick={() => this.uploadMotionData(key)}
+            >
+              {key}
             </button>
           )
         })}
+
+        <div>
+          <pre>
+            {JSON.stringify(this.state.feedbackHistory[this.state.feedbackHistory.length - 1], null, 2)}
+          </pre>
+        </div>
       </div>
     )
   }
 }
 
 interface AdminViewState {
-  activeGameMode: GameModeEntry
+  feedbackHistory: WSS.IncomingFrames.MotionFeedback[]
 }

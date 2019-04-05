@@ -1,5 +1,6 @@
 import Sockette from 'sockette'
 import {
+  addLastMotionFeedback,
   ApplicationEventTypes,
   emitter,
   getState,
@@ -28,14 +29,14 @@ export function isConnected () {
   return sock ? true : false
 }
 
-export function connect (isAdmin = false) {
+export function connect () {
   if (sock) {
     log('already connected. returning existing socket')
     return Promise.resolve(sock)
   }
 
   return new Promise((resolve, reject) => {
-    const url = getSocketUrl(isAdmin)
+    const url = getSocketUrl()
 
     const _sock = (sock = new Sockette(url, {
       timeout: 2500,
@@ -66,22 +67,16 @@ export function connect (isAdmin = false) {
   })
 }
 
-export function getSocketUrl (isAdmin = false) {
+export function getSocketUrl () {
   const isDevelopment = process.env.NODE_ENV === 'development'
   const devGameSocket = process.env.GAME_SOCKET
-  const devAdminSocket = process.env.ADMIN_SOCKET
 
-  if (isDevelopment && isAdmin && devAdminSocket) {
-    return devAdminSocket
-  }
-
-  if (isDevelopment && !isAdmin && devGameSocket) {
+  if (isDevelopment && devGameSocket) {
     return devGameSocket
   }
 
-  const suffix = isAdmin ? '/admin-socket' : '/game-socket'
   const proto = window.location.protocol.includes('https') ? 'wss' : 'ws'
-  return `${proto}://${window.location.hostname}${suffix}`
+  return `${proto}://${window.location.hostname}/game-socket`
 }
 
 export function sendTrainingData (
@@ -154,6 +149,7 @@ function onMessage (e: MessageEvent) {
       emitter.emit(ApplicationEventTypes.ServerHeartBeat)
     } else if (WSS.IncomingFrames.Type.MotionFeedback) {
       processFeedback(parsed as WSS.IncomingFrames.MotionFeedback)
+      addLastMotionFeedback((parsed as WSS.IncomingFrames.MotionFeedback))
     } else {
       // TODO: oh noes, this shouldn't ever happen
       console.error(`message JSON was parsed, but was of unknown type "${parsed.type}"`, e)

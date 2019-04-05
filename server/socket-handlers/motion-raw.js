@@ -22,7 +22,10 @@ function motionRawHandler(ws, messageObj) {
 
     const totalAcceleration = sumVectors(messageObj.motion);
     const multiplier = global.game.shakeDemo.multiplier || 5;
-    const numMessages = Math.floor(totalAcceleration * multiplier);
+    const maxMessages = Math.floor((global.game.shakeDemo.maxPerSecond || 1000) / 4)
+    let numMessages = Math.floor(totalAcceleration * multiplier);
+    numMessages = Math.min(numMessages, maxMessages);
+
     const kafkaMsg = Buffer.from(JSON.stringify({type: "motion-raw"}))
 
     log.info(`sending ${numMessages} to kafka topic: ${TOPICS.MOTION_RAW}`)
@@ -30,7 +33,7 @@ function motionRawHandler(ws, messageObj) {
         if (kafkaProducer.isConnected()) {
             kafkaProducer.produce(TOPICS.MOTION_RAW, -1, kafkaMsg, uuidv4())
         } else {
-            log.warn("kafka producer is not connected. not sending motion-raw payload")
+            log.error("kafka producer is not connected. not sending motion-raw payload")
         }
     }
 }

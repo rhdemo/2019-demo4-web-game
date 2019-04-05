@@ -2,14 +2,14 @@ const env = require("env-var");
 const axios = require("axios");
 
 const log = require("../utils/log")("socket-handlers/motion");
-const GESTURE_API_URL = env.get("GESTURE_API_URL", "http://demo4-gesture:8080").asString();
+const TRAINING_URL = env.get("TRAINING_URL", "http://demo4-gesture:8080/training").asString();
 
 
 async function trainingHandler(ws, messageObj) {
     try {
         await axios({
             method: "POST",
-            url: new URL("/training", GESTURE_API_URL).href,
+            url: TRAINING_URL,
             data: messageObj
         })
     } catch (error) {
