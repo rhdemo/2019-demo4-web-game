@@ -1,11 +1,12 @@
-import { GameLoadingView } from './game.loading'
 import { Component, h } from 'preact'
+import { GameLoadingView } from './game.loading'
 import { GamePausedView } from './game.paused'
 import { GameBorkedView } from './game.borked'
 import { GameStoppedView } from './game.stopped'
 import { GameActiveView } from './game.active'
 import { GameReadyView } from './game.ready'
 import { GameLobbyView } from './game.lobby'
+import { Toast } from '@app/app-game/components/toast'
 import { connect } from '@app/websocks/ws'
 import {
   ApplicationEventTypes,
@@ -21,6 +22,7 @@ import getLogger from '@app/log'
 import { DeviceUnsupportedView } from './device-unsupported'
 
 const log = getLogger('view:container')
+const toast = <Toast></Toast>
 
 export class ViewsContainer extends Component<{}, ViewsContainerState> {
   constructor () {
@@ -89,7 +91,12 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = <GameBorkedView />
     }
 
-    return <div class='game-el-container'>{v}</div>
+    return (
+      <div class='game-el-container'>
+        {v}
+        {toast}
+      </div>
+    )
   }
 }
 
