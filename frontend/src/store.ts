@@ -4,6 +4,7 @@ import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './i
 import getLogger from '@app/log'
 import { stat } from 'fs'
 import { isDeviceSupported } from './utils'
+import IncomingFrames = WSS.IncomingFrames
 
 const log = getLogger('store')
 
@@ -14,6 +15,7 @@ const log = getLogger('store')
 export enum ApplicationEventTypes {
   ScoreUpdate = 'ws:frame:score',
   ConfigUpdate = 'ws:frame:config',
+  FeedbackUpdate = 'ws:frame:motion-feedback',
   ServerHeartBeat = 'ws:frame:heartbeat',
   MotionUpdate = 'orientation-motion:update'
 }
@@ -25,6 +27,7 @@ export enum ApplicationEventTypes {
 export interface ApplicationEventHandlers {
   [ApplicationEventTypes.ScoreUpdate]: (data: WSS.IncomingFrames.Score) => void
   [ApplicationEventTypes.ConfigUpdate]: (data: WSS.IncomingFrames.Config | { gameState: ConfigGameMode }) => void
+  [ApplicationEventTypes.FeedbackUpdate]: (data: WSS.IncomingFrames.MotionFeedback) => void
   [ApplicationEventTypes.MotionUpdate]: (data: { orientation: number[][], motion: number[][] }) => void
   [ApplicationEventTypes.ServerHeartBeat]: () => void
 }
@@ -38,6 +41,7 @@ export interface ApplicationState {
   config: GameConfiguration
   error?: Error
   gestureHistory: GestureHistoryEntry[]
+  feedbackHistory: IncomingFrames.MotionFeedback[]
   unsupportedDevice: boolean
 }
 
@@ -66,7 +70,8 @@ const state: ApplicationState = {
     }
   },
   unsupportedDevice: !isDeviceSupported(),
-  gestureHistory: []
+  gestureHistory: [],
+  feedbackHistory: []
 }
 
 export function getState () {
@@ -114,6 +119,11 @@ export function setPlayerScore (score: number) {
 
   // We don't really need a score event, can just reuse config for now...
   emitter.emit(ApplicationEventTypes.ConfigUpdate, state.config)
+}
+
+export function addLastMotionFeedback (feedback: IncomingFrames.MotionFeedback) {
+  state.feedbackHistory.push(feedback)
+  emitter.emit(ApplicationEventTypes.FeedbackUpdate, feedback)
 }
 
 /**
