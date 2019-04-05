@@ -7,7 +7,7 @@ import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import { addGestureToHistory } from '@app/store'
+import { addCurrentGestureToHistory } from '@app/store'
 import getLogger from '@app/log'
 
 const log = getLogger('motion')
@@ -42,8 +42,10 @@ let _callback: EmitterCallback = (data) => {
   // TODO - The server will eventually send us the motion
   const gesture = 'todo'
 
+  addCurrentGestureToHistory(uuid)
+
+  log('sending motion data to the server')
   sendMotionAndOrientationData({ ...data, uuid })
-  addGestureToHistory({ uuid, gesture })
 }
 
 export class DeviceMotionUnavailableError extends Error {
@@ -69,6 +71,8 @@ export function stopSendLoop () {
     ol.stop()
 
     clearBuffers()
+
+    log('send loop stopped, interval and buffers cleared')
   }
 }
 
