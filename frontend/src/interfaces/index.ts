@@ -96,6 +96,16 @@ export namespace WSS {
       machineId: string // we need to identify the targetted machine, though we probably know in advance
     }
 
+    export interface MotionFeedback extends FrameBase {
+      type: Type.MotionFeedback
+      uuid: string
+      gesture: string
+      correct: boolean
+      probability: number,
+      score: number
+      prediction: {[gesture: string]: number}
+    }
+
     export interface Heartbeat extends FrameBase {
       type: Type.Heartbeat
     }
