@@ -81,6 +81,13 @@ export namespace WSS {
       type: Type.Config
     }
 
+    export interface MotionFeedback extends FrameBase {
+      gesture: string
+      probability: number
+      type: Type.MotionFeedback
+      uuid: string
+    }
+
     export interface Score extends FrameBase {
       type: Type.Score
       total: number
