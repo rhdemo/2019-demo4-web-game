@@ -18,6 +18,7 @@
     "axios": "^0.18.0",
     "env-var": "~3.5.0",
     "infinispan": "^0.6.0",
+    "lodash": "^4.17.11",
     "node-rdkafka": "^2.5.1",
     "pino": "~5.11.1",
     "pino-pretty": "~2.5.0",
