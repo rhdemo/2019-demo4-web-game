@@ -20,6 +20,7 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
 
     // Binding "this" for event handlers
     this.onConfigChange = this.onConfigChange.bind(this)
+    this.onSelectedGestureChange = this.onSelectedGestureChange.bind(this)
   }
 
   onConfigChange () {
@@ -28,9 +29,16 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     })
   }
 
+  onSelectedGestureChange () {
+    log('perform motion loop reset due to gesture change')
+    stopSendLoop()
+    startSendLoop()
+  }
+
   componentWillMount () {
     log('will mount')
     emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
+    emitter.addListener(ApplicationEventTypes.SelectedGestureChange, this.onSelectedGestureChange)
     startSendLoop()
   }
 
@@ -39,6 +47,11 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     emitter.removeListener(
       ApplicationEventTypes.ConfigUpdate,
       this.onConfigChange
+    )
+
+    emitter.removeListener(
+      ApplicationEventTypes.SelectedGestureChange,
+      this.onSelectedGestureChange
     )
     stopSendLoop()
   }
@@ -51,7 +64,7 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
       radius: 30,
       fontColor: '#111',
       format: () => {
-        // Must call to string or the font size gets messed up (seriously)
+        // Must call to string or the font size gets messed up?
         return this.state.config.machineId.toString()
       }
     })

@@ -1,18 +1,11 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
 import { GameConfiguration } from '@app/interfaces'
-import { ApplicationEventTypes, emitter, getState } from '@app/store'
+import { ApplicationEventTypes, emitter, getState, setCurrentSelectedGesture } from '@app/store'
 
 import ArrowLeft from '@public/assets/images/svg/arrow-left.svg'
 import ArrowRight from '@public/assets/images/svg/arrow-right.svg'
 import MoveSquqare from '@public/assets/images/svg/moves/square.svg'
-
-const TMP_MOVES = {
-  // TODO use server side moves object
-  'floss': true,
-  'sqaure': true,
-  'circle': true
-}
 
 const log = getLogger('component:move-selector')
 
@@ -46,15 +39,40 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
   }
 
   onArrowClick (index: number) {
-    console.log('click!')
     const el = document.getElementById('move-scroller')
 
     if (el) {
       const width = el.scrollWidth
-      const moveAmt = width / Object.keys(TMP_MOVES).length
+      const moveAmt = width / Object.keys(this.state.config.gameMotions).length
       el.scrollLeft = el.scrollLeft + (moveAmt * index)
     } else {
       throw new Error('#move-selector el not found!')
+    }
+  }
+
+  onScroll (e: UIEvent) {
+    const srcEl = e.srcElement
+
+    if (srcEl) {
+      const el = srcEl as HTMLElement
+      const position = el.scrollLeft
+
+      if (position === 0) {
+        console.log('gesture is', Object.keys(this.state.config.gameMotions)[0])
+      } else {
+        // We need a child node so we can use it's width (each has the same width)
+        // to determine an index by dividing the scroller width by it
+        const child = el.firstChild as HTMLElement
+
+        if (!child) {
+          throw new Error('no child element found!')
+        }
+
+        const width = child.offsetWidth
+        const approxIdx = position / width
+
+        setCurrentSelectedGesture(Object.keys(this.state.config.gameMotions)[Math.round(approxIdx)])
+      }
     }
   }
 
@@ -75,7 +93,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
           <img src={ArrowLeft}></img>
         </div>
 
-        <div id='move-scroller' style='flex: 1; scroll-snap-type: x mandatory; overflow: hidden; overflow-x: scroll; display: flex;'>
+        <div id='move-scroller' onScroll={(e) => this.onScroll(e)} style='flex: 1; scroll-snap-type: x mandatory; overflow: hidden; overflow-x: scroll; display: flex;'>
           {availableMovesEls}
         </div>
 
@@ -89,4 +107,5 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
 
 interface MoveSelectorState {
   config: GameConfiguration
+  selectedGesture: string
 }

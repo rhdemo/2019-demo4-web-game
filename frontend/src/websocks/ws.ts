@@ -8,6 +8,7 @@ import {
 } from '@app/store'
 import { WSS } from '@app/interfaces'
 import getLogger from '@app/log'
+import { processFeedback } from '@app/app-game/motion-feedback-processor';
 
 const log = getLogger('wsocket')
 
@@ -152,7 +153,7 @@ function onMessage (e: MessageEvent) {
       log(`${new Date()}  - received heartbeat from server`)
       emitter.emit(ApplicationEventTypes.ServerHeartBeat)
     } else if (WSS.IncomingFrames.Type.MotionFeedback) {
-      // TODO: motion feedback in UI
+      processFeedback(parsed as WSS.IncomingFrames.MotionFeedback)
     } else {
       // TODO: oh noes, this shouldn't ever happen
       console.error(`message JSON was parsed, but was of unknown type "${parsed.type}"`, e)
