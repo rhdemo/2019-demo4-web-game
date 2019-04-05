@@ -58,7 +58,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
       const position = el.scrollLeft
 
       if (position === 0) {
-        console.log('gesture is', Object.keys(this.state.config.gameMotions)[0])
+        setCurrentSelectedGesture(this.getEnabledMotionKeys()[0])
       } else {
         // We need a child node so we can use it's width (each has the same width)
         // to determine an index by dividing the scroller width by it
@@ -71,9 +71,14 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
         const width = child.offsetWidth
         const approxIdx = position / width
 
-        setCurrentSelectedGesture(Object.keys(this.state.config.gameMotions)[Math.round(approxIdx)])
+        setCurrentSelectedGesture(this.getEnabledMotionKeys()[Math.round(approxIdx)])
       }
     }
+  }
+
+  getEnabledMotionKeys () {
+    return Object.keys(this.state.config.gameMotions)
+      .filter((m) => this.state.config.gameMotions[m])
   }
 
   render () {
