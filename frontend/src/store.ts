@@ -171,7 +171,6 @@ export function clearGestureToHistory (entry: GestureHistoryEntry) {
   state.gestureHistory = []
 }
 
-
 /**
  * Set a message to appear in a toast
  */

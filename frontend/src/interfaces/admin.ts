@@ -1,5 +1,4 @@
-import { ConfigGameMode } from '@app/interfaces/index'
-import { MockGesture } from '@app/interfaces/mock-gestures/mock-gesture'
+import {ConfigGameMode, MotionVectors} from '@app/interfaces/index'
 import { MockGestureX } from '@app/interfaces/mock-gestures/mock-x'
 import { MockGestureCircle } from '@app/interfaces/mock-gestures/mock-circle'
 import { MockGestureFever } from '@app/interfaces/mock-gestures/mock-fever'
@@ -37,7 +36,7 @@ export const GameModes: GameModesInterface = {
   }
 }
 
-export const MockGestures: { [gesture: string]: MockGesture } = {
+export const MockGestures: { [gesture: string]: MotionVectors } = {
   'circle': MockGestureCircle,
   'fever': MockGestureFever,
   'floss': MockGestureFloss,

@@ -4,8 +4,8 @@ import * as ws from '@app/websocks/ws'
 import { MockGestures } from '@app/interfaces/admin'
 
 import getLogger from '@app/log'
-import { ApplicationEventTypes, emitter, getState } from '@app/store'
-import { WSS } from '@app/interfaces'
+import {ApplicationEventTypes, emitter, getState} from '@app/store'
+import {ConfigGameMode, GameConfiguration, WSS} from '@app/interfaces'
 
 const log = getLogger('admin-page')
 
@@ -13,14 +13,20 @@ export class AdminView extends Component<{}, AdminViewState> {
   constructor () {
     super()
     this.setState({
+      config: getState().config,
       feedbackHistory: getState().feedbackHistory
     })
     this.onFeedbackUpdate = this.onFeedbackUpdate.bind(this)
   }
 
   async componentWillMount () {
+    emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigUpdate)
     emitter.addListener(ApplicationEventTypes.FeedbackUpdate, this.onFeedbackUpdate)
     return ws.connect()
+  }
+
+  onConfigUpdate = () => {
+    this.setState({ config: getState().config })
   }
 
   onFeedbackUpdate () {
@@ -60,6 +66,14 @@ export class AdminView extends Component<{}, AdminViewState> {
   }
 
   render () {
+    if (this.state.config.gameState !== ConfigGameMode.Active) {
+      return (
+        <div>
+          <h1>Game not active!</h1>
+          <h3>State: {this.state.config.gameState}</h3>
+        </div>)
+    }
+
     return (
       <div>
         <h1>Test Motions</h1>
@@ -87,5 +101,6 @@ export class AdminView extends Component<{}, AdminViewState> {
 }
 
 interface AdminViewState {
+  config: GameConfiguration
   feedbackHistory: WSS.IncomingFrames.MotionFeedback[]
 }
