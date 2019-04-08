@@ -6,7 +6,8 @@ import getLogger from '@app/log'
 
 import GameHeaderSVG from '@public/assets/images/svg/game-header.svg'
 import MachineYellowSVG from '@public/assets/images/svg/machines/yellow.svg'
-import { MoveSelector } from '../move-selector'
+import { MoveSelector } from '@app/app-game/components/move-selector'
+import { machineIdToLetter } from '@app/utils';
 
 const log = getLogger('view:game.active')
 
@@ -65,7 +66,7 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
       fontColor: '#111',
       format: () => {
         // Must call to string or the font size gets messed up?
-        return this.state.config.machineId.toString()
+        return machineIdToLetter(parseInt(this.state.config.machineId))
       }
     })
   }
