@@ -1,6 +1,6 @@
-import { MockGesture } from '@app/interfaces/mock-gestures/mock-gesture'
+import {MotionVectors} from '@app/interfaces';
 
-export const MockGestureFever: MockGesture = {
+export const MockGestureFever: MotionVectors = {
   motion: [
     [
       -1.29888,
