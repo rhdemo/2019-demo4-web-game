@@ -5,7 +5,7 @@ export enum ConfigGameMode {
   Stopped = 'stopped',
   Loading = 'loading',
   Ready = 'ready',
-  Lobby = 'lobby'
+  Lobby = 'lobby',
 }
 
 export interface GestureHistoryEntry {
@@ -43,7 +43,7 @@ export namespace WSS {
       MotionRaw = 'motion-raw',
       Training = 'training',
       GameStateChange = 'game',
-      Connection = 'connection'
+      Connection = 'connection',
     }
 
     export interface OutgoingFrame {
@@ -70,7 +70,7 @@ export namespace WSS {
       Config = 'configuration',
       Score = 'score',
       Heartbeat = 'heartbeat',
-      MotionFeedback = 'motion_feedback'
+      MotionFeedback = 'motion_feedback',
     }
 
     export interface FrameBase {
@@ -101,9 +101,9 @@ export namespace WSS {
       uuid: string
       gesture: string
       correct: boolean
-      probability: number,
+      probability: number
       score: number
-      prediction: {[gesture: string]: number}
+      prediction: { [gesture: string]: number }
     }
 
     export interface Heartbeat extends FrameBase {
