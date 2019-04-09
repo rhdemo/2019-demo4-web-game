@@ -10,6 +10,8 @@ import MoveSquqare from '@public/assets/images/svg/moves/square.svg'
 const log = getLogger('component:move-selector')
 
 export class MoveSelector extends Component<{}, MoveSelectorState> {
+  private determinationTimer: NodeJS.Timer|undefined
+
   constructor () {
     log('creating')
 
@@ -51,6 +53,19 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
   }
 
   onScroll (e: UIEvent) {
+    // Processing each scroll event is wasteful and can affect scorlling perf
+    // This will ensure we excute it just once - when the scrolling completes
+    if (this.determinationTimer) {
+      clearTimeout(this.determinationTimer)
+    }
+
+    this.determinationTimer = setTimeout(() => {
+      this.determinationTimer = undefined
+      this.determineNewSelection(e)
+    }, 50)
+  }
+
+  determineNewSelection (e: UIEvent) {
     const srcEl = e.srcElement
 
     if (srcEl) {
