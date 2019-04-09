@@ -1,9 +1,6 @@
 #!/bin/bash
 
-PREDICTION_URL=http://0.0.0.0:8084/predict \
-
-
-
+PREDICTION_URL=http://adcd8d7be55de11e9947402e6167af94-1891507013.us-east-1.elb.amazonaws.com/model/predict
 
 PORT=8081 \
 PREDICTION_URL=$PREDICTION_URL \
