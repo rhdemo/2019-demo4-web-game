@@ -62,7 +62,7 @@ const state: ApplicationState = {
     // Just empty string by default
     playerId: playerId || '',
     username: '',
-    machineId: '?',
+    machineId: 0,
 
     // All disabled by default
     gameMotions: {

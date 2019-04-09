@@ -8,6 +8,7 @@ import GameHeaderSVG from '@public/assets/images/svg/game-header.svg'
 import MachineYellowSVG from '@public/assets/images/svg/machines/yellow.svg'
 import { MoveSelector } from '@app/app-game/components/move-selector'
 import { machineIdToLetter } from '@app/utils';
+import { MachineSvgComponent } from '../machine';
 
 const log = getLogger('view:game.active')
 
@@ -87,13 +88,7 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
 
         <MoveSelector/>
 
-        <div class='machine-info-container'>
-          <div style='flex: 0.65;' class='machine-container'>
-            <object data={MachineYellowSVG} type='image/svg+xml'></object>
-          </div>
-
-          <div style='flex: 0.35;' id='indicator-container' />
-        </div>
+        <MachineSvgComponent machineId={this.state.config.machineId}/>
       </div>
     )
   }
