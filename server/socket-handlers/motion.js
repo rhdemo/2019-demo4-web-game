@@ -7,7 +7,17 @@ const log = require("../utils/log")("socket-handlers/motion");
 const GAME_STATES = require("../models/game-states");
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
 const {kafkaProducer, TOPICS} = require("../kafka-producer");
+const PREDICTION_HOST_HEADER = env.get("PREDICTION_HOST_HEADER", "tf-serving-knative-demo.tf-demo.example.com").asString();
 const PREDICTION_URL = env.get("PREDICTION_URL").asString();
+
+const AI_MOTIONS = {
+  shake: "shake",
+  circle: "draw-circle",
+  x: "draw-cross",
+  roll: "roll",
+  fever: "fever",
+  floss: "floss",
+};
 
 async function motionHandler(ws, messageObj) {
   if (global.game.state !== GAME_STATES.ACTIVE) {
@@ -15,34 +25,42 @@ async function motionHandler(ws, messageObj) {
     return;
   }
 
+  let gesture = messageObj.gesture || "unspecified";
+
+  if (global.game.bypassAI) {
+    log.info("AI Bypass enabled");
+    sendFeedback(ws, messageObj, gesture, true, 1, {});
+    sendVibration(messageObj, gesture, 1);
+    return;
+  }
+
   try {
     let gestureResponse = await axios({
+      headers: {
+        "Host": PREDICTION_HOST_HEADER,
+        "content-type": "application/json" ,
+      },
       method: "POST",
       url: PREDICTION_URL,
-      data: messageObj
+      data: {instances: [messageObj]}
     });
 
-    let gesture = messageObj.gesture || "unspecified";
-    let probability = gestureResponse.data[gesture] || 0;
-    let correct = isCorrect(gesture, probability);
+    let prediction = gestureResponse.data.payload[0];
+    let probability = prediction.candidate_score;
+    let correct = AI_MOTIONS[gesture] === prediction.candidate;
 
-    sendFeedback(ws, messageObj, gesture, correct, probability, gestureResponse.data);
+    sendFeedback(ws, messageObj, gesture, correct, probability, prediction);
 
     if (correct) {
       sendVibration(messageObj, gesture, probability);
     }
   } catch (error) {
+    //If we fail to reach the AI service, just give them credit.
+    sendFeedback(ws, messageObj, gesture, true, 1, {error: error.message});
+    sendVibration(messageObj, gesture, 1);
     log.error("error occured in http call to prediction API:");
-    log.error(error);
+    log.error(error.message);
   }
-}
-
-function isCorrect(attempted, probability) {
-  if (!attempted || !probability) {
-    return false;
-  }
-  const minProbability = _.get(global, `ai.minProbability.${attempted}`) || 0.8;
-  return probability > minProbability;
 }
 
 function sendFeedback(ws, socketMessage, gesture, correct, probability, prediction) {
