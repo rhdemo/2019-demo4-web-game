@@ -6,6 +6,7 @@ import { MockGestures } from '@app/interfaces/admin'
 import getLogger from '@app/log'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import { ConfigGameMode, GameConfiguration, WSS } from '@app/interfaces'
+import { removeStoredPlayerId } from '@app/utils';
 
 const log = getLogger('admin-page')
 
@@ -67,6 +68,11 @@ export class AdminView extends Component<{}, AdminViewState> {
     }
   }
 
+  resetConnection () {
+    removeStoredPlayerId()
+    window.location.reload()
+  }
+
   render() {
     if (this.state.config.gameState !== ConfigGameMode.Active) {
       return (
@@ -101,6 +107,13 @@ export class AdminView extends Component<{}, AdminViewState> {
               2
             )}
           </pre>
+        </div>
+        <hr/>
+        <button onClick={() => this.resetConnection()}>Reset Player ID &amp; Machine ID</button>
+
+        <div>
+          <p><b>PlayerID:</b> {this.state.config.playerId}</p>
+          <p><b>MachineID:</b> {this.state.config.machineId}</p>
         </div>
       </div>
     )

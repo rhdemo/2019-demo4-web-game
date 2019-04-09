@@ -2,7 +2,7 @@ import getLogger from '@app/log'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import { EventEmitter } from 'events'
 import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
-import { isDeviceSupported } from './utils'
+import { isDeviceSupported, getStoredPlayerId } from './utils'
 import IncomingFrames = WSS.IncomingFrames
 
 const log = getLogger('store')
@@ -50,7 +50,6 @@ export interface ApplicationState {
   toastMessage?: string
 }
 
-const playerId = localStorage.getItem('playerId')
 const state: ApplicationState = {
   // Always initialise in loading state
   config: {
@@ -60,7 +59,7 @@ const state: ApplicationState = {
     score: 0,
 
     // Just empty string by default
-    playerId: playerId || '',
+    playerId: getStoredPlayerId() || '',
     username: '',
     machineId: 0,
 
