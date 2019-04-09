@@ -4,24 +4,27 @@ import * as ws from '@app/websocks/ws'
 import { MockGestures } from '@app/interfaces/admin'
 
 import getLogger from '@app/log'
-import {ApplicationEventTypes, emitter, getState} from '@app/store'
-import {ConfigGameMode, GameConfiguration, WSS} from '@app/interfaces'
+import { ApplicationEventTypes, emitter, getState } from '@app/store'
+import { ConfigGameMode, GameConfiguration, WSS } from '@app/interfaces'
 
 const log = getLogger('admin-page')
 
 export class AdminView extends Component<{}, AdminViewState> {
-  constructor () {
+  constructor() {
     super()
     this.setState({
       config: getState().config,
-      feedbackHistory: getState().feedbackHistory
+      feedbackHistory: getState().feedbackHistory,
     })
     this.onFeedbackUpdate = this.onFeedbackUpdate.bind(this)
   }
 
-  async componentWillMount () {
+  async componentWillMount() {
     emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigUpdate)
-    emitter.addListener(ApplicationEventTypes.FeedbackUpdate, this.onFeedbackUpdate)
+    emitter.addListener(
+      ApplicationEventTypes.FeedbackUpdate,
+      this.onFeedbackUpdate
+    )
     return ws.connect()
   }
 
@@ -29,60 +32,60 @@ export class AdminView extends Component<{}, AdminViewState> {
     this.setState({ config: getState().config })
   }
 
-  onFeedbackUpdate () {
+  onFeedbackUpdate() {
     this.setState({
-      feedbackHistory: getState().feedbackHistory
+      feedbackHistory: getState().feedbackHistory,
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     emitter.removeListener(
       ApplicationEventTypes.FeedbackUpdate,
       this.onFeedbackUpdate
     )
   }
 
-  wsAlert (err: any) {
+  wsAlert(err: any) {
     log('error ion websocket')
     log(err)
 
     alert('WebSocket Error: Please refresh the page and try again.')
   }
 
-  async uploadMotionData (gesture: string) {
+  async uploadMotionData(gesture: string) {
     if (ws.isConnected()) {
-
       const { motion, orientation } = MockGestures[gesture]
 
       ws.sendMotionAndOrientationData({
         uuid: nanoid(),
         gesture,
         motion,
-        orientation
+        orientation,
       })
     } else {
       this.wsAlert('WebSocket is not connected!')
     }
   }
 
-  render () {
+  render() {
     if (this.state.config.gameState !== ConfigGameMode.Active) {
       return (
         <div>
           <h1>Game not active!</h1>
           <h3>State: {this.state.config.gameState}</h3>
-        </div>)
+        </div>
+      )
     }
 
     return (
       <div>
         <h1>Test Motions</h1>
 
-        {Object.keys(MockGestures).map((key) => {
+        {Object.keys(MockGestures).map(key => {
           return (
             <button
-              style='margin: 0.5rem;'
-              className='button'
+              style="margin: 0.5rem;"
+              className="button"
               onClick={() => this.uploadMotionData(key)}
             >
               {key}
@@ -92,7 +95,11 @@ export class AdminView extends Component<{}, AdminViewState> {
 
         <div>
           <pre>
-            {JSON.stringify(this.state.feedbackHistory[this.state.feedbackHistory.length - 1], null, 2)}
+            {JSON.stringify(
+              this.state.feedbackHistory[this.state.feedbackHistory.length - 1],
+              null,
+              2
+            )}
           </pre>
         </div>
       </div>
