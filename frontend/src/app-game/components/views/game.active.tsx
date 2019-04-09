@@ -58,20 +58,6 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     stopSendLoop()
   }
 
-  componentDidMount () {
-    log('did mount')
-    const container = window.radialIndicator('#indicator-container', {
-      initValue: 100,
-      barColor: '#33FF66',
-      radius: 30,
-      fontColor: '#111',
-      format: () => {
-        // Must call to string or the font size gets messed up?
-        return machineIdToLetter(parseInt(this.state.config.machineId))
-      }
-    })
-  }
-
   render () {
     log('render')
     return (

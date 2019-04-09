@@ -1,4 +1,7 @@
 import { Component, h } from 'preact'
+import { machineIdToLetter } from '@app/utils';
+import { getState, ApplicationEventTypes, emitter } from '@app/store';
+import { GameConfiguration } from '@app/interfaces';
 
 import MachineOne from '@public/assets/images/svg/machines/machine-1.svg'
 import MachineThree from '@public/assets/images/svg/machines/machine-3.svg'
@@ -18,10 +21,47 @@ const machineReverseMap: { [key: number]: number} = {
   9: 0,
 }
 
-export class MachineSvgComponent extends Component<MachineSvgProps, {}> {
+export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {
+
+  constructor () {
+    super()
+
+    this.setState({
+      config: getState().config
+    })
+
+    this.onConfigChange = this.onConfigChange.bind(this)
+  }
+
+  onConfigChange () {
+    this.setState({
+      config: getState().config
+    })
+  }
 
   isReversed () {
     return machineReverseMap[this.props.machineId] === 1
+  }
+
+  componentDidMount () {
+    const container = window.radialIndicator('#indicator-container', {
+      initValue: 100,
+      barColor: '#33FF66',
+      radius: 30,
+      fontColor: '#111',
+      format: () => {
+        // Must call to string or the font size gets messed up?
+        return machineIdToLetter(this.state.config.machineId)
+      }
+    })
+  }
+
+  componentWillMount () {
+    emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
+  }
+
+  componentWillUnmount () {
+    emitter.removeListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
   }
 
   render () {
