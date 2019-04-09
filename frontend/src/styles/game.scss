@@ -48,11 +48,16 @@
       position: absolute;
     }
   }
+
   .machine-info-container {
     width: 100%;
     display: flex;
     bottom: 0;
     position: absolute;
+  }
+
+  .machine-info-container.reverse {
+    flex-direction: row-reverse;
   }
 
   /* CSS specific to iOS devices becuase Safari is garbage */

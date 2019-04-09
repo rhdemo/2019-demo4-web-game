@@ -8,6 +8,7 @@ import GameHeaderSVG from '@public/assets/images/svg/game-header.svg'
 import MachineYellowSVG from '@public/assets/images/svg/machines/yellow.svg'
 import { MoveSelector } from '@app/app-game/components/move-selector'
 import { machineIdToLetter } from '@app/utils';
+import { MachineSvgComponent } from '../machine';
 
 const log = getLogger('view:game.active')
 
@@ -57,20 +58,6 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     stopSendLoop()
   }
 
-  componentDidMount () {
-    log('did mount')
-    const container = window.radialIndicator('#indicator-container', {
-      initValue: 100,
-      barColor: '#33FF66',
-      radius: 30,
-      fontColor: '#111',
-      format: () => {
-        // Must call to string or the font size gets messed up?
-        return machineIdToLetter(parseInt(this.state.config.machineId))
-      }
-    })
-  }
-
   render () {
     log('render')
     return (
@@ -87,13 +74,7 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
 
         <MoveSelector/>
 
-        <div class='machine-info-container'>
-          <div style='flex: 0.65;' class='machine-container'>
-            <object data={MachineYellowSVG} type='image/svg+xml'></object>
-          </div>
-
-          <div style='flex: 0.35;' id='indicator-container' />
-        </div>
+        <MachineSvgComponent machineId={this.state.config.machineId}/>
       </div>
     )
   }
