@@ -152,7 +152,11 @@ export function addCurrentGestureToHistory (uuid: string) {
   state.gestureHistory.push(entry)
 }
 
-export function setCurrentSelectedGesture (gesture: string) {
+export function getCurrentSelectedGesture () {
+  return state.currentSelectedGesture
+}
+
+export function setCurrentSelectedGesture (gesture?: string) {
   log(`setting current selected gesture to ${gesture}`)
 
   state.currentSelectedGesture = gesture
