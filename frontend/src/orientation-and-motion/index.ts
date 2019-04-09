@@ -7,7 +7,7 @@ import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import { addCurrentGestureToHistory } from '@app/store'
+import { addCurrentGestureToHistory, getCurrentSelectedGesture } from '@app/store'
 import getLogger from '@app/log'
 
 const log = getLogger('motion')
@@ -37,6 +37,13 @@ let emitterInterval: NodeJS.Timer | null = null
 type EmitterCallback = (data: MotionVectors) => void
 
 let _callback: EmitterCallback = (data) => {
+  if (data.motion.length < 10) {
+    // User is not attempting gestures, don't bother sending anything
+    // We check motion, since orientation tends to give false positives
+    log('not sending "motion", too little data captured. user is probably playing')
+    log('data captured but not sent was:', data)
+    return
+  }
   const uuid = nanoid()
   // TODO - Need to get this from our central state store
   // TODO - The server will eventually send us the motion
@@ -45,7 +52,7 @@ let _callback: EmitterCallback = (data) => {
   addCurrentGestureToHistory(uuid)
 
   log('sending motion data to the server')
-  sendMotionAndOrientationData({ ...data, uuid })
+  sendMotionAndOrientationData({ ...data, uuid, gesture: getCurrentSelectedGesture() || 'unspecified' })
 }
 
 export class DeviceMotionUnavailableError extends Error {

@@ -1,11 +1,11 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
 import { GameConfiguration } from '@app/interfaces'
-import { ApplicationEventTypes, emitter, getState, setCurrentSelectedGesture } from '@app/store'
+import { ApplicationEventTypes, emitter, getState, setCurrentSelectedGesture, getCurrentSelectedGesture } from '@app/store'
 
 import ArrowLeft from '@public/assets/images/svg/arrow-left.svg'
 import ArrowRight from '@public/assets/images/svg/arrow-right.svg'
-import MoveSquqare from '@public/assets/images/svg/moves/square.svg'
+import { stopSendLoop } from '@app/orientation-and-motion';
 
 const log = getLogger('component:move-selector')
 
@@ -26,12 +26,34 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
 
   onConfigChange () {
     this.setState({ config: getState().config })
+
+    const selectedGesture = getCurrentSelectedGesture()
+    const availableGestures = this.getEnabledMotionKeys()
+
+    if (availableGestures.length === 0) {
+      setCurrentSelectedGesture(undefined)
+      stopSendLoop()
+    } else if (!selectedGesture || availableGestures.indexOf(selectedGesture) === -1) {
+      setCurrentSelectedGesture(availableGestures[0])
+    } else {
+      setCurrentSelectedGesture(availableGestures[0])
+    }
   }
 
   componentWillMount () {
     log('will mount')
 
     emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
+  }
+
+  componentDidMount () {
+    const initialGesture = this.getEnabledMotionKeys()[0]
+
+    if (initialGesture) {
+      setCurrentSelectedGesture(initialGesture)
+    } else {
+      setCurrentSelectedGesture(undefined)
+    }
   }
 
   componentWillUnmount () {
@@ -127,5 +149,4 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
 
 interface MoveSelectorState {
   config: GameConfiguration
-  selectedGesture: string
 }
