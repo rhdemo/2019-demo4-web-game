@@ -20,3 +20,11 @@ export function machineIdToLetter (id: number) {
     return id.toString()
   }
 }
+
+export function getStoredPlayerId () {
+  return localStorage.getItem('playerId') || undefined
+}
+
+export function removeStoredPlayerId () {
+  localStorage.removeItem('playerId')
+}
