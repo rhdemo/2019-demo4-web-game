@@ -15,7 +15,7 @@ global.game = {
     shakeDemo: {
         enabled: true,
         multiplier: 2,
-        maxPerSecond: 5000
+        maxPerSecond: 1000
     },
     motions: {
         shake: false,
