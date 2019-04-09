@@ -12,7 +12,7 @@ export function isAppleTwelveDevice () {
 }
 
 export function machineIdToLetter (id: number) {
-  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+  const letters = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k' ]
 
   if (letters[id]) {
     return letters[id].toUpperCase()

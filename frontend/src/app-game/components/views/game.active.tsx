@@ -7,8 +7,8 @@ import getLogger from '@app/log'
 import GameHeaderSVG from '@public/assets/images/svg/game-header.svg'
 import MachineYellowSVG from '@public/assets/images/svg/machines/yellow.svg'
 import { MoveSelector } from '@app/app-game/components/move-selector'
-import { machineIdToLetter } from '@app/utils';
-import { MachineSvgComponent } from '../machine';
+import { machineIdToLetter } from '@app/utils'
+import { MachineSvgComponent } from '../machine'
 
 const log = getLogger('view:game.active')
 
