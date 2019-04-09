@@ -5,7 +5,7 @@ import {
   emitter,
   getState,
   setGameConfiguration,
-  setPlayerScore,
+  setPlayerScore
 } from '@app/store'
 import { WSS } from '@app/interfaces'
 import getLogger from '@app/log'
@@ -15,7 +15,7 @@ const log = getLogger('wsocket')
 
 let sock: Sockette | null = null
 
-export function disconnect() {
+export function disconnect () {
   if (sock) {
     log('closing socket')
     sock.close()
@@ -25,11 +25,11 @@ export function disconnect() {
   }
 }
 
-export function isConnected() {
+export function isConnected () {
   return sock ? true : false
 }
 
-export function connect() {
+export function connect () {
   if (sock) {
     log('already connected. returning existing socket')
     return Promise.resolve(sock)
@@ -40,7 +40,7 @@ export function connect() {
 
     const _sock = (sock = new Sockette(url, {
       timeout: 2500,
-      onopen: e => {
+      onopen: (e) => {
         log('connected!', e)
 
         // Immediately send connection payload with playerId
@@ -48,10 +48,10 @@ export function connect() {
 
         resolve(_sock)
       },
-      onmessage: e => onMessage(e),
-      onreconnect: e => log('reconnecting...', e),
-      onmaximum: e => log('reached maximum number of reconnect attempts'),
-      onclose: e => {
+      onmessage: (e) => onMessage(e),
+      onreconnect: (e) => log('reconnecting...', e),
+      onmaximum: (e) => log('reached maximum number of reconnect attempts'),
+      onclose: (e) => {
         log('close event detected', e)
         if (!e.wasClean) {
           log(
@@ -59,19 +59,19 @@ export function connect() {
           )
         }
       },
-      onerror: e => {
+      onerror: (e) => {
         log('WebSocket Error:', e)
         reject(
           new Error(
             'WebSocket connection error. Please verify connection settings and refresh the page.'
           )
         )
-      },
+      }
     }))
   })
 }
 
-export function getSocketUrl() {
+export function getSocketUrl () {
   const isDevelopment = process.env.NODE_ENV === 'development'
   const devGameSocket = process.env.GAME_SOCKET
 
@@ -83,39 +83,39 @@ export function getSocketUrl() {
   return `${proto}://${window.location.hostname}/game-socket`
 }
 
-export function sendTrainingData(data: WSS.OutgoingFrames.MotionDataPayload) {
+export function sendTrainingData (data: WSS.OutgoingFrames.MotionDataPayload) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.Training,
-    ...data,
+    ...data
   })
 }
 
-export function sendMotionAndOrientationData(
+export function sendMotionAndOrientationData (
   data: WSS.OutgoingFrames.MotionDataPayload
 ) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.Motion,
-    ...data,
+    ...data
   })
 }
 
-export function sendGameStateChange(
+export function sendGameStateChange (
   data: WSS.OutgoingFrames.GameStateChangePayload
 ) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.GameStateChange,
-    ...data,
+    ...data
   })
 }
 
-export function sendConnection(playerId?: string) {
+export function sendConnection (playerId?: string) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.Connection,
-    playerId,
+    playerId
   })
 }
 
-function sendJsonPayload(payload: WSS.OutgoingFrames.OutgoingFrame) {
+function sendJsonPayload (payload: WSS.OutgoingFrames.OutgoingFrame) {
   if (sock) {
     const data = { ...payload, playerId: getState().config.playerId }
     log('sending payload', data)
@@ -125,7 +125,7 @@ function sendJsonPayload(payload: WSS.OutgoingFrames.OutgoingFrame) {
   }
 }
 
-function onMessage(e: MessageEvent) {
+function onMessage (e: MessageEvent) {
   log('received message', e)
 
   let parsed: WSS.IncomingFrames.FrameBase | undefined

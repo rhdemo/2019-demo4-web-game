@@ -1,7 +1,7 @@
 import { Component, h } from 'preact'
-import { machineIdToLetter } from '@app/utils';
-import { getState, ApplicationEventTypes, emitter } from '@app/store';
-import { GameConfiguration } from '@app/interfaces';
+import { machineIdToLetter } from '@app/utils'
+import { ApplicationEventTypes, emitter, getState } from '@app/store'
+import { GameConfiguration } from '@app/interfaces'
 
 import MachineOne from '@public/assets/images/svg/machines/machine-1.svg'
 import MachineThree from '@public/assets/images/svg/machines/machine-3.svg'
@@ -18,7 +18,7 @@ const machineReverseMap: { [key: number]: number} = {
   6: 0,
   7: 0,
   8: 0,
-  9: 0,
+  9: 0
 }
 
 export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {

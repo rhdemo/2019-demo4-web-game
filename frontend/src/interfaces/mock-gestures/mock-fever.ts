@@ -1,4 +1,4 @@
-import {MotionVectors} from '@app/interfaces';
+import { MotionVectors } from '@app/interfaces'
 
 export const MockGestureFever: MotionVectors = {
   motion: [

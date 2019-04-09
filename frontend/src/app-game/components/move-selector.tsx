@@ -10,7 +10,7 @@ import MoveSquqare from '@public/assets/images/svg/moves/square.svg'
 const log = getLogger('component:move-selector')
 
 export class MoveSelector extends Component<{}, MoveSelectorState> {
-  private determinationTimer: NodeJS.Timer|undefined
+  private determinationTimer: NodeJS.Timer | undefined
 
   constructor () {
     log('creating')

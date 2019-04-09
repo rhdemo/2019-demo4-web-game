@@ -1,9 +1,9 @@
 import { WSS } from '@app/interfaces'
 import { getState, setToastMessage } from '@app/store'
 
-export function processFeedback(feedback: WSS.IncomingFrames.MotionFeedback) {
+export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
   const { gestureHistory } = getState()
-  const localRecord = gestureHistory.find(ge => ge.uuid === feedback.uuid)
+  const localRecord = gestureHistory.find((ge) => ge.uuid === feedback.uuid)
 
   if (localRecord) {
     if (localRecord.gesture === feedback.gesture) {

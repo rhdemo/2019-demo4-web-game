@@ -2,7 +2,7 @@ import getLogger from '@app/log'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import { EventEmitter } from 'events'
 import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
-import { isDeviceSupported, getStoredPlayerId } from './utils'
+import { getStoredPlayerId, isDeviceSupported } from './utils'
 import IncomingFrames = WSS.IncomingFrames
 
 const log = getLogger('store')
