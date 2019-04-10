@@ -32,7 +32,7 @@ export interface ApplicationEventHandlers {
   [ApplicationEventTypes.MotionUpdate]: (data: { orientation: number[][], motion: number[][] }) => void
   [ApplicationEventTypes.ServerHeartBeat]: () => void
   [ApplicationEventTypes.AppStateUpdate]: () => void
-  [ApplicationEventTypes.SelectedGestureChange]: () => void
+  [ApplicationEventTypes.SelectedGestureChange]: (gesture?: string) => void
 }
 
 /**
@@ -152,13 +152,17 @@ export function addCurrentGestureToHistory (uuid: string) {
   state.gestureHistory.push(entry)
 }
 
-export function setCurrentSelectedGesture (gesture: string) {
+export function getCurrentSelectedGesture () {
+  return state.currentSelectedGesture
+}
+
+export function setCurrentSelectedGesture (gesture?: string) {
   log(`setting current selected gesture to ${gesture}`)
 
   state.currentSelectedGesture = gesture
 
   // TODO: need reset the motion tracking if user changes gesture midway through capture
-  emitter.emit(ApplicationEventTypes.SelectedGestureChange)
+  emitter.emit(ApplicationEventTypes.SelectedGestureChange, gesture)
 }
 
 /**

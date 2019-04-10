@@ -1,11 +1,11 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
 import { GameConfiguration } from '@app/interfaces'
-import { ApplicationEventTypes, emitter, getState, setCurrentSelectedGesture } from '@app/store'
+import { ApplicationEventTypes, emitter, getState, setCurrentSelectedGesture, getCurrentSelectedGesture } from '@app/store'
 
 import ArrowLeft from '@public/assets/images/svg/arrow-left.svg'
 import ArrowRight from '@public/assets/images/svg/arrow-right.svg'
-import MoveSquqare from '@public/assets/images/svg/moves/square.svg'
+import { stopSendLoop } from '@app/orientation-and-motion';
 
 const log = getLogger('component:move-selector')
 
@@ -26,6 +26,20 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
 
   onConfigChange () {
     this.setState({ config: getState().config })
+
+    const selectedGesture = getCurrentSelectedGesture()
+    const availableGestures = this.getEnabledMotionKeys()
+
+    if (availableGestures.length === 0) {
+      // Set to undefined since no options are available for the user
+      setCurrentSelectedGesture(undefined)
+    } else if (!selectedGesture || availableGestures.indexOf(selectedGesture) === -1) {
+      // Reset to first gesture
+      setCurrentSelectedGesture(availableGestures[0])
+    } else {
+      // Keep scroll position aligned with selected gesture
+      this.scrollTo(availableGestures.indexOf(selectedGesture))
+    }
   }
 
   componentWillMount () {
@@ -34,19 +48,27 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
     emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
   }
 
+  componentDidMount () {
+    setCurrentSelectedGesture(this.getEnabledMotionKeys()[0])
+  }
+
   componentWillUnmount () {
     log('will unmount')
 
     emitter.removeListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
   }
 
-  onArrowClick (index: number) {
+  scrollTo (index: number) {
     const el = document.getElementById('move-scroller')
 
     if (el) {
-      const width = el.scrollWidth
-      const moveAmt = width / Object.keys(this.state.config.gameMotions).length
-      el.scrollLeft = el.scrollLeft + (moveAmt * index)
+      if (index <= 0) {
+        el.scrollLeft = 0
+      } else {
+        const width = el.scrollWidth
+        const moveElWidth = width / Object.keys(this.getEnabledMotionKeys()).length
+        el.scrollLeft = moveElWidth * index
+      }
     } else {
       throw new Error('#move-selector el not found!')
     }
@@ -96,8 +118,18 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
       .filter((m) => this.state.config.gameMotions[m])
   }
 
+  getCurrentMoveIdx () {
+    const selection = getCurrentSelectedGesture() || this.getEnabledMotionKeys()[0]
+
+    return this.getEnabledMotionKeys().indexOf(selection)
+  }
+
   render () {
     log('rendering')
+
+    if (this.getEnabledMotionKeys().length === 0) {
+      return <div class="move-selector"><p>Please wait...</p></div>
+    }
 
     const availableMovesEls = Object.keys(this.state.config.gameMotions)
       .filter((m) => this.state.config.gameMotions[m])
@@ -109,7 +141,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
 
     return (
       <div class='move-selector'>
-        <div onClick={() => this.onArrowClick(-1)} style='flex: 0.15;'>
+        <div onClick={() => this.scrollTo(this.getCurrentMoveIdx() - 1)} style='flex: 0.15;'>
           <img src={ArrowLeft}></img>
         </div>
 
@@ -117,7 +149,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
           {availableMovesEls}
         </div>
 
-        <div onClick={() => this.onArrowClick(1)} style='flex: 0.15;'>
+        <div onClick={() => this.scrollTo(this.getCurrentMoveIdx() + 1)} style='flex: 0.15;'>
           <img src={ArrowRight}></img>
         </div>
       </div>
@@ -127,5 +159,4 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
 
 interface MoveSelectorState {
   config: GameConfiguration
-  selectedGesture: string
 }
