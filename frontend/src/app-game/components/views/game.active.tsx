@@ -31,10 +31,16 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     })
   }
 
-  onSelectedGestureChange () {
+  onSelectedGestureChange (gesture?: string) {
     log('perform motion loop reset due to gesture change')
+
     stopSendLoop()
-    startSendLoop()
+
+    if (gesture) {
+      // We only restart the send loop if gesture is defined, otherwise
+      // we wait until user selects a valid gesture
+      startSendLoop()
+    }
   }
 
   componentWillMount () {
