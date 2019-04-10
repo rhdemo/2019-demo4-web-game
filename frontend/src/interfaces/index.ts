@@ -55,7 +55,7 @@ export namespace WSS {
       motion: number[][]
       orientation: number[][]
       uuid: string
-      gesture?: string // TODO: enums for our planned gesture types
+      gesture: string
     }
 
     export interface GameStateChangePayload {
@@ -82,6 +82,7 @@ export namespace WSS {
     }
 
     export interface MotionFeedback extends FrameBase {
+      correct: boolean
       gesture: string
       probability: number
       type: Type.MotionFeedback
