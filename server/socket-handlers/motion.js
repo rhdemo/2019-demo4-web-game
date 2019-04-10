@@ -42,7 +42,15 @@ async function motionHandler(ws, messageObj) {
       },
       method: "POST",
       url: PREDICTION_URL,
-      data: {instances: [messageObj]}
+      data: {
+        instances: [
+          {
+            gesture: AI_MOTIONS[messageObj.gesture],
+            motion : messageObj.motion,
+            orientation: messageObj.orientation
+          }
+        ]
+      }
     });
 
     let prediction = gestureResponse.data.payload[0];
