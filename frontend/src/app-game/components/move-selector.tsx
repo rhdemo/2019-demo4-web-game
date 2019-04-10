@@ -31,12 +31,14 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
     const availableGestures = this.getEnabledMotionKeys()
 
     if (availableGestures.length === 0) {
+      // Set to undefined since no options are available for the user
       setCurrentSelectedGesture(undefined)
-      stopSendLoop()
     } else if (!selectedGesture || availableGestures.indexOf(selectedGesture) === -1) {
+      // Reset to first gesture
       setCurrentSelectedGesture(availableGestures[0])
     } else {
-      setCurrentSelectedGesture(availableGestures[0])
+      // Keep scroll position aligned with selected gesture
+      this.scrollTo(availableGestures.indexOf(selectedGesture))
     }
   }
 
@@ -47,13 +49,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
   }
 
   componentDidMount () {
-    const initialGesture = this.getEnabledMotionKeys()[0]
-
-    if (initialGesture) {
-      setCurrentSelectedGesture(initialGesture)
-    } else {
-      setCurrentSelectedGesture(undefined)
-    }
+    setCurrentSelectedGesture(this.getEnabledMotionKeys()[0])
   }
 
   componentWillUnmount () {
@@ -62,7 +58,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
     emitter.removeListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
   }
 
-  onArrowClick (index: number) {
+  scrollTo (index: number) {
     const el = document.getElementById('move-scroller')
 
     if (el) {
@@ -131,7 +127,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
 
     return (
       <div class='move-selector'>
-        <div onClick={() => this.onArrowClick(-1)} style='flex: 0.15;'>
+        <div onClick={() => this.scrollTo(-1)} style='flex: 0.15;'>
           <img src={ArrowLeft}></img>
         </div>
 
@@ -139,7 +135,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
           {availableMovesEls}
         </div>
 
-        <div onClick={() => this.onArrowClick(1)} style='flex: 0.15;'>
+        <div onClick={() => this.scrollTo(1)} style='flex: 0.15;'>
           <img src={ArrowRight}></img>
         </div>
       </div>
