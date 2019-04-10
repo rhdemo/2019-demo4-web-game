@@ -49,25 +49,28 @@ async function motionHandler(ws, messageObj) {
     let probability = prediction.candidate_score;
     let correct = AI_MOTIONS[gesture] === prediction.candidate;
 
-    sendFeedback(ws, messageObj, gesture, correct, probability, prediction);
-
     if (correct) {
       sendVibration(messageObj, gesture, probability);
     }
+
+    return sendFeedback(ws, messageObj, gesture, correct, probability, prediction);
   } catch (error) {
-    //If we fail to reach the AI service, just give them credit.
-    sendFeedback(ws, messageObj, gesture, true, 1, {error: error.message});
-    sendVibration(messageObj, gesture, 1);
     log.error("error occured in http call to prediction API:");
     log.error(error.message);
+
+    //If we fail to reach the AI service, just give them credit.
+    sendVibration(messageObj, gesture, 1);
+    return sendFeedback(ws, messageObj, gesture, true, 1, {error: error.message});
   }
 }
 
-function sendFeedback(ws, socketMessage, gesture, correct, probability, prediction) {
+async function sendFeedback(ws, socketMessage, gesture, correct, probability, prediction) {
   let score = 0;
   if (correct) {
     score = _.get(global, `game.scoring.${gesture}`);
   }
+
+  let totalScore = await updatePlayerScore(socketMessage, score);
 
   let feedbackMsg = {
     type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
@@ -76,9 +79,30 @@ function sendFeedback(ws, socketMessage, gesture, correct, probability, predicti
     correct,
     probability,
     score,
+    totalScore,
     prediction
   };
   ws.send(JSON.stringify(feedbackMsg));
+}
+
+async function updatePlayerScore(socketMessage, score) {
+  let {playerId} = socketMessage;
+
+  if (!playerId) {
+    return score;
+  }
+
+  let playerStr = await global.dataClient.get(playerId);
+
+  if (!playerStr) {
+    return score;
+  }
+
+  let player = JSON.parse(playerStr);
+  player.score += score;
+  global.dataClient.put(playerId, JSON.stringify(player));
+
+  return player.score;
 }
 
 function sendVibration(socketMessage, vibrationClass, confidencePercentage) {
