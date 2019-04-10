@@ -25,6 +25,8 @@ async function motionHandler(ws, messageObj) {
     return;
   }
 
+  let {uuid, gesture, playerId, motion, orientation} = messageObj;
+
   if (!messageObj.playerId) {
     log.warn(`Ignoring incoming malformed motion data. Missing playerId.`);
     return;
@@ -35,7 +37,6 @@ async function motionHandler(ws, messageObj) {
     return;
   }
 
-  let gesture = messageObj.gesture;
   let prediction;
   let probability;
   let correct;
@@ -58,9 +59,9 @@ async function motionHandler(ws, messageObj) {
         data: {
           instances: [
             {
-              gesture: AI_MOTIONS[messageObj.gesture],
-              motion: messageObj.motion,
-              orientation: messageObj.orientation
+              gesture: AI_MOTIONS[gesture],
+              motion,
+              orientation
             }
           ]
         }
@@ -82,22 +83,24 @@ async function motionHandler(ws, messageObj) {
   }
 
   if (correct) {
-    sendVibration(messageObj, gesture, probability);
+    sendVibration({uuid, playerId, gesture, probability});
   }
-  return sendFeedback(ws, messageObj, gesture, correct, probability, prediction);
+
+  return sendFeedback(ws, {uuid, playerId, gesture, correct, probability, prediction});
 }
 
-async function sendFeedback(ws, socketMessage, gesture, correct, probability, prediction) {
+async function sendFeedback(ws, msgParamsObj) {
+  let {uuid, playerId, gesture, correct, probability, prediction} = msgParamsObj;
   let score = 0;
   if (correct) {
     score = _.get(global, `game.scoring.${gesture}`);
   }
 
-  let totalScore = await updatePlayerScore(socketMessage, score);
+  let totalScore = await updatePlayerScore(playerId, score);
 
   let feedbackMsg = {
     type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
-    uuid: socketMessage.uuid,
+    uuid,
     gesture,
     correct,
     probability,
@@ -109,8 +112,7 @@ async function sendFeedback(ws, socketMessage, gesture, correct, probability, pr
   ws.send(JSON.stringify(feedbackMsg));
 }
 
-async function updatePlayerScore(socketMessage, score) {
-  let {playerId} = socketMessage;
+async function updatePlayerScore(playerId, score) {
   let totalScore = 0;
 
   try {
@@ -132,9 +134,9 @@ async function updatePlayerScore(socketMessage, score) {
   return totalScore;
 }
 
-function sendVibration(socketMessage, vibrationClass, confidencePercentage) {
-  let kafkaKey = socketMessage.uuid || uuidv4();
-  let playerId = socketMessage.playerId || null;
+function sendVibration(messageFields) {
+  let {uuid, playerId, gesture, probability} = messageFields;
+  let kafkaKey = uuid || uuidv4();
   let machineId = null;
 
   if (playerId) {
@@ -145,8 +147,8 @@ function sendVibration(socketMessage, vibrationClass, confidencePercentage) {
   let jsonMsg = JSON.stringify({
     sensorId: playerId,
     machineId,
-    vibrationClass,
-    confidencePercentage
+    vibrationClass: gesture,
+    confidencePercentage: probability
   });
 
   let kafkaMsg = Buffer.from(jsonMsg);
