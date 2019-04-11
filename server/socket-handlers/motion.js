@@ -25,49 +25,75 @@ async function motionHandler(ws, messageObj) {
     return;
   }
 
-  let gesture = messageObj.gesture || "unspecified";
-
-  if (global.game.bypassAI) {
-    log.info("AI Bypass enabled");
-    sendFeedback(ws, messageObj, gesture, true, 1, {});
-    sendVibration(messageObj, gesture, 1);
+  if (!messageObj.playerId) {
+    log.warn(`Ignoring incoming malformed motion data. Missing playerId.`);
     return;
   }
 
-  try {
-    let gestureResponse = await axios({
-      headers: {
-        "Host": PREDICTION_HOST_HEADER,
-        "content-type": "application/json" ,
-      },
-      method: "POST",
-      url: PREDICTION_URL,
-      data: {instances: [messageObj]}
-    });
-
-    let prediction = gestureResponse.data.payload[0];
-    let probability = prediction.candidate_score;
-    let correct = AI_MOTIONS[gesture] === prediction.candidate;
-
-    sendFeedback(ws, messageObj, gesture, correct, probability, prediction);
-
-    if (correct) {
-      sendVibration(messageObj, gesture, probability);
-    }
-  } catch (error) {
-    //If we fail to reach the AI service, just give them credit.
-    sendFeedback(ws, messageObj, gesture, true, 1, {error: error.message});
-    sendVibration(messageObj, gesture, 1);
-    log.error("error occured in http call to prediction API:");
-    log.error(error.message);
+  if (!messageObj.gesture) {
+    log.warn(`Ignoring incoming malformed motion data. Missing gesture.`);
+    return;
   }
+
+  let gesture = messageObj.gesture;
+  let prediction;
+  let probability;
+  let correct;
+
+  if (global.game.bypassAI) {
+    log.info("AI Bypass enabled");
+
+    prediction = {};
+    probability = 1
+    correct = true;
+  } else {
+    try {
+      let gestureResponse = await axios({
+        headers: {
+          "Host": PREDICTION_HOST_HEADER,
+          "content-type": "application/json",
+        },
+        method: "POST",
+        url: PREDICTION_URL,
+        data: {
+          instances: [
+            {
+              gesture: AI_MOTIONS[messageObj.gesture],
+              motion: messageObj.motion,
+              orientation: messageObj.orientation
+            }
+          ]
+        }
+      });
+
+      prediction = gestureResponse.data.payload[0];
+      probability = prediction.candidate_score;
+      correct = AI_MOTIONS[gesture] === prediction.candidate;
+
+    } catch (error) {
+      log.error("error occurred in http call to prediction API:");
+      log.error(error.message);
+
+      //If we fail to reach the AI service, just give them credit.
+      prediction = {error: error.message};
+      probability = 1
+      correct = true;
+    }
+  }
+
+  if (correct) {
+    sendVibration(messageObj, gesture, probability);
+  }
+  return sendFeedback(ws, messageObj, gesture, correct, probability, prediction);
 }
 
-function sendFeedback(ws, socketMessage, gesture, correct, probability, prediction) {
+async function sendFeedback(ws, socketMessage, gesture, correct, probability, prediction) {
   let score = 0;
   if (correct) {
     score = _.get(global, `game.scoring.${gesture}`);
   }
+
+  let totalScore = await updatePlayerScore(socketMessage, score);
 
   let feedbackMsg = {
     type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
@@ -76,9 +102,34 @@ function sendFeedback(ws, socketMessage, gesture, correct, probability, predicti
     correct,
     probability,
     score,
+    totalScore,
     prediction
   };
+
   ws.send(JSON.stringify(feedbackMsg));
+}
+
+async function updatePlayerScore(socketMessage, score) {
+  let {playerId} = socketMessage;
+  let totalScore = 0;
+
+  try {
+    let playerStr = await global.dataClient.get(playerId);
+
+    if (!playerStr) {
+      return totalScore;
+    }
+
+    let player = JSON.parse(playerStr);
+    player.score += score;
+    totalScore = player.score;
+    await global.dataClient.put(playerId, JSON.stringify(player));
+  } catch (error) {
+    log.error("error occurred updating player data:", error.message);
+    return totalScore;
+  }
+
+  return totalScore;
 }
 
 function sendVibration(socketMessage, vibrationClass, confidencePercentage) {
@@ -102,10 +153,11 @@ function sendVibration(socketMessage, vibrationClass, confidencePercentage) {
 
   log.debug(`kafka produce topic: ${TOPICS.MOTION}; key: ${kafkaKey}; msg: ${jsonMsg}`);
 
-  if (kafkaProducer.isConnected()) {
-    kafkaProducer.produce(TOPICS.MOTION, -1, kafkaMsg, kafkaKey);
-  } else {
-    log.error("kafka producer is not connected. not sending vibration payload");
+  try {
+    let result = kafkaProducer.produce(TOPICS.MOTION, -1, kafkaMsg, kafkaKey);
+    log.debug("kafka producer sent vibration payload", result, kafkaKey, jsonMsg);
+  } catch {
+    log.error("kafka producer failed to send vibration payload");
   }
 }
 
