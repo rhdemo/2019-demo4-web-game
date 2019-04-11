@@ -68,8 +68,9 @@ async function motionHandler(ws, messageObj) {
       });
 
       prediction = gestureResponse.data.payload[0];
-      probability = prediction.candidate_score;
-      correct = AI_MOTIONS[gesture] === prediction.candidate;
+      let results = getResults(gesture, prediction);
+      correct = results.correct;
+      probability = results.probability;
 
     } catch (error) {
       log.error("error occurred in http call to prediction API:");
@@ -87,6 +88,21 @@ async function motionHandler(ws, messageObj) {
   }
 
   return sendFeedback(ws, {uuid, playerId, gesture, correct, probability, prediction});
+}
+
+function getResults(gesture, prediction) {
+  const aiMotion = AI_MOTIONS[gesture];
+  const minProbability = _.get(global, `game.ai.${gesture}`);
+  const probability = prediction.predictions[aiMotion];
+  let correct;
+
+  if (!minProbability) {
+    correct = aiMotion === prediction.candidate;
+    return {correct, probability}
+  }
+
+  correct = probability > minProbability;
+  return {correct, probability};
 }
 
 async function sendFeedback(ws, msgParamsObj) {
