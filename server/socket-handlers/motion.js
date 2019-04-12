@@ -152,7 +152,7 @@ async function updatePlayerScore(playerId, score) {
 
 function sendVibration(messageFields) {
   let {uuid, playerId, gesture, probability} = messageFields;
-  let kafkaKey = uuid || uuidv4();
+  let kafkaKey = playerId || uuid || uuidv4();
   let machineId = null;
 
   if (playerId) {
