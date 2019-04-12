@@ -3,9 +3,13 @@ import { machineIdToLetter } from '@app/utils'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import { GameConfiguration } from '@app/interfaces'
 
+import getLogger from '@app/log'
 import MachineOne from '@public/assets/images/svg/machines/machine-1.svg'
 import MachineThree from '@public/assets/images/svg/machines/machine-3.svg'
 import MachineNine from '@public/assets/images/svg/machines/machine-9.svg'
+
+
+const log = getLogger('component:machine')
 
 // Maps machine orientation, 0 is left hand, 1 is right
 // 1 means we apply row-reverse flex setting in CSS
@@ -22,8 +26,10 @@ const machineReverseMap: { [key: number]: number} = {
 }
 
 export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {
+  private indicator: RadialIndicatorInstance<RadialIndicatorOptions>|undefined
 
   constructor () {
+    log('create')
     super()
 
     this.setState({
@@ -34,9 +40,18 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
   }
 
   onConfigChange () {
+    log('config change detected')
     this.setState({
       config: getState().config
     })
+
+    if (this.indicator) {
+      const health = this.state.config.machineHealth
+
+      log('update indicator with health value:', health)
+
+      this.indicator.value(health)
+    }
   }
 
   isReversed () {
@@ -44,7 +59,7 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
   }
 
   componentDidMount () {
-    const container = window.radialIndicator('#indicator-container', {
+    this.indicator = window.radialIndicator('#indicator-container', {
       initValue: 100,
       barColor: '#33FF66',
       radius: 30,
