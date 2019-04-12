@@ -5,7 +5,8 @@ import {
   emitter,
   getState,
   setGameConfiguration,
-  setPlayerScore
+  setPlayerScore,
+  setMachineHealth
 } from '@app/store'
 import { WSS } from '@app/interfaces'
 import getLogger from '@app/log'
@@ -149,7 +150,10 @@ function onMessage (e: MessageEvent) {
     } else if (WSS.IncomingFrames.Type.Heartbeat === parsed.type) {
       log(`${new Date()}  - received heartbeat from server`)
       emitter.emit(ApplicationEventTypes.ServerHeartBeat)
-    } else if (WSS.IncomingFrames.Type.MotionFeedback) {
+    } else if (WSS.IncomingFrames.Type.Machine === parsed.type) {
+      log('processing machine payload', parsed)
+      setMachineHealth((parsed as WSS.IncomingFrames.Machine).percent)
+    } else if (WSS.IncomingFrames.Type.MotionFeedback === parsed.type) {
       processFeedback(parsed as WSS.IncomingFrames.MotionFeedback)
       addLastMotionFeedback(parsed as WSS.IncomingFrames.MotionFeedback)
     } else {
