@@ -1,5 +1,5 @@
 import { WSS } from '@app/interfaces'
-import { setToastMessage, setPlayerScore } from '@app/store'
+import { setPlayerScore, setToastMessage } from '@app/store'
 
 export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
   console.log('processing feedback', feedback)

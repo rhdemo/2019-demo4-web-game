@@ -5,8 +5,8 @@ import {
   emitter,
   getState,
   setGameConfiguration,
-  setPlayerScore,
-  setMachineHealth
+  setMachineHealth,
+  setPlayerScore
 } from '@app/store'
 import { WSS } from '@app/interfaces'
 import getLogger from '@app/log'
