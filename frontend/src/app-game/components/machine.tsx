@@ -8,7 +8,6 @@ import MachineOne from '@public/assets/images/svg/machines/machine-1.svg'
 import MachineThree from '@public/assets/images/svg/machines/machine-3.svg'
 import MachineNine from '@public/assets/images/svg/machines/machine-9.svg'
 
-
 const log = getLogger('component:machine')
 
 // Maps machine orientation, 0 is left hand, 1 is right
@@ -26,7 +25,7 @@ const machineReverseMap: { [key: number]: number} = {
 }
 
 export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {
-  private indicator: RadialIndicatorInstance<RadialIndicatorOptions>|undefined
+  private indicator: RadialIndicatorInstance<RadialIndicatorOptions> | undefined
 
   constructor () {
     log('create')
