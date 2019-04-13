@@ -1,5 +1,5 @@
 import { Component, h } from 'preact'
-import { MotionVectors } from '@app/interfaces/index'
+import { MotionVectors, WSS } from '@app/interfaces/index'
 import {
   initialiseMotionAndOrientationTracking,
   startSendLoop,
@@ -15,6 +15,7 @@ import triangles from '@public/assets/images/triangles.gif'
 import disco from '@public/assets/images/disco.gif'
 import rolls from '@public/assets/images/rolls.gif'
 import floss from '@public/assets/images/floss.gif'
+import { emitter, ApplicationEventTypes } from '@app/store';
 
 const log = getLogger('training-page')
 const AC = (window as any).webkitAudioContext || AudioContext
@@ -36,6 +37,7 @@ interface TrainingViewState {
   mode: TrainingViewMode
   capturedMotionVectors: MotionVectors
   selectedGesture?: Gesture
+  feedback?: WSS.IncomingFrames.MotionFeedback
 }
 
 const GESTURES: Gesture[] = shuffle([
@@ -118,6 +120,19 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     initialiseMotionAndOrientationTracking((capturedMotionVectors) => {
       log('training component received motion data')
       this.setState({ capturedMotionVectors })
+
+      ws.sendMotionAndOrientationData({
+        ...this.state.capturedMotionVectors,
+        gesture: this.state.selectedGesture ? this.state.selectedGesture.id : 'unknown',
+        uuid: nanoid()
+      })
+
+      emitter.once(ApplicationEventTypes.FeedbackUpdate, (feedback) => {
+        alert('feedback')
+        this.setState({
+          feedback
+        })
+      })
     }).catch((e) => {
       alert(
         'It looks as though this device lacks support for motion and orientation APIs/Sensors'
@@ -212,11 +227,24 @@ export class TrainingView extends Component<{}, TrainingViewState> {
     }
   }
 
+  gestureFilter (g: Gesture) {
+    const url = new URL(window.location.href)
+    const gestures = url.searchParams.get('gestures')
+
+    if (gestures) {
+      const gArr = gestures.split(',')
+
+      return gArr.indexOf(g.id) !== -1
+    } else {
+      return true
+    }
+  }
+
   render () {
     let content
 
     if (this.state.mode === TrainingViewMode.CaptureList) {
-      const els = GESTURES.map((g) => {
+      const els = GESTURES.filter((g) => this.gestureFilter(g)).map((g) => {
         return (
           <div>
             <h3 id={g.id}>{g.name}</h3>
@@ -264,9 +292,19 @@ export class TrainingView extends Component<{}, TrainingViewState> {
         </div>
       )
     } else {
+      const feedback = this.state.feedback
+      let feedbackEl: JSX.Element
+
+      if (feedback) {
+        feedbackEl = <pre>{JSON.stringify(feedback, null, 2)}</pre>
+      } else {
+        feedbackEl = <pre>Loading feedback...</pre>
+      }
+
       content = (
         <div style='margin-top: 30vh'>
           <h2>Finished</h2>
+          {feedbackEl}
           <p>
             Were you happy with the motion you made? If so, click yes to help
             train our models!
