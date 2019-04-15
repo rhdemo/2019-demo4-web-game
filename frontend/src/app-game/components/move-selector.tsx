@@ -1,11 +1,11 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
 import { GameConfiguration } from '@app/interfaces'
-import { ApplicationEventTypes, emitter, getState, setCurrentSelectedGesture, getCurrentSelectedGesture } from '@app/store'
+import { ApplicationEventTypes, emitter, getCurrentSelectedGesture, getState, setCurrentSelectedGesture } from '@app/store'
 
 import ArrowLeft from '@public/assets/images/svg/arrow-left.svg'
 import ArrowRight from '@public/assets/images/svg/arrow-right.svg'
-import { stopSendLoop } from '@app/orientation-and-motion';
+import { stopSendLoop } from '@app/orientation-and-motion'
 
 const log = getLogger('component:move-selector')
 
@@ -128,7 +128,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
     log('rendering')
 
     if (this.getEnabledMotionKeys().length === 0) {
-      return <div class="move-selector"><p>Please wait...</p></div>
+      return <div class='move-selector'><p>Please wait...</p></div>
     }
 
     const availableMovesEls = Object.keys(this.state.config.gameMotions)

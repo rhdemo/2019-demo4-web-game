@@ -12,7 +12,6 @@ const log = getLogger('store')
  * and therefore easily infer argument types in component listeners
  */
 export enum ApplicationEventTypes {
-  ScoreUpdate = 'ws:frame:score',
   ConfigUpdate = 'ws:frame:config',
   FeedbackUpdate = 'ws:frame:motion-feedback',
   ServerHeartBeat = 'ws:frame:heartbeat',
@@ -26,7 +25,6 @@ export enum ApplicationEventTypes {
  * handler signatures so we have a typed event system - yay!?
  */
 export interface ApplicationEventHandlers {
-  [ApplicationEventTypes.ScoreUpdate]: (data: WSS.IncomingFrames.Score) => void
   [ApplicationEventTypes.ConfigUpdate]: (data: WSS.IncomingFrames.Config | { gameState: ConfigGameMode }) => void
   [ApplicationEventTypes.FeedbackUpdate]: (data: WSS.IncomingFrames.MotionFeedback) => void
   [ApplicationEventTypes.MotionUpdate]: (data: { orientation: number[][], motion: number[][] }) => void
@@ -54,6 +52,9 @@ const state: ApplicationState = {
   // Always initialise in loading state
   config: {
     gameState: ConfigGameMode.Loading,
+
+    // Default to full health
+    machineHealth: 100,
 
     // Initially zero
     score: 0,
@@ -182,4 +183,14 @@ export function setToastMessage (toastMessage: string) {
   state.toastMessage = toastMessage
 
   emitter.emit(ApplicationEventTypes.AppStateUpdate)
+}
+
+/**
+ * Set machine health configuration
+ */
+export function setMachineHealth (health: number) {
+  log(`setting machine health to ${health}`)
+  state.config.machineHealth = health
+
+  emitter.emit(ApplicationEventTypes.ConfigUpdate, state.config)
 }

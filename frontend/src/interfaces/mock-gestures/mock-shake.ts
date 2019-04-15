@@ -1,7 +1,7 @@
 import { MotionVectors } from '@app/interfaces'
 
 export const MockGestureShake: MotionVectors = {
-  "motion": [
+  'motion': [
     [
       -6.52736,
       0.48581,
@@ -2946,7 +2946,7 @@ export const MockGestureShake: MotionVectors = {
       1552932669502
     ]
   ],
-  "orientation": [
+  'orientation': [
     [
       293.69085,
       -12.59016,
