@@ -2,9 +2,12 @@ const WebSocket = require("ws");
 const env = require("env-var");
 const log = require("./utils/log")("web-game-server");
 const {OUTGOING_MESSAGE_TYPES} = require("./message-types");
+const machines = require("./models/machines");
 const initData = require("./datagrid/init-data");
 const {kafkaProducer} = require("./kafka-producer")
+const broadcast = require("./utils/broadcast");
 const processSocketMessage = require("./socket-handlers/process-socket-message");
+const pollMachines = require("./datagrid/poll-machines");
 
 const PORT = env.get("PORT", "8080").asIntPositive();
 const IP = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0";
@@ -27,6 +30,8 @@ global.game = {
     }
 }
 
+global.machines = machines;
+
 global.players = {};
 
 global.socketServer = new WebSocket.Server({
@@ -36,21 +41,10 @@ global.socketServer = new WebSocket.Server({
 
 global.dataClient = null;
 
-setInterval(function () {
-    if (kafkaProducer.isConnected()) {
-        log.info("kafka producer connected");
-    } else {
-        log.error("kafka producer disconnected");
-    }
+log.info(`Started Game server on ${IP}:${PORT}`);
 
-    if (global.socketServer.clients) {
-    log.info(`sending heartbeats to connected clients`);
-    global.socketServer.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({type: OUTGOING_MESSAGE_TYPES.HEARTBEAT}));
-      }
-    });
-  }
+setInterval(function () {
+  broadcast(OUTGOING_MESSAGE_TYPES.HEARTBEAT);
 }, 5000);
 
 
@@ -61,6 +55,8 @@ initData()
         processSocketMessage(ws, message);
       });
     });
+    pollMachines(1000);
+    setTimeout(() => pollMachines(10000, true), 500);
   });
 
 

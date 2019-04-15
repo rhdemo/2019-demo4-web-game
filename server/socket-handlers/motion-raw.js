@@ -31,7 +31,7 @@ function motionRawHandler(ws, messageObj) {
     log.info(`sending ${numMessages} to kafka topic: ${TOPICS.MOTION_RAW}`)
     for (let i=0; i<numMessages; i++) {
         if (kafkaProducer.isConnected()) {
-            kafkaProducer.produce(TOPICS.MOTION_RAW, -1, kafkaMsg)
+            kafkaProducer.produce(TOPICS.MOTION_RAW, -1, kafkaMsg, uuidv4())
         } else {
             log.error("kafka producer is not connected. not sending motion-raw payload")
         }
