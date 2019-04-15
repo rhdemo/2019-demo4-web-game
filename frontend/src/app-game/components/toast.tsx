@@ -1,6 +1,6 @@
 import { Component, h } from 'preact'
-import getLogger from '@app/log'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
+import getLogger from '@app/log'
 
 import '@styles/toast.scss'
 
@@ -52,6 +52,7 @@ export class Toast extends Component<{}, ToastState> {
   render () {
     log('render')
     const visibilityClass = this.state.timer ? 'visible' : 'hidden'
+    log('setting toast visibility to: ', visibilityClass)
     return (
       <div class={`toast ${visibilityClass} stage-shadow`}>
         <p>{this.state.message}</p>
