@@ -43,6 +43,7 @@ export namespace WSS {
       Motion = 'motion',
       MotionRaw = 'motion-raw',
       Training = 'training',
+      TrainingMotion = 'training-motion',
       GameStateChange = 'game',
       Connection = 'connection'
     }
