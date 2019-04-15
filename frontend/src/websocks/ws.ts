@@ -84,7 +84,16 @@ export function getSocketUrl () {
   return `${proto}://${window.location.hostname}/game-socket`
 }
 
-export function sendTrainingData (data: WSS.OutgoingFrames.MotionDataPayload) {
+export function getTrainingFeedback (
+  data: WSS.OutgoingFrames.MotionDataPayload
+) {
+  sendJsonPayload({
+    type: WSS.OutgoingFrames.Type.TrainingMotion,
+    ...data
+  })
+}
+
+export function saveTrainingData (data: WSS.OutgoingFrames.MotionDataPayload) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.Training,
     ...data

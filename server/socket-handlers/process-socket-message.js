@@ -26,6 +26,10 @@ function processSocketMessage(ws, messageStr) {
             loadTestHandler(ws, messageObj);
             break;
 
+        case INCOMING_MESSAGE_TYPES.TRAINING_MOTION:
+            trainingMotionHandler(ws, messageObj);
+            break;
+
         case INCOMING_MESSAGE_TYPES.TRAINING:
             trainingHandler(ws, messageObj);
             break;
@@ -55,6 +59,7 @@ const pingHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.PING, function (ws
 const motionHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.MOTION, require("./motion"));
 const motionRawHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.MOTION_RAW, require("./motion-raw"));
 const loadTestHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.LOAD_TEST, require("./load-test"));
+const trainingMotionHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.TRAINING_MOTION, require("./training-motion"));
 const trainingHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.TRAINING, require("./training"));
 
 module.exports = processSocketMessage;

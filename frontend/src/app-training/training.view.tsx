@@ -15,7 +15,7 @@ import triangles from '@public/assets/images/triangles.gif'
 import disco from '@public/assets/images/disco.gif'
 import rolls from '@public/assets/images/rolls.gif'
 import floss from '@public/assets/images/floss.gif'
-import { emitter, ApplicationEventTypes } from '@app/store';
+import { ApplicationEventTypes, emitter } from '@app/store'
 
 const log = getLogger('training-page')
 const AC = (window as any).webkitAudioContext || AudioContext
@@ -121,7 +121,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       log('training component received motion data')
       this.setState({ capturedMotionVectors })
 
-      ws.sendMotionAndOrientationData({
+      ws.getTrainingFeedback({
         ...this.state.capturedMotionVectors,
         gesture: this.state.selectedGesture ? this.state.selectedGesture.id : 'unknown',
         uuid: nanoid()
@@ -216,7 +216,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
         )
       }
 
-      ws.sendTrainingData({
+      ws.saveTrainingData({
         ...this.state.capturedMotionVectors,
         gesture: this.state.selectedGesture.id,
         uuid: nanoid()
@@ -295,7 +295,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       let feedbackEl: JSX.Element
 
       if (feedback) {
-        feedbackEl = <pre style='text-align: left'>{JSON.stringify(feedback, null, 2)}</pre>
+        feedbackEl = <pre style='text-align: left; font-size: 14px'>{JSON.stringify(feedback, null, 2)}</pre>
       } else {
         feedbackEl = <pre>Loading feedback...</pre>
       }

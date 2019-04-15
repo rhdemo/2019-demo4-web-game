@@ -4,6 +4,7 @@ module.exports.INCOMING_MESSAGE_TYPES = {
   MOTION: "motion",
   MOTION_RAW: "motion-raw",
   TRAINING: "training",
+  TRAINING_MOTION: "training-motion",
   LOAD_TEST: "load-test"
 };
 

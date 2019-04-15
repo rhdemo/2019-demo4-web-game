@@ -59,7 +59,7 @@ async function motionHandler(ws, messageObj) {
         data: {
           instances: [
             {
-              gesture: AI_MOTIONS[gesture],
+              gesture: AI_MOTIONS[gesture] || gesture,
               motion,
               orientation
             }
