@@ -128,7 +128,6 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       })
 
       emitter.once(ApplicationEventTypes.FeedbackUpdate, (feedback) => {
-        alert('feedback')
         this.setState({
           feedback
         })
@@ -296,7 +295,7 @@ export class TrainingView extends Component<{}, TrainingViewState> {
       let feedbackEl: JSX.Element
 
       if (feedback) {
-        feedbackEl = <pre>{JSON.stringify(feedback, null, 2)}</pre>
+        feedbackEl = <pre style='text-align: left'>{JSON.stringify(feedback, null, 2)}</pre>
       } else {
         feedbackEl = <pre>Loading feedback...</pre>
       }
