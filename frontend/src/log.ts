@@ -1,7 +1,9 @@
 // Need to set this before loading "debug"
 if (process.env.NODE_ENV === 'production') {
+  console.log('production - debug logging disabled')
   localStorage.debug = ''
 } else {
+  console.log('development - debug logging enabled')
   localStorage.debug = '*'
 }
 

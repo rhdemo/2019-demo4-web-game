@@ -55,7 +55,7 @@ export class Toast extends Component<{}, ToastState> {
     log('setting toast visibility to: ', visibilityClass)
     return (
       <div class={`toast ${visibilityClass} stage-shadow`}>
-        <p>{this.state.message}</p>
+        <h3>{this.state.message}</h3>
       </div>
     )
   }

@@ -1,8 +1,34 @@
 @import 'variables.scss';
 
 .game-el-container {
-  .stopped {
-    color: $redhat-red;
+  height: 100vh;
+
+  &.machine-baby-blue {
+    background: $machine-baby-blue;
+  }
+  &.machine-black {
+    background: $machine-black;
+  }
+  &.machine-green {
+    background: $machine-green;
+  }
+  &.machine-pink {
+    background: $machine-pink;
+  }
+  &.machine-purple {
+    background: $machine-purple;
+  }
+  &.machine-red-alt {
+    background: $machine-red-alt;
+  }
+  &.machine-red {
+    background: $machine-red;
+  }
+  &.machine-turquoise {
+    background: $machine-turquoise;
+  }
+  &.machine-yellow {
+    background: $machine-yellow;
   }
 }
 
@@ -10,20 +36,28 @@
   p, small {
     line-height: 1.2em;
   }
+
+  &.lobby {
+    padding-top: 30vh;
+  }
+  &.paused, &.stopped {
+    padding-top: 40vh;
+  }
+
 }
 
-.game.lobby {
-  margin-top: 30vh;
-}
 
-.game.paused {
-  margin-top: 40vh;
-}
 
 .move-selector {
   align-items: center;
-  margin-top: 20vh;
+  margin-top: 25vh;
   display: flex;
+
+  #move-scroller h2 {
+    text-transform: uppercase;
+    color: white;
+    text-shadow: rgb(51, 51, 51) 1px 1px 3px;
+  }
 }
 
 .game.borked {
@@ -73,8 +107,13 @@
     }
   }
 
+  #indicator-container {
+    display: flex;
+    align-items: center;
+  }
+
   #indicator-container canvas {
-    margin-top: 5vh;
+    margin: auto;
     border-radius: 50%;
     background: white;
     box-shadow: 0 1px 5px rgba(51, 51, 51, 0.25);

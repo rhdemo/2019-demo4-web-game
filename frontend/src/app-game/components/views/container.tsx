@@ -20,6 +20,7 @@ import { initialiseMotionAndOrientationTracking } from '@app/orientation-and-mot
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import getLogger from '@app/log'
 import { DeviceUnsupportedView } from './device-unsupported'
+import { getMachineColourFromId } from '@app/utils'
 
 const log = getLogger('view:container')
 const toast = <Toast></Toast>
@@ -91,8 +92,10 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = <GameBorkedView />
     }
 
+    const classname = `game-el-container machine-${getMachineColourFromId(this.state.config.machineId)}`
+
     return (
-      <div class='game-el-container'>
+      <div class={classname}>
         {v}
         {toast}
       </div>
