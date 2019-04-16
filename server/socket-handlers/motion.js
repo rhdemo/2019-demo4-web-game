@@ -116,13 +116,18 @@ function getResults(gesture, prediction) {
 }
 
 async function sendFeedback(ws, msgParamsObj) {
-  let {uuid, playerId, gesture, correct, probability, prediction} = msgParamsObj;
+  let {uuid, gesture, correct, probability, prediction} = msgParamsObj;
   let score = 0;
   if (correct) {
     score = _.get(global, `game.scoring.${gesture}`);
   }
 
-  let totalScore = await updatePlayerScore(playerId, score);
+  let player = await updatePlayer({...msgParamsObj, score});
+  if (!player) {
+    return
+  }
+
+  const totalScore = player ? player.score : undefined;
 
   let feedbackMsg = {
     type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
@@ -138,29 +143,38 @@ async function sendFeedback(ws, msgParamsObj) {
   ws.send(JSON.stringify(feedbackMsg));
 }
 
-async function updatePlayerScore(playerId, score) {
-  let totalScore = 0;
+async function updatePlayer(msgParamsObj) {
+  let {playerId} = msgParamsObj;
+  let player = null;
 
   try {
     let playerStr = await global.playerClient.get(playerId);
 
-    let player;
     if (playerStr) {
       player = JSON.parse(playerStr);
     } else {
       log.error(`Player ${playerId} data not found`);
-      return score;
+      return null;
     }
 
-    player.score += score;
-    totalScore = player.score;
-    updateLeaderboard(player);
+    updatePlayerFields(player, msgParamsObj)
     await global.playerClient.put(playerId, JSON.stringify(player));
+    await updateLeaderboard(player);
   } catch (error) {
     log.error("error occurred updating player data:", error.message);
   }
 
-  return totalScore;
+  return player;
+}
+
+function updatePlayerFields(player, msgParamsObj) {
+  let {gesture, correct, score} = msgParamsObj;
+  player.score += score;
+  let motionRecord = correct? player.successfulMotions : player.failedMotions
+  let numMotions = motionRecord[gesture] || 0;
+  motionRecord[gesture] = numMotions + 1;
+
+  return player;
 }
 
 async function updateLeaderboard(player) {
@@ -176,10 +190,9 @@ async function updateLeaderboard(player) {
     await readLeaderboard();
     let newLeaders = global.leaderboard.players.filter(leader => leader.id !== player.id);
     newLeaders.push(player)
-
     newLeaders = newLeaders.sort(sortPlayers);
     global.leaderboard.players  = newLeaders.slice(0,10);
-    writeLeaderboard();
+    return global.dataClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
   }
 }
 
@@ -190,14 +203,6 @@ function sortPlayers(p1, p2)  {
   }
 
   return p1.username.localeCompare(p2.username);
-}
-
-async function writeLeaderboard() {
-  try {
-    return await global.dataClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
-  } catch (error) {
-    log.error("Failed to update leaderboard. Error:", error.message);
-  }
 }
 
 function sendVibration(messageFields) {

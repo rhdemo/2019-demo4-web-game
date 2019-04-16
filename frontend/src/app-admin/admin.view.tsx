@@ -6,7 +6,7 @@ import { MockGestures } from '@app/interfaces/admin'
 import getLogger from '@app/log'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import { ConfigGameMode, GameConfiguration, WSS } from '@app/interfaces'
-import {removeStoredGameId, removeStoredPlayerId} from '@app/utils'
+import { removeStoredGameId, removeStoredPlayerId } from '@app/utils'
 
 const log = getLogger('admin-page')
 
