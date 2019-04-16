@@ -12,6 +12,11 @@ import getLogger from '@app/log'
 
 const log = getLogger('motion')
 
+// This represents the index of a timestamp in the motion and orientation data
+const TS_INDEX = 6
+// We must have motion events that span more than this time (in milliseconds)
+const MIN_MOTION_CAP_LEN = 2000
+
 const DEFAULT_MOTION_OPTS = {
   autoStart: false,
   threshold: 2.5,
@@ -37,13 +42,7 @@ let emitterInterval: NodeJS.Timer | null = null
 type EmitterCallback = (data: MotionVectors) => void
 
 let _callback: EmitterCallback = (data) => {
-  if (data.motion.length < 10) {
-    // User is not attempting gestures, don't bother sending anything
-    // We check motion, since orientation tends to give false positives
-    log('not sending "motion", too little data captured. user is probably playing')
-    log('data captured but not sent was:', data)
-    return
-  }
+
   const uuid = nanoid()
   // TODO - Need to get this from our central state store
   // TODO - The server will eventually send us the motion
@@ -183,4 +182,21 @@ function emitMotionAndOrientation () {
   clearBuffers()
 
   _callback(data)
+}
+
+function hasSufficientMotionData (data: MotionVectors) {
+  if (data.motion.length < 15) {
+    // User is not attempting gestures, don't bother sending anything
+    // We check motion, since orientation tends to give false positives
+    log('not sending "motion", too few events captured')
+    log('data captured but not sent was:', data)
+    return false
+  }
+
+  if (data.motion[data.motion.length - 1][TS_INDEX] - data.motion[0][TS_INDEX] < MIN_MOTION_CAP_LEN) {
+    // Captured motions do not span a sufficient time period
+    return false
+  }
+
+  return true
 }
