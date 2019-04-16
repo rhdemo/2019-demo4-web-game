@@ -4,6 +4,7 @@ const log = require("./utils/log")("web-game-server");
 const {OUTGOING_MESSAGE_TYPES} = require("./message-types");
 const machines = require("./models/machines");
 const initData = require("./datagrid/init-data");
+const initPlayers = require("./datagrid/init-players");
 const {kafkaProducer} = require("./kafka-producer")
 const broadcast = require("./utils/broadcast");
 const processSocketMessage = require("./socket-handlers/process-socket-message");
@@ -32,6 +33,10 @@ global.game = {
 
 global.machines = machines;
 
+global.leaderboard = {
+  players: []
+};
+
 global.players = {};
 
 global.socketServer = new WebSocket.Server({
@@ -40,6 +45,7 @@ global.socketServer = new WebSocket.Server({
 });
 
 global.dataClient = null;
+global.playerClient = null;
 
 log.info(`Started Game server on ${IP}:${PORT}`);
 
@@ -49,6 +55,7 @@ setInterval(function () {
 
 
 initData()
+  .then(() => initPlayers())
   .then(client => {
     global.socketServer.on("connection", function connection(ws) {
       ws.on("message", function incoming(message) {

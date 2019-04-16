@@ -2,7 +2,7 @@ import getLogger from '@app/log'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import { EventEmitter } from 'events'
 import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
-import { getStoredPlayerId, isDeviceSupported } from './utils'
+import { getStoredGameId, getStoredPlayerId, isDeviceSupported } from './utils'
 import IncomingFrames = WSS.IncomingFrames
 
 const log = getLogger('store')
@@ -61,6 +61,7 @@ const state: ApplicationState = {
 
     // Just empty string by default
     playerId: getStoredPlayerId() || '',
+    gameId: getStoredGameId() || '',
     username: '',
     machineId: 0,
 
@@ -107,6 +108,10 @@ export function setGameConfiguration (config: GameConfiguration) {
   log('setting game configuration to:', config)
   if (config.playerId) {
     localStorage.setItem('playerId', config.playerId)
+  }
+
+  if (config.gameId) {
+    localStorage.setItem('gameId', config.gameId)
   }
 
   state.config = config

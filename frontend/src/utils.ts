@@ -29,6 +29,14 @@ export function removeStoredPlayerId () {
   localStorage.removeItem('playerId')
 }
 
+export function getStoredGameId () {
+  return localStorage.getItem('gameId') || undefined
+}
+
+export function removeStoredGameId () {
+  localStorage.removeItem('gameId')
+}
+
 export function getMachineColourFromId (id: number) {
   const idColorMap: Record<number, string> = {
     0: 'yellow',

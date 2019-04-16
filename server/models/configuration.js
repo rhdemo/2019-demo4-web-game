@@ -6,6 +6,7 @@ class Configuration {
     this.gameState = global.game.state;
     this.gameMotions = global.game.motions;
     this.playerId = player.id;
+    this.gameId = player.gameId;
     this.username = player.username;
     this.score = player.score;
     this.machineId = player.machineId;

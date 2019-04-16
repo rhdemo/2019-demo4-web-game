@@ -48,7 +48,7 @@ export function connect () {
         log('connected!', e)
 
         // Immediately send connection payload with playerId
-        sendConnection(getState().config.playerId)
+        sendConnection(getState().config.playerId, getState().config.gameId)
 
         resolve(_sock)
       },
@@ -121,10 +121,11 @@ export function sendGameStateChange (
   })
 }
 
-export function sendConnection (playerId?: string) {
+export function sendConnection (playerId?: string, gameId?: string) {
   sendJsonPayload({
     type: WSS.OutgoingFrames.Type.Connection,
-    playerId
+    playerId,
+    gameId
   })
 }
 

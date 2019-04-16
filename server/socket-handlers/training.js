@@ -13,8 +13,7 @@ async function trainingHandler(ws, messageObj) {
             data: messageObj
         })
     } catch (error) {
-        log.error("error occured in http call to gesture API:")
-        log.error(error)
+        log.error("error occurred in http call to gesture API:", error.message)
     }
 }
 

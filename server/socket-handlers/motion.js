@@ -5,6 +5,8 @@ const _ = require('lodash');
 
 const log = require("../utils/log")("socket-handlers/motion");
 const GAME_STATES = require("../models/game-states");
+const {DATAGRID_KEYS, LEADERBOARD_MAX} = require("../datagrid/constants");
+const readLeaderboard = require("../datagrid/read-leaderboard");
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
 const {kafkaProducer, TOPICS} = require("../kafka-producer");
 const PREDICTION_HOST_HEADER = env.get("PREDICTION_HOST_HEADER", "tf-serving-knative-demo.tf-demo.example.com").asString();
@@ -49,7 +51,8 @@ async function motionHandler(ws, messageObj) {
     correct = true;
   } else {
     try {
-      let gestureResponse = await axios({
+      const startTime = new Date();
+      const gestureResponse = await axios({
         headers: {
           "Host": PREDICTION_HOST_HEADER,
           "content-type": "application/json",
@@ -66,6 +69,13 @@ async function motionHandler(ws, messageObj) {
           ]
         }
       });
+
+      const endTime = new Date();
+      const timeDiff = (endTime - startTime) / 1000;
+
+      if (timeDiff > 1) {
+        log.warn(`Prediction took ${timeDiff.toFixed(1)} seconds`);
+      }
 
       prediction = gestureResponse.data.payload[0];
       let results = getResults(gesture, prediction);
@@ -132,22 +142,62 @@ async function updatePlayerScore(playerId, score) {
   let totalScore = 0;
 
   try {
-    let playerStr = await global.dataClient.get(playerId);
+    let playerStr = await global.playerClient.get(playerId);
 
-    if (!playerStr) {
-      return totalScore;
+    let player;
+    if (playerStr) {
+      player = JSON.parse(playerStr);
+    } else {
+      log.error(`Player ${playerId} data not found`);
+      return score;
     }
 
-    let player = JSON.parse(playerStr);
     player.score += score;
     totalScore = player.score;
-    await global.dataClient.put(playerId, JSON.stringify(player));
+    updateLeaderboard(player);
+    await global.playerClient.put(playerId, JSON.stringify(player));
   } catch (error) {
     log.error("error occurred updating player data:", error.message);
-    return totalScore;
   }
 
   return totalScore;
+}
+
+async function updateLeaderboard(player) {
+  if (!global.leaderboard || !global.leaderboard.players) {
+    global.leaderboard = {
+      players: []
+    }
+  }
+
+  const length = global.leaderboard.players.length;
+
+  if (length < LEADERBOARD_MAX || player.score >= global.leaderboard.players[length - 1].score) {
+    await readLeaderboard();
+    let newLeaders = global.leaderboard.players.filter(leader => leader.id !== player.id);
+    newLeaders.push(player)
+
+    newLeaders = newLeaders.sort(sortPlayers);
+    global.leaderboard.players  = newLeaders.slice(0,10);
+    writeLeaderboard();
+  }
+}
+
+function sortPlayers(p1, p2)  {
+  let comp = p2.score - p1.score;
+  if (comp !== 0) {
+    return comp;
+  }
+
+  return p1.username.localeCompare(p2.username);
+}
+
+async function writeLeaderboard() {
+  try {
+    return await global.dataClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
+  } catch (error) {
+    log.error("Failed to update leaderboard. Error:", error.message);
+  }
 }
 
 function sendVibration(messageFields) {
