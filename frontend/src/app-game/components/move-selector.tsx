@@ -136,7 +136,7 @@ export class MoveSelector extends Component<{}, MoveSelectorState> {
       .map((m) => {
         // TODO: Reference move svg/images
         // return <object style='min-width: 100%; scroll-snap-align: center;' data={MoveSquqare} type='image/svg+xml'></object>
-        return <h3 style='min-width: 100%; scroll-snap-align: center;'>{m}</h3>
+        return <h2 style='min-width: 100%; scroll-snap-align: center;'>{m}</h2>
       })
 
     return (

@@ -4,10 +4,8 @@ import { GameConfiguration } from '@app/interfaces'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import getLogger from '@app/log'
 
-import GameHeaderSVG from '@public/assets/images/svg/game-header.svg'
-import MachineYellowSVG from '@public/assets/images/svg/machines/yellow.svg'
+import GameHeaderSVG from '@public/assets/images/svg/header.svg'
 import { MoveSelector } from '@app/app-game/components/move-selector'
-import { machineIdToLetter } from '@app/utils'
 import { MachineSvgComponent } from '../machine'
 
 const log = getLogger('view:game.active')
@@ -71,10 +69,10 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
         <div class='header'>
           <img src={GameHeaderSVG}/>
           <div style='color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: left;'>
-            <p>{this.state.config.username}</p>
+            <h3>{this.state.config.username}</h3>
           </div>
           <div style='color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: right;'>
-            <p>{this.state.config.score} POINTS</p>
+            <h3>{this.state.config.score} POINTS</h3>
           </div>
         </div>
 

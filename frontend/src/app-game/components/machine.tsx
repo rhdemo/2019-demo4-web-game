@@ -4,24 +4,45 @@ import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import { GameConfiguration } from '@app/interfaces'
 
 import getLogger from '@app/log'
-import MachineOne from '@public/assets/images/svg/machines/machine-1.svg'
-import MachineThree from '@public/assets/images/svg/machines/machine-3.svg'
-import MachineNine from '@public/assets/images/svg/machines/machine-9.svg'
+
+import BabyBlueMachine from '@public/assets/images/svg/machines/baby-blue-machine.svg'
+import BlackMachine from '@public/assets/images/svg/machines/black-machine.svg'
+import GreenMachine from '@public/assets/images/svg/machines/green-machine.svg'
+import PinkMachine from '@public/assets/images/svg/machines/pink-machine.svg'
+import PurpleMachine from '@public/assets/images/svg/machines/purple-machine.svg'
+import RedMachine from '@public/assets/images/svg/machines/red-machine.svg'
+import TurquoiseMachine from '@public/assets/images/svg/machines/turquoise-machine.svg'
+import YellowMachine from '@public/assets/images/svg/machines/yellow-machine.svg'
+import RedAltMachine from '@public/assets/images/svg/machines/red-alt-machine.svg'
 
 const log = getLogger('component:machine')
 
 // Maps machine orientation, 0 is left hand, 1 is right
 // 1 means we apply row-reverse flex setting in CSS
 const machineReverseMap: { [key: number]: number} = {
-  1: 0,
-  2: 0,
-  3: 1,
+  0: 0,
+  1: 1,
+  2: 1,
+  3: 0,
   4: 1,
-  5: 0,
+  5: 1,
   6: 0,
   7: 0,
   8: 0,
   9: 0
+}
+
+const machineSvgMap: Record<number, any> = {
+  0: YellowMachine,
+  1: GreenMachine,
+  2: PurpleMachine,
+  3: PinkMachine,
+  4: BlackMachine,
+  5: RedAltMachine,
+  6: BabyBlueMachine,
+  7: TurquoiseMachine,
+  8: YellowMachine, // TODO seem to be missing this one it's a robot arm?
+  9: RedMachine
 }
 
 export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {
@@ -79,21 +100,7 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
   }
 
   render () {
-    let svg: any
-
-    switch (this.props.machineId) {
-      case 1:
-        svg = MachineOne
-        break
-      case 3:
-        svg = MachineThree
-        break
-      case 9:
-        svg = MachineNine
-        break
-      default:
-        svg = MachineOne
-    }
+    let svg = machineSvgMap[this.props.machineId]
 
     return (
       <div class={`machine-info-container ${this.isReversed() ? 'reverse' : ''}`}>

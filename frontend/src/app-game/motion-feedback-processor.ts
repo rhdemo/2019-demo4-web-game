@@ -2,7 +2,6 @@ import { WSS } from '@app/interfaces'
 import { setPlayerScore, setToastMessage } from '@app/store'
 
 export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
-  console.log('processing feedback', feedback)
   if (feedback.correct) {
     setToastMessage(`Your ${feedback.gesture} was recognised successfully!`)
   } else {
