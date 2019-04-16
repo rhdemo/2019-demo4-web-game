@@ -20,7 +20,7 @@ import { initialiseMotionAndOrientationTracking } from '@app/orientation-and-mot
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import getLogger from '@app/log'
 import { DeviceUnsupportedView } from './device-unsupported'
-import { getMachineColourFromId } from '@app/utils';
+import { getMachineColourFromId } from '@app/utils'
 
 const log = getLogger('view:container')
 const toast = <Toast></Toast>
