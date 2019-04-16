@@ -100,7 +100,7 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
   }
 
   render () {
-    let svg = machineSvgMap[this.props.machineId]
+    const svg = machineSvgMap[this.props.machineId]
 
     return (
       <div class={`machine-info-container ${this.isReversed() ? 'reverse' : ''}`}>

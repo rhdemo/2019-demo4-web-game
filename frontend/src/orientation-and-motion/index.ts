@@ -42,16 +42,19 @@ let emitterInterval: NodeJS.Timer | null = null
 type EmitterCallback = (data: MotionVectors) => void
 
 let _callback: EmitterCallback = (data) => {
+  if (hasSufficientMotionData(data)) {
+    const uuid = nanoid()
+    // TODO - Need to get this from our central state store
+    // TODO - The server will eventually send us the motion
+    const gesture = 'todo'
 
-  const uuid = nanoid()
-  // TODO - Need to get this from our central state store
-  // TODO - The server will eventually send us the motion
-  const gesture = 'todo'
+    addCurrentGestureToHistory(uuid)
 
-  addCurrentGestureToHistory(uuid)
-
-  log('sending motion data to the server')
-  sendMotionAndOrientationData({ ...data, uuid, gesture: getCurrentSelectedGesture() || 'unspecified' })
+    log('sending motion data to the server')
+    sendMotionAndOrientationData({ ...data, uuid, gesture: getCurrentSelectedGesture() || 'unspecified' })
+  } else {
+    log('data captured but not sent was:', data)
+  }
 }
 
 export class DeviceMotionUnavailableError extends Error {
@@ -189,12 +192,12 @@ function hasSufficientMotionData (data: MotionVectors) {
     // User is not attempting gestures, don't bother sending anything
     // We check motion, since orientation tends to give false positives
     log('not sending "motion", too few events captured')
-    log('data captured but not sent was:', data)
     return false
   }
 
   if (data.motion[data.motion.length - 1][TS_INDEX] - data.motion[0][TS_INDEX] < MIN_MOTION_CAP_LEN) {
     // Captured motions do not span a sufficient time period
+    log('not sending "motion", events do not span enough time')
     return false
   }
 
