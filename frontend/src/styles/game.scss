@@ -1,11 +1,7 @@
 @import 'variables.scss';
 
 .game-el-container {
-  height: 100%;
-
-  .stopped {
-    color: $redhat-red;
-  }
+  height: 100vh;
 
   &.machine-baby-blue {
     background: $machine-baby-blue;
@@ -40,15 +36,17 @@
   p, small {
     line-height: 1.2em;
   }
+
+  &.lobby {
+    padding-top: 30vh;
+  }
+  &.paused, &.stopped {
+    padding-top: 40vh;
+  }
+
 }
 
-.game.lobby {
-  margin-top: 30vh;
-}
 
-.game.paused {
-  margin-top: 40vh;
-}
 
 .move-selector {
   align-items: center;

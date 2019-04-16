@@ -20,6 +20,7 @@ export class GameLobbyView extends Component<{}, GameLobbyViewState> {
     log('render')
     return (
       <div class='game lobby'>
+        <br/>
         <h2>Welcome {this.state.config.username}</h2>
         <br />
         <h1 style='margin: 5vh 0;'>It's time to WRECK IT!</h1>

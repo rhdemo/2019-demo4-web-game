@@ -104,11 +104,11 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
 
     return (
       <div class={`machine-info-container ${this.isReversed() ? 'reverse' : ''}`}>
-        <div style='flex: 0.65;' class='machine-container'>
+        <div style='flex: 0.7;' class='machine-container'>
           <img src={svg} />
         </div>
 
-        <div style='flex: 0.35;' id='indicator-container' />
+        <div style='flex: 0.3;' id='indicator-container' />
       </div>
     )
   }
