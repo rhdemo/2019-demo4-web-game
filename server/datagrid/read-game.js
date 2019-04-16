@@ -1,14 +1,18 @@
 const log = require("../utils/log")("datagrid/read-game");
+const {DATAGRID_KEYS} = require("./constants");
 
 async function readGame() {
-    let gameStr = await global.dataClient.get("game");
-    log.debug("initializing game", gameStr);
-    if (gameStr) {
-        global.game = JSON.parse(gameStr);
+  try {
+    let str = await global.dataClient.get(DATAGRID_KEYS.GAME);
+    if (str) {
+      global.game = JSON.parse(str);
+    } else {
+      log.error("Game configuration missing");
     }
-    return global.game;
+  } catch (error) {
+    log.error("Failed to read game. Error:", error.message);
+  }
 }
-
 
 module.exports = readGame;
 

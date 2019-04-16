@@ -20,9 +20,9 @@ function pollMachines(interval, alwaysPoll) {
     }
 
     let refreshResults = await Promise.all(promises);
-    let updatedMachineIndexes = {}
+    let updatedMachineIndexes = {};
     refreshResults.forEach(index => {
-      if (index >=0) {
+      if (index >= 0) {
         updatedMachineIndexes[index] = true;
       }
     });
@@ -36,14 +36,14 @@ async function refreshMachine(machine, alwaysBroadcast) {
     machine.value = response.data;
   } catch (error) {
     log.error(`error occurred in http call get counter for machine ${machine.id}`);
-    log.error(error)
+    log.error(error);
     return -1;
   }
 
-  let percent =  Math.floor(machine.value / MAX_HEALTH * 100);
+  let percent = Math.floor(machine.value / MAX_HEALTH * 100);
   if (alwaysBroadcast || machine.percent !== percent) {
     machine.percent = percent;
-    return machine.index
+    return machine.index;
   } else {
     return -1;
   }
@@ -61,14 +61,14 @@ function broadcastMachineChanges(updatedMachineIndexes) {
         continue;
       }
 
-      if (updatedMachineIndexes[player.machineId] &&  player.ws.readyState === WebSocket.OPEN) {
+      if (updatedMachineIndexes[player.machineId] && player.ws.readyState === WebSocket.OPEN) {
         let machine = global.machines[player.machineId];
-        let msgObj = {type: OUTGOING_MESSAGE_TYPES.MACHINE, id: player.machineId, percent: machine.percent}
+        let msgObj = {type: OUTGOING_MESSAGE_TYPES.MACHINE, id: player.machineId, percent: machine.percent};
         log.debug("send updated machine info", player.username, player.machineId, msgObj);
         try {
           player.ws.send(JSON.stringify(msgObj));
         } catch (error) {
-          log.error(`Failed to send message to client.  Error: ${error.message}`)
+          log.error(`Failed to send message to client.  Error: ${error.message}`);
         }
       }
     }

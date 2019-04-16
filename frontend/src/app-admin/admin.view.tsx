@@ -6,7 +6,7 @@ import { MockGestures } from '@app/interfaces/admin'
 import getLogger from '@app/log'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import { ConfigGameMode, GameConfiguration, WSS } from '@app/interfaces'
-import { removeStoredPlayerId } from '@app/utils'
+import { removeStoredGameId, removeStoredPlayerId } from '@app/utils'
 
 const log = getLogger('admin-page')
 
@@ -70,6 +70,7 @@ export class AdminView extends Component<{}, AdminViewState> {
 
   resetConnection () {
     removeStoredPlayerId()
+    removeStoredGameId()
     window.location.reload()
   }
 
