@@ -37,7 +37,10 @@ export function connect () {
   }
 
   return new Promise((resolve, reject) => {
+    log('creating new connection')
     const url = getSocketUrl()
+
+    log('connecting to url:', url)
 
     const _sock = (sock = new Sockette(url, {
       timeout: 2500,
@@ -153,6 +156,7 @@ function onMessage (e: MessageEvent) {
     log('parsed ws payload contains - ', parsed)
 
     if (WSS.IncomingFrames.Type.Config === parsed.type) {
+      log('received config from')
       setGameConfiguration(parsed as WSS.IncomingFrames.Config)
     } else if (WSS.IncomingFrames.Type.Score === parsed.type) {
       setPlayerScore((parsed as WSS.IncomingFrames.Score).total)
@@ -163,6 +167,7 @@ function onMessage (e: MessageEvent) {
       log('processing machine payload', parsed)
       setMachineHealth((parsed as WSS.IncomingFrames.Machine).percent)
     } else if (WSS.IncomingFrames.Type.MotionFeedback === parsed.type) {
+      log('received feedback payload')
       processFeedback(parsed as WSS.IncomingFrames.MotionFeedback)
       addLastMotionFeedback(parsed as WSS.IncomingFrames.MotionFeedback)
     } else {
