@@ -1,0 +1,50 @@
+<svg class="header-bg" enable-background="new 0 0 1242 405.9" version="1.1" viewBox="0 0 1242 405.9" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+<style type="text/css">
+	.machine-01{fill:#FFFFFF;}
+	.machine-11{fill:#00BAB2;}
+	.machine-21{fill:none;}
+	.machine-31{opacity:0.7;}
+	.machine-41{fill:url(#b);}
+	.machine-51{opacity:0.4;}
+	.machine-61{opacity:7.000000e-02;}
+	.machine-71{fill:url(#a);}
+	.machine-81{opacity:5.000000e-02;fill:#FFFFFF;}
+	.machine-91{fill:url(#SVGID_3_);}
+	.machine-101{fill:url(#SVGID_4_);}
+</style>
+<path class="machine-01" d="m0.1 0.1"/>
+	<polygon class="machine-11" points="1242 378.1 870.6 336.8 849.7 247 394.1 244.3 374.2 333.6 0 378.6 0 0 1242 0"/>
+<rect class="machine-21" x="2.3" y="1.1" width="1239.7" height="395.4"/>
+<g class="st31">
+	<linearGradient id="b" x1="621.02" x2="621.02" y1="333.68" y2="-12.51" gradientUnits="userSpaceOnUse">
+		<stop stop-color="#078E84" offset="0"/>
+		<stop stop-color="#078EBE" offset="1"/>
+	</linearGradient>
+	<polygon class="machine-41" points="1242 378.1 868.8 334.1 848.4 248.5 393.8 245.2 374.2 337.3 0 378.6 0 0 1242 0"/>
+</g>
+<g class="machine-51">
+	<polygon class="machine-01" points="831.5 265.8 409.4 265.5 391.6 244.7 848.6 246.7"/>
+</g>
+<g class="machine-61">
+	<polygon points="850.6 350.4 831.5 265.8 848.5 246.8 868.5 333.9"/>
+</g>
+<path class="machine-01" d="m55.9 6.3"/>
+<g class="st31">
+	<linearGradient id="a" x1=".017141" x2="1242" y1="189.3" y2="189.3" gradientUnits="userSpaceOnUse">
+		<stop stop-color="#078E84" offset="0"/>
+		<stop stop-color="#078EBE" offset="1"/>
+	</linearGradient>
+	<path class="machine-71" d="m1242 0h-1242v378.6l356.6-45c7-0.8 12.8-5.9 14.5-12.7 2.9-11.5-6.6-22.3-18.4-20.9l-297.7 34.6c-10.1 1.2-18.9-6.7-18.9-16.8v-251.5c0-17.1 13.9-31 31-31h1116c12 0 21.7 9.7 21.7 21.7v260.8c0 10.1-8.8 18-18.9 16.8l-297.8-34.6c-11.8-1.4-21.3 9.4-18.4 20.9 1.7 6.8 7.5 11.9 14.5 12.7l357.8 44.4v-378z"/>
+</g>
+<polygon class="machine-81" points="0.1 63.7 325.2 335.3 228.5 346.8 0 155.6"/>
+<polygon class="machine-81" points="0.1 242.9 138.5 357.6 185.6 351.8 0 196.9"/>
+<g class="machine-51">
+	<polygon class="machine-01" points="850.6 350.3 1242 399.4 1242 378.1 868.5 333.9"/>
+</g>
+<g class="machine-61">
+	<polygon points="409.4 265.5 409.4 265.6 386.9 356.3 371.7 334.7 391.5 244.7"/>
+</g>
+<g class="machine-51">
+	<polygon class="machine-01" points="386.9 356.5 0 405.9 0 378.7 371.7 334.9"/>
+</g>
+</svg>

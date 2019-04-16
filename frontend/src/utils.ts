@@ -28,3 +28,20 @@ export function getStoredPlayerId () {
 export function removeStoredPlayerId () {
   localStorage.removeItem('playerId')
 }
+
+export function getMachineColourFromId (id: number) {
+  const idColorMap: Record<number, string> = {
+    0: 'yellow',
+    1: 'green',
+    2: 'purple',
+    3: 'pink',
+    4: 'black',
+    5: 'red-alt',
+    6: 'baby-blue',
+    7: 'turquoise',
+    8: 'yellow', // TODO seem to be missing this one it's a robot arm?
+    9: 'red'
+  }
+
+  return idColorMap[id]
+}
