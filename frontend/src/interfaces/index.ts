@@ -14,6 +14,7 @@ export interface GestureHistoryEntry {
 }
 
 export interface GameConfiguration {
+  gameId: string
   gameState: ConfigGameMode
   playerId: string
   machineId: number

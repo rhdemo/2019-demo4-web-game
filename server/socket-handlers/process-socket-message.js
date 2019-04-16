@@ -54,7 +54,7 @@ function wrapMessageHandler (type, fn) {
     }
 }
 
-const connectionHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.CONNECTION, require("./connection"))
+const connectionHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.CONNECTION, require("./connect-player"))
 const pingHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.PING, function (ws, messageObj) {})
 const motionHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.MOTION, require("./motion"));
 const motionRawHandler = wrapMessageHandler(INCOMING_MESSAGE_TYPES.MOTION_RAW, require("./motion-raw"));
