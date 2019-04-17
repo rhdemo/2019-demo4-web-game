@@ -37,6 +37,24 @@
     line-height: 1.2em;
   }
 
+  .header {
+    div {
+      padding: 0.5em 1em; flex: 1;
+    }
+
+    div:first-of-type {
+      text-align: left;
+    }
+
+    div:last-of-type {
+      text-align: right;
+    }
+
+    h3 {
+      color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold;
+    }
+  }
+
   &.lobby {
     padding-top: 30vh;
   }
@@ -114,8 +132,12 @@
     box-shadow: 0 1px 5px rgba(51, 51, 51, 0.25);
   }
 
-  .machine-container svg {
-    margin-top: 10%;
+  .machine-container {
+    img {
+      position: relative;
+      bottom: -3px;
+    }
+
   }
 
 }

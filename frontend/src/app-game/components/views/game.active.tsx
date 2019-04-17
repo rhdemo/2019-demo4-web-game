@@ -68,10 +68,10 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
       <div class='game active'>
         <div class='header'>
           <img src={GameHeaderSVG}/>
-          <div style='color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: left;'>
+          <div>
             <h3>{this.state.config.username}</h3>
           </div>
-          <div style='color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold; padding: 1em 1.5em; flex: 1; text-align: right;'>
+          <div>
             <h3>{this.state.config.score} POINTS</h3>
           </div>
         </div>
