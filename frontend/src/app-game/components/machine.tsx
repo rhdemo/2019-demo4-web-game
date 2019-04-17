@@ -82,6 +82,7 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
     this.indicator = window.radialIndicator('#indicator-container', {
       initValue: 100,
       barColor: '#33FF66',
+      fontFamily: 'Overpass',
       radius: 30,
       fontColor: '#111',
       format: () => {
