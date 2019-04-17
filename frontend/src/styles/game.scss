@@ -110,6 +110,10 @@
 
   .machine-info-container.reverse {
     flex-direction: row-reverse;
+
+    .machine-container {
+      text-align: right;
+    }
   }
 
   /* CSS specific to iOS devices becuase Safari is garbage */
@@ -133,9 +137,12 @@
   }
 
   .machine-container {
+    text-align: left;
+
     img {
       position: relative;
       bottom: -3px;
+      max-width: 55vw;
     }
 
   }
