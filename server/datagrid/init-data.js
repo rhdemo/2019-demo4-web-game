@@ -10,6 +10,8 @@ const readLeaderboard = require("./read-leaderboard");
 const DATAGRID_HOST = env.get("DATAGRID_HOST").asString();
 const DATAGRID_PORT = env.get("DATAGRID_HOTROD_PORT").asIntPositive();
 
+let {dataClient} = require("./clients");
+
 async function initClient() {
   let client = await infinispan.client({port: DATAGRID_PORT, host: DATAGRID_HOST});
   log.info(`Connected to Infinispan game data`);
@@ -38,7 +40,7 @@ async function handleDataChange(client, changeType, key) {
 
 async function initData() {
   try {
-    global.dataClient = await initClient();
+    dataClient = await initClient();
     readGame();
     readLeaderboard();
   } catch (error) {

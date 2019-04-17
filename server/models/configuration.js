@@ -1,10 +1,11 @@
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
+let game = require("../data/game");
 
 class Configuration {
   constructor(player) {
     this.type = OUTGOING_MESSAGE_TYPES.CONFIGURATION;
-    this.gameState = global.game.state;
-    this.gameMotions = global.game.motions;
+    this.gameState = game.state;
+    this.gameMotions = game.motions;
     this.playerId = player.id;
     this.gameId = player.gameId;
     this.username = player.username;

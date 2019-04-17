@@ -2,22 +2,23 @@ const log = require("../utils/log")("socket-handlers/connection");
 const Player = require("../models/player");
 const Configuration = require("../models/configuration");
 const generateUsername = require("../utils/username/generate-username");
+const {playerClient} = require("../datagrid/clients");
+
+let game = require("../data/game");
+let players = require("../data/players");
 
 async function connectPlayer(ws, messageObj) {
-  log.debug("connectionHandler", messageObj);
   let player = await initPlayer(ws, messageObj.playerId, messageObj.gameId);
   let configuration = new Configuration(player);
-  log.debug(configuration);
   ws.send(JSON.stringify(configuration));
   return player;
 }
 
 async function initPlayer(ws, playerId, gameId) {
-  log.debug("initPlayer", playerId, gameId);
   let player;
 
   //combination of playerId + gameId should be unique
-  if (playerId && gameId === global.game.id) {
+  if (playerId && gameId === game.id) {
     player = await getExistingPlayer(ws, playerId)
   } else {
     let username = await generateUniqueUsername();
@@ -25,14 +26,14 @@ async function initPlayer(ws, playerId, gameId) {
   }
 
   player.ws = ws;
-  global.players[player.id] = player;
+  players[player.id] = player;
   return player;
 }
 
 async function getExistingPlayer(ws, playerId) {
   let playerStr;
   try {
-    playerStr = await global.playerClient.get(playerId);
+    playerStr = await playerClient.get(playerId);
   } catch (error) {
     log.error(`error occurred retrieving existing player ${playerId}.  Error:`, error.message);
   }
@@ -46,11 +47,10 @@ async function getExistingPlayer(ws, playerId) {
 
 async function createNewPlayer(ws, playerId) {
   let player = new Player(playerId);
-  log.debug("createNewPlayer", playerId, player);
   let playerStr = JSON.stringify(player);
 
   try {
-    await global.playerClient.put(player.id, playerStr);
+    await playerClient.put(player.id, playerStr);
   } catch (error) {
     log.error("error occurred saving new player data: ", error.message);
   }
@@ -63,9 +63,8 @@ async function generateUniqueUsername() {
   let username = null;
   while (i < 100) {
     username = generateUsername();
-    console.log("username", username);
     try {
-      let playerStr = await global.playerClient.get(username);
+      let playerStr = await playerClient.get(username);
       if (!playerStr) {
         return username;
       }

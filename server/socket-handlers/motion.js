@@ -12,6 +12,11 @@ const {kafkaProducer, TOPICS} = require("../kafka-producer");
 const PREDICTION_HOST_HEADER = env.get("PREDICTION_HOST_HEADER", "tf-serving-knative-demo.tf-demo.example.com").asString();
 const PREDICTION_URL = env.get("PREDICTION_URL").asString();
 
+const {dataClient, playerClient} = require("../datagrid/clients");
+const game = require("../data/game");
+const players = require("../data/players");
+const leaderboard = require("../data/leaderboard");
+
 const AI_MOTIONS = {
   shake: "shake",
   circle: "draw-circle",
@@ -23,7 +28,7 @@ const AI_MOTIONS = {
 
 async function motionHandler(ws, messageObj) {
   if (global.game.state !== GAME_STATES.ACTIVE) {
-    log.warn(`Ignoring incoming motion because the game is in state ${global.game.state}`);
+    log.warn(`Ignoring incoming motion because the game is in state ${game.state}`);
     return;
   }
 
@@ -43,7 +48,7 @@ async function motionHandler(ws, messageObj) {
   let probability;
   let correct;
 
-  if (global.game.bypassAI) {
+  if (game.bypassAI) {
     log.info("AI Bypass enabled");
 
     prediction = {};
@@ -148,7 +153,7 @@ async function updatePlayer(msgParamsObj) {
   let player = null;
 
   try {
-    let playerStr = await global.playerClient.get(playerId);
+    let playerStr = await playerClient.get(playerId);
 
     if (playerStr) {
       player = JSON.parse(playerStr);
@@ -158,7 +163,7 @@ async function updatePlayer(msgParamsObj) {
     }
 
     updatePlayerFields(player, msgParamsObj)
-    await global.playerClient.put(playerId, JSON.stringify(player));
+    await playerClient.put(playerId, JSON.stringify(player));
     await updateLeaderboard(player);
   } catch (error) {
     log.error("error occurred updating player data:", error.message);
@@ -178,21 +183,21 @@ function updatePlayerFields(player, msgParamsObj) {
 }
 
 async function updateLeaderboard(player) {
-  if (!global.leaderboard || !global.leaderboard.players) {
-    global.leaderboard = {
+  if (!leaderboard || !leaderboard.players) {
+    leaderboard = {
       players: []
     }
   }
 
-  const length = global.leaderboard.players.length;
+  const length = leaderboard.players.length;
 
-  if (length < LEADERBOARD_MAX || player.score >= global.leaderboard.players[length - 1].score) {
+  if (length < LEADERBOARD_MAX || player.score >= leaderboard.players[length - 1].score) {
     await readLeaderboard();
-    let newLeaders = global.leaderboard.players.filter(leader => leader.id !== player.id);
+    let newLeaders = leaderboard.players.filter(leader => leader.id !== player.id);
     newLeaders.push(player)
     newLeaders = newLeaders.sort(sortPlayers);
-    global.leaderboard.players  = newLeaders.slice(0,10);
-    return global.dataClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
+    leaderboard.players  = newLeaders.slice(0,10);
+    return dataClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(leaderboard));
   }
 }
 
@@ -211,7 +216,7 @@ function sendVibration(messageFields) {
   let machineId = null;
 
   if (playerId) {
-    let player = global.players[playerId];
+    let player = players[playerId];
     machineId = player ? player.machineId : null;
   }
 

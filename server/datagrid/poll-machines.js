@@ -3,11 +3,16 @@ const axios = require("axios");
 const log = require("../utils/log")("datagrid/poll-machines");
 const GAME_STATES = require("../models/game-states");
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
+let game = require("../data/game");
+let players = require("../data/players");
+let machines = require("../data/machines");
+
 const MAX_HEALTH = 1000000000000000000;
+
 
 function pollMachines(interval, alwaysPoll) {
   setInterval(async function () {
-    const inactiveGameState = (global.game.state === GAME_STATES.LOBBY || global.game.state === GAME_STATES.LOADING);
+    const inactiveGameState = (game.state === GAME_STATES.LOBBY || game.state === GAME_STATES.LOADING);
 
     if (!alwaysPoll && inactiveGameState) {
       return;
@@ -15,9 +20,9 @@ function pollMachines(interval, alwaysPoll) {
 
     let promises = [];
 
-    for (let key in global.machines) {
-      promises.push(refreshMachine(global.machines[key], alwaysPoll));
-    }
+    machines.forEach((machine) => {
+      promises.push(refreshMachine(machine, alwaysPoll));
+    })
 
     let refreshResults = await Promise.all(promises);
     let updatedMachineIndexes = {};
@@ -50,19 +55,18 @@ async function refreshMachine(machine, alwaysBroadcast) {
 }
 
 function broadcastMachineChanges(updatedMachineIndexes) {
-  const players = global.players;
   for (let idKey in players) {
     if (players.hasOwnProperty(idKey)) {
       let player = players[idKey];
 
       if (player.ws.readyState !== WebSocket.OPEN) {
-        log.info("Connection lost.  Delete player", global.players[idKey].username);
-        delete global.players[idKey];
+        log.info("Connection lost.  Delete player", players[idKey].username);
+        delete players[idKey];
         continue;
       }
 
       if (updatedMachineIndexes[player.machineId] && player.ws.readyState === WebSocket.OPEN) {
-        let machine = global.machines[player.machineId];
+        let machine = machines[player.machineId];
         let msgObj = {type: OUTGOING_MESSAGE_TYPES.MACHINE, id: player.machineId, percent: machine.percent};
         log.debug("send updated machine info", player.username, player.machineId, msgObj);
         try {

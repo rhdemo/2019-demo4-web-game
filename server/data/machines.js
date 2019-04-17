@@ -14,6 +14,7 @@ let machineUrl = datagridKey => {
 };
 
 let machines = [];
+
 for (let i = 0; i < MAX_MACHINES; i++) {
   let index = i;
   let id = `machine-${i}`;

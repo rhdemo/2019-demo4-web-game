@@ -3,11 +3,13 @@ const uuidv4 = require("uuid/v4")
 const log = require("../utils/log")("socket-handlers/motion")
 const {kafkaProducer, TOPICS} = require("../kafka-producer")
 
+let game = require("../data/game");
+
 function motionRawHandler(ws, messageObj) {
     log.debug("motionRawHandler");
     log.debug(messageObj);
 
-    if (!global.game || !global.game.shakeDemo || !global.game.shakeDemo.enabled) {
+    if (!game || !game.shakeDemo || !game.shakeDemo.enabled) {
         log.info("Shake Demo not enabled. Ignoring motion-raw");
         return;
     }
@@ -21,8 +23,8 @@ function motionRawHandler(ws, messageObj) {
     const sumVectors = vectors => sumAbs(vectors.map(v => sumAbs(v)));
 
     const totalAcceleration = sumVectors(messageObj.motion);
-    const multiplier = global.game.shakeDemo.multiplier || 5;
-    const maxMessages = Math.floor((global.game.shakeDemo.maxPerSecond || 1000) / 4)
+    const multiplier = game.shakeDemo.multiplier || 5;
+    const maxMessages = Math.floor((game.shakeDemo.maxPerSecond || 1000) / 4)
     let numMessages = Math.floor(totalAcceleration * multiplier);
     numMessages = Math.min(numMessages, maxMessages);
 
