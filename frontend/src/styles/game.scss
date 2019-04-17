@@ -1,7 +1,7 @@
 @import 'variables.scss';
 
 .game-el-container {
-  height: 100vh;
+  height: 100%;
 
   &.machine-baby-blue {
     background: $machine-baby-blue;
@@ -96,11 +96,6 @@
 
   /* CSS specific to iOS devices becuase Safari is garbage */
   @supports (-webkit-overflow-scrolling: touch) {
-    .machine-info-container {
-      // iOS menu obscures the bottom of the page
-      bottom: 88px;
-    }
-
     .move-selector {
       // iOS won't scroll elements without this
       -webkit-overflow-scrolling: touch;
