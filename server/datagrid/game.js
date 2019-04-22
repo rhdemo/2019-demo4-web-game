@@ -19,13 +19,14 @@ async function gameHandler(client, changeType, key) {
 }
 
 function refreshConnections() {
-  for (let idKey in global.players) {
-    let player = global.players[idKey];
-    if (player.ws.readyState === WebSocket.OPEN) {
-      connectPlayer(player.ws, {})
-    } else {
-      delete global.players[idKey];
-    }
+  global.players = {};
+
+  if (global.socketServer.clients) {
+    global.socketServer.clients.forEach(client => {
+      if (client.readyState === WebSocket.OPEN) {
+        connectPlayer(client, {})
+      }
+    });
   }
 }
 
