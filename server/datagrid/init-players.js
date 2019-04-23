@@ -3,6 +3,7 @@ const env = require("env-var");
 
 const log = require("../utils/log")("datagrid");
 const {DATAGRID_KEYS} = require("./constants");
+const readLeaderboard = require("./read-leaderboard");
 
 const DATAGRID_HOST = env.get("DATAGRID_HOST").asString();
 const DATAGRID_PORT = env.get("DATAGRID_HOTROD_PORT").asIntPositive();
@@ -23,16 +24,22 @@ async function initClient() {
 
 async function handleDataChange(client, changeType, key) {
   log.debug(`Data change: ${changeType} ${key}`);
+  switch (key) {
+    case DATAGRID_KEYS.LEADERBOARD:
+      readLeaderboard();
+      break;
+  }
 }
 
 async function initPlayers() {
   try {
     global.playerClient = await initClient();
+    await readLeaderboard();
   } catch (error) {
     log.error(`Error connecting to Infinispan admin data: ${error.message}`);
     log.error(error);
   }
-  return dataClient;
+  return global.playerClient;
 }
 
 module.exports = initPlayers;
