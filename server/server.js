@@ -8,6 +8,7 @@ const broadcast = require("./utils/broadcast");
 const processSocketMessage = require("./socket-handlers/process-socket-message");
 const initData = require("./datagrid/init-data");
 const initPlayers = require("./datagrid/init-players");
+const initLeaderboard = require("./datagrid/init-leaderboard");
 const pollDatagrid = require("./datagrid/poll-datagrid");
 const pollMachines = require("./datagrid/poll-machines");
 
@@ -57,13 +58,14 @@ setInterval(function () {
 
 initData()
   .then(() => initPlayers())
-  .then(client => {
+  .then(() => initLeaderboard())
+  .then(() => {
     global.socketServer.on("connection", function connection(ws) {
       ws.on("message", function incoming(message) {
         processSocketMessage(ws, message);
       });
     });
-    pollDatagrid(10000);
+    pollDatagrid(5000);
     pollMachines(1000);
   });
 
