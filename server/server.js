@@ -3,11 +3,12 @@ const env = require("env-var");
 const log = require("./utils/log")("web-game-server");
 const {OUTGOING_MESSAGE_TYPES} = require("./message-types");
 const machines = require("./models/machines");
-const initData = require("./datagrid/init-data");
-const initPlayers = require("./datagrid/init-players");
 const {kafkaProducer} = require("./kafka-producer")
 const broadcast = require("./utils/broadcast");
 const processSocketMessage = require("./socket-handlers/process-socket-message");
+const initData = require("./datagrid/init-data");
+const initPlayers = require("./datagrid/init-players");
+const pollDatagrid = require("./datagrid/poll-datagrid");
 const pollMachines = require("./datagrid/poll-machines");
 
 const PORT = env.get("PORT", "8080").asIntPositive();
@@ -62,9 +63,7 @@ initData()
         processSocketMessage(ws, message);
       });
     });
+    pollDatagrid(10000);
     pollMachines(1000);
-    setTimeout(() => pollMachines(10000, true), 500);
   });
-
-
 
