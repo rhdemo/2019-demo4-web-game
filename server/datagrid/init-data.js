@@ -10,7 +10,7 @@ const DATAGRID_HOST = env.get("DATAGRID_HOST").asString();
 const DATAGRID_PORT = env.get("DATAGRID_HOTROD_PORT").asIntPositive();
 
 async function initClient() {
-  let client = await infinispan.client({port: DATAGRID_PORT, host: DATAGRID_HOST});
+  let client = await infinispan.client({port: DATAGRID_PORT, host: DATAGRID_HOST}, {cacheName: "game"});
   log.info(`Connected to Infinispan game data`);
 
   let stats = await client.stats();
