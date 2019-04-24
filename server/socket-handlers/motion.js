@@ -192,7 +192,7 @@ async function updateLeaderboard(player) {
     newLeaders.push(player)
     newLeaders = newLeaders.sort(sortPlayers);
     global.leaderboard.players  = newLeaders.slice(0,10);
-    return global.playerClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
+    return global.leaderboardClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
   }
 }
 
