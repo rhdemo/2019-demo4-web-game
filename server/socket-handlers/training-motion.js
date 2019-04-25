@@ -3,6 +3,7 @@ const axios = require("axios");
 const _ = require('lodash');
 
 const log = require("../utils/log")("socket-handlers/motion");
+const send = require("../utils/send");
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
 const PREDICTION_HOST_HEADER = env.get("PREDICTION_HOST_HEADER", "tf-serving-knative-demo.tf-demo.example.com").asString();
 const PREDICTION_URL = env.get("PREDICTION_URL").asString();
@@ -96,7 +97,7 @@ async function sendFeedback(ws, msgParamsObj) {
     prediction
   };
 
-  ws.send(JSON.stringify(feedbackMsg));
+  send(ws, JSON.stringify(feedbackMsg));
 }
 
 module.exports = trainingMotionHandler;

@@ -4,8 +4,8 @@
   "description": "Summit 2019 - Demo 4 game server",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js | pino-pretty -t",
-    "dev": "LOG_LEVEL=trace NODE_ENV=development nodemon server.js | pino-pretty -t"
+    "start": "node server.js",
+    "dev": "LOG_LEVEL=trace NODE_ENV=development nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,7 @@
     "infinispan": "^0.6.0",
     "lodash": "^4.17.11",
     "node-rdkafka": "^2.5.1",
-    "pino": "~5.11.1",
-    "pino-pretty": "~2.5.0",
+    "log4js": "^4.1.0",
     "uuid": "^3.3.2",
     "ws": "^6.1.4"
   },
