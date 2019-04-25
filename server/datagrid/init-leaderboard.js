@@ -3,6 +3,7 @@ const env = require("env-var");
 
 const log = require("../utils/log")("datagrid");
 const readLeaderboard = require("./read-leaderboard");
+const {DATAGRID_KEYS} = require("./constants");
 
 const DATAGRID_HOST = env.get("DATAGRID_HOST").asString();
 const DATAGRID_HOTROD_PORT = env.get("DATAGRID_HOTROD_PORT").asIntPositive();
