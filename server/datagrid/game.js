@@ -1,7 +1,7 @@
 const WebSocket = require("ws");
 const log = require("../utils/log")("datagrid/game");
+const send = require("../utils/send");
 const Configuration = require("../models/configuration");
-const GAME_STATES = require("../models/game-states");
 const readGame = require("./read-game");
 const connectPlayer = require("../socket-handlers/connect-player");
 
@@ -35,9 +35,7 @@ function sendGameConfigs() {
   for (let idKey in players) {
     let player = players[idKey];
     let configuration = new Configuration(player);
-    if (player.ws.readyState === WebSocket.OPEN) {
-      player.ws.send(JSON.stringify(configuration));
-    }
+    send(player.ws, JSON.stringify(configuration));
   }
 }
 

@@ -1,4 +1,5 @@
 const log = require("../utils/log")("socket-handlers/connection");
+const send = require("../utils/send");
 const Player = require("../models/player");
 const Configuration = require("../models/configuration");
 const generateUsername = require("../utils/username/generate-username");
@@ -8,7 +9,7 @@ async function connectPlayer(ws, messageObj) {
   let player = await initPlayer(ws, messageObj.playerId, messageObj.gameId);
   let configuration = new Configuration(player);
   log.debug(configuration);
-  ws.send(JSON.stringify(configuration));
+  send(ws, JSON.stringify(configuration));
   return player;
 }
 

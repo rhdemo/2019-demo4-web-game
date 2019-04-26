@@ -107,7 +107,7 @@ const NOUNS = [
   "Nape",
   "Belly",
   "Reaper",
-  "Giver",
+  "Dinosaur",
   "Taker",
   "Dancer",
   "Player",

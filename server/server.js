@@ -6,6 +6,7 @@ const machines = require("./models/machines");
 const {kafkaProducer} = require("./kafka-producer")
 const broadcast = require("./utils/broadcast");
 const processSocketMessage = require("./socket-handlers/process-socket-message");
+require("./datagrid/enable-logging");
 const initData = require("./datagrid/init-data");
 const initPlayers = require("./datagrid/init-players");
 const initLeaderboard = require("./datagrid/init-leaderboard");
