@@ -7,6 +7,7 @@ const log = require("../utils/log")("socket-handlers/motion");
 const GAME_STATES = require("../models/game-states");
 const {DATAGRID_KEYS, LEADERBOARD_MAX} = require("../datagrid/constants");
 const readLeaderboard = require("../datagrid/read-leaderboard");
+const send = require("../utils/send");
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
 const {kafkaProducer, TOPICS} = require("../kafka-producer");
 const PREDICTION_HOST_HEADER = env.get("PREDICTION_HOST_HEADER", "tf-serving-knative-demo.tf-demo.example.com").asString();
@@ -53,6 +54,7 @@ async function motionHandler(ws, messageObj) {
     try {
       const startTime = new Date();
       const gestureResponse = await axios({
+        timeout: 5000,
         headers: {
           "Host": PREDICTION_HOST_HEADER,
           "content-type": "application/json",
@@ -140,7 +142,7 @@ async function sendFeedback(ws, msgParamsObj) {
     prediction
   };
 
-  ws.send(JSON.stringify(feedbackMsg));
+  return send(ws, JSON.stringify(feedbackMsg));
 }
 
 async function updatePlayer(msgParamsObj) {
@@ -229,8 +231,8 @@ function sendVibration(messageFields) {
   try {
     let result = kafkaProducer.produce(TOPICS.MOTION, -1, kafkaMsg, kafkaKey);
     log.debug("kafka producer sent vibration payload", result, kafkaKey, jsonMsg);
-  } catch {
-    log.error("kafka producer failed to send vibration payload");
+  } catch (error) {
+    log.error("kafka producer failed to send vibration payload.  Error: ", error.message);
   }
 }
 

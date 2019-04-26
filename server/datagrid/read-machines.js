@@ -1,4 +1,5 @@
 const WebSocket = require("ws");
+const send = require("../utils/send");
 const axios = require("axios");
 const log = require("../utils/log")("datagrid/read-machines");
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
@@ -27,7 +28,7 @@ async function readMachines(broadcastAll) {
 
 async function refreshMachine(machine, alwaysBroadcast) {
   try {
-    let response = await axios({method: "get", url: machine.url});
+    let response = await axios({method: "get", url: machine.url, timeout: 5000});
     machine.value = response.data;
   } catch (error) {
     log.error(`error occurred in http call get counter for machine ${machine.id}`);
@@ -60,11 +61,7 @@ function broadcastMachineChanges(updatedMachineIndexes) {
         let machine = global.machines[player.machineId];
         let msgObj = {type: OUTGOING_MESSAGE_TYPES.MACHINE, id: player.machineId, percent: machine.percent};
         log.debug("send updated machine info", player.username, player.machineId, msgObj);
-        try {
-          player.ws.send(JSON.stringify(msgObj));
-        } catch (error) {
-          log.error(`Failed to send message to client.  Error: ${error.message}`);
-        }
+        send(player.ws, JSON.stringify(msgObj));
       }
     }
   }
