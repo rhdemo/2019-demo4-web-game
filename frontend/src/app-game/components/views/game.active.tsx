@@ -1,12 +1,19 @@
 import { Component, h } from 'preact'
 import { startSendLoop, stopSendLoop } from '@app/orientation-and-motion'
-import { GameConfiguration } from '@app/interfaces'
+import { GameConfiguration, ConfigGameMode } from '@app/interfaces'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
+import { FullScreenOverlay } from '@app/app-game/components/full-screen-overlay';
 import getLogger from '@app/log'
 
 import GameHeaderSVG from '@public/assets/images/svg/header.svg'
-import { MoveSelector } from '@app/app-game/components/move-selector'
-import { MachineSvgComponent } from '../machine'
+import { MachineSvgComponent } from '@app/app-game/components/machine'
+import { ButtonMoveSelector } from '@app/app-game/components/button-move-selector';
+
+import SVGLobby from '@public/assets/images/svg/state-lobby.svg'
+import SVGPause from '@public/assets/images/svg/state-pause.svg'
+import SVGStopped from '@public/assets/images/svg/state-stopped.svg'
+
+import { getMachineColourFromId } from '@app/utils';
 
 const log = getLogger('view:game.active')
 
@@ -45,7 +52,6 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
     log('will mount')
     emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
     emitter.addListener(ApplicationEventTypes.SelectedGestureChange, this.onSelectedGestureChange)
-    startSendLoop()
   }
 
   componentWillUnmount () {
@@ -64,6 +70,21 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
 
   render () {
     log('render')
+
+    const { gameState } = this.state.config
+    const overlayClasses = `machine-${getMachineColourFromId(this.state.config.machineId)} ${this.state.config.gameState}`
+    let overlay: JSX.Element|undefined
+
+    if (gameState === ConfigGameMode.Lobby) {
+      overlay = <FullScreenOverlay text='Game Will Begin Shortly' classes={overlayClasses} svg={SVGLobby} />
+    } else if (gameState === ConfigGameMode.Paused) {
+      overlay = <FullScreenOverlay text='Game Will Resume Shortly' classes={overlayClasses} svg={SVGPause} />
+    } else if (gameState === ConfigGameMode.Stopped) {
+      overlay = <FullScreenOverlay text='Game Over' classes={overlayClasses} svg={SVGStopped} />
+    } else {
+      overlay = undefined
+    }
+
     return (
       <div class='game active'>
         <div class='header'>
@@ -76,9 +97,12 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
           </div>
         </div>
 
-        <MoveSelector/>
+        {/* <MoveSelector/> */}
+        <ButtonMoveSelector></ButtonMoveSelector>
 
         <MachineSvgComponent machineId={this.state.config.machineId}/>
+
+        {overlay}
       </div>
     )
   }

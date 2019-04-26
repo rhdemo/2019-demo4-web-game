@@ -65,6 +65,27 @@
 }
 
 
+.button-move-selector {
+  .button-container {
+    padding: 3vw 2.5vw;
+    width: 45vw;
+    display: inline-block;
+  }
+
+  button:disabled {
+    background: $machine-red;
+  }
+
+  img {
+    width: 30vw;
+    height: 30vw;
+    background: white;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    text-transform: uppercase;
+  }
+}
 
 .move-selector {
   align-items: center;

@@ -7,7 +7,7 @@ import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import { addCurrentGestureToHistory, getCurrentSelectedGesture } from '@app/store'
+import { addCurrentGestureToHistory, getCurrentSelectedGesture, emitter, ApplicationEventTypes } from '@app/store'
 import getLogger from '@app/log'
 
 const log = getLogger('motion')
@@ -52,6 +52,7 @@ let _callback: EmitterCallback = (data) => {
 
     log('sending motion data to the server')
     sendMotionAndOrientationData({ ...data, uuid, gesture: getCurrentSelectedGesture() || 'unspecified' })
+    emitter.emit(ApplicationEventTypes.MotionUpdate, data)
   } else {
     log('data captured but not sent was:', data)
   }

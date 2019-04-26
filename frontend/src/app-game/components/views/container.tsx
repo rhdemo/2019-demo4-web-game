@@ -75,13 +75,13 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = <GameActiveView />
         break
       case ConfigGameMode.Paused:
-        v = <GamePausedView />
+        v = <GameActiveView />
         break
       case ConfigGameMode.Stopped:
-        v = <GameStoppedView />
+        v = <GameActiveView />
         break
       case ConfigGameMode.Lobby:
-        v = <GameLobbyView />
+        v = <GameActiveView />
         break
       default:
         setError(
