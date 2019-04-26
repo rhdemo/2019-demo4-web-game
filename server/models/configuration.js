@@ -10,6 +10,7 @@ class Configuration {
     this.username = player.username;
     this.score = player.score;
     this.machineId = player.machineId;
+    this.successfulMotions = player.successfulMotions;
   }
 }
 
