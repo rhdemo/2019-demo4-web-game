@@ -25,8 +25,7 @@ async function initPlayer(ws, playerId, gameId) {
     player = await createNewPlayer(ws, username);
   }
 
-  player.ws = ws;
-  global.players[player.id] = player;
+  global.players[player.id] = {...player, ws};
   return player;
 }
 

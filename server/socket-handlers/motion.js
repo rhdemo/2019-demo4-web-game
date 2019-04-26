@@ -95,11 +95,17 @@ async function motionHandler(ws, messageObj) {
     }
   }
 
-  if (correct) {
-    sendVibration({uuid, playerId, gesture, probability});
+  let score = correct ? _.get(global, `game.scoring.${gesture}`, 0) : 0;
+  let player = await updatePlayer({ws, playerId, gesture, correct, score});
+  if (!player) {
+    return
   }
 
-  return sendFeedback(ws, {uuid, playerId, gesture, correct, probability, prediction});
+  if (correct) {
+    sendVibration({uuid, player, gesture, probability});
+  }
+
+  return sendFeedback({ws, score, uuid, player, gesture, correct, probability, prediction});
 }
 
 function getResults(gesture, prediction) {
@@ -117,36 +123,7 @@ function getResults(gesture, prediction) {
   return {correct, probability};
 }
 
-async function sendFeedback(ws, msgParamsObj) {
-  let {uuid, gesture, correct, probability, prediction} = msgParamsObj;
-  let score = 0;
-  if (correct) {
-    score = _.get(global, `game.scoring.${gesture}`);
-  }
-
-  let player = await updatePlayer({...msgParamsObj, score});
-  if (!player) {
-    return
-  }
-
-  const totalScore = player ? player.score : undefined;
-
-  let feedbackMsg = {
-    type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
-    uuid,
-    gesture,
-    correct,
-    probability,
-    score,
-    totalScore,
-    prediction
-  };
-
-  return send(ws, JSON.stringify(feedbackMsg));
-}
-
-async function updatePlayer(msgParamsObj) {
-  let {playerId} = msgParamsObj;
+async function updatePlayer({ws, playerId, correct, gesture, score}) {
   let player = null;
 
   try {
@@ -159,9 +136,10 @@ async function updatePlayer(msgParamsObj) {
       return null;
     }
 
-    updatePlayerFields(player, msgParamsObj)
+    updatePlayerFields({player, correct, gesture, score})
     await global.playerClient.put(playerId, JSON.stringify(player));
     await updateLeaderboard(player);
+    global.players[player.id] = {...player, ws};
   } catch (error) {
     log.error("error occurred updating player data:", error.message);
   }
@@ -169,8 +147,7 @@ async function updatePlayer(msgParamsObj) {
   return player;
 }
 
-function updatePlayerFields(player, msgParamsObj) {
-  let {gesture, correct, score} = msgParamsObj;
+function updatePlayerFields({player, gesture, correct, score}) {
   player.score += score;
   let motionRecord = correct? player.successfulMotions : player.failedMotions
   let numMotions = motionRecord[gesture] || 0;
@@ -207,19 +184,27 @@ function sortPlayers(p1, p2)  {
   return p1.username.localeCompare(p2.username);
 }
 
-function sendVibration(messageFields) {
-  let {uuid, playerId, gesture, probability} = messageFields;
-  let kafkaKey = playerId || uuid || uuidv4();
-  let machineId = null;
+async function sendFeedback({ws, score, uuid, player, gesture, correct, probability, prediction}) {
+  let feedbackMsg = {
+    type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
+    uuid,
+    gesture,
+    correct,
+    probability,
+    score,
+    totalScore: player.score,
+    prediction
+  };
 
-  if (playerId) {
-    let player = global.players[playerId];
-    machineId = player ? player.machineId : null;
-  }
+  return send(ws, JSON.stringify(feedbackMsg));
+}
+
+function sendVibration({uuid, player, gesture, probability}) {
+  let kafkaKey = player.id || uuid || uuidv4();
 
   let jsonMsg = JSON.stringify({
-    sensorId: playerId,
-    machineId,
+    sensorId: player.id,
+    machineId: player.machineId,
     vibrationClass: gesture,
     confidencePercentage: probability
   });
