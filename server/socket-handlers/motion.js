@@ -95,8 +95,6 @@ async function motionHandler(ws, messageObj) {
     }
   }
 
-
-
   let score = correct ? _.get(global, `game.scoring.${gesture}`, 0) : 0;
   let player = await updatePlayer({ws, playerId, gesture, correct, score});
   if (!player) {
@@ -207,8 +205,6 @@ async function sendFeedback({ws, score, uuid, player, gesture, correct, probabil
 }
 
 function sendVibration({uuid, player, gesture, probability}) {
-  let kafkaKey = player.id || uuid || uuidv4();
-
   let jsonMsg = JSON.stringify({
     sensorId: player.id,
     machineId: player.machineId,
@@ -218,11 +214,11 @@ function sendVibration({uuid, player, gesture, probability}) {
 
   let kafkaMsg = Buffer.from(jsonMsg);
 
-  log.debug(`kafka produce topic: ${TOPICS.MOTION}; key: ${kafkaKey}; msg: ${jsonMsg}`);
+  log.debug(`kafka produce topic: ${TOPICS.MOTION}; key: null; msg: ${jsonMsg}`);
 
   try {
-    let result = kafkaProducer.produce(TOPICS.MOTION, -1, kafkaMsg, kafkaKey);
-    log.debug("kafka producer sent vibration payload", result, kafkaKey, jsonMsg);
+    let result = kafkaProducer.produce(TOPICS.MOTION, -1, kafkaMsg, null);
+    log.debug("kafka producer sent vibration payload", result, jsonMsg);
   } catch (error) {
     log.error("kafka producer failed to send vibration payload.  Error: ", error.message);
   }
