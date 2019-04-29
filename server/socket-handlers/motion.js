@@ -95,6 +95,8 @@ async function motionHandler(ws, messageObj) {
     }
   }
 
+
+
   let score = correct ? _.get(global, `game.scoring.${gesture}`, 0) : 0;
   let player = await updatePlayer({ws, playerId, gesture, correct, score});
   if (!player) {
@@ -171,7 +173,12 @@ async function updateLeaderboard(player) {
     newLeaders.push(player)
     newLeaders = newLeaders.sort(sortPlayers);
     global.leaderboard.players  = newLeaders.slice(0,10);
-    return global.leaderboardClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
+    try {
+      await global.leaderboardClient.put(DATAGRID_KEYS.LEADERBOARD, JSON.stringify(global.leaderboard));
+    } catch (error) {
+      log.error("error occurred updating leaderboard.  Error:", error.message);
+    }
+    return global.leaderboard;
   }
 }
 
