@@ -54,6 +54,8 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     log('rendering')
     let v: JSX.Element
 
+    const { gameState, machineId, playerId, score, successfulMotions } = this.state.config
+
     if (getState().unsupportedDevice) {
       return <DeviceUnsupportedView />
     }
@@ -63,13 +65,13 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     }
 
     const activeView = <GameActiveView
-      gameState={this.state.config.gameState}
-      machineId={this.state.config.machineId}
-      score={this.state.config.score}
-      username={this.state.config.playerId}
+      gameState={gameState}
+      machineId={machineId}
+      score={score}
+      playerId={playerId}
     />
 
-    switch (this.state.config.gameState) {
+    switch (gameState) {
       case ConfigGameMode.Loading:
         v = <GameLoadingView />
         break
@@ -83,7 +85,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = activeView
         break
       case ConfigGameMode.Stopped:
-        v = <GameStoppedView motions={[]} username={this.state.config.playerId} score={this.state.config.score}/>
+        v = <GameStoppedView motions={successfulMotions} playerId={playerId} score={score}/>
         break
       case ConfigGameMode.Lobby:
         v = activeView
@@ -91,13 +93,13 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       default:
         setError(
           new Error(
-            `Received unknown game state of "${this.state.config.gameState}"`
+            `Received unknown game state of "${gameState}"`
           )
         )
         v = <GameBorkedView />
     }
 
-    const classname = `game-el-container machine-${getMachineColourFromId(this.state.config.machineId)}`
+    const classname = `game-el-container machine-${getMachineColourFromId(machineId)}`
 
     return (
       <div class={classname}>

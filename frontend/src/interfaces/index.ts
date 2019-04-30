@@ -31,6 +31,9 @@ export interface GameConfiguration {
     shake: boolean
     x: boolean
   }
+  // Similar to game motions, but instead of booleans it uses integers
+  // to track how often the user performed a given motion
+  successfulMotions: Record<string, number>
 }
 
 export interface MotionVectors {

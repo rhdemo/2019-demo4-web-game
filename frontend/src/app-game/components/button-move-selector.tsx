@@ -103,8 +103,6 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
 
         if (isEnabled) {
           style = `background-image: url(${moveIconsMap[m]});`
-        } else {
-          style = `border: 0.1em white dashed;  background-color: transparent;`
         }
 
         return (

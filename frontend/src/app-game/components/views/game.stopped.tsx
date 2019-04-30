@@ -13,15 +13,22 @@ export class GameStoppedView extends Component<GameStoppedViewProps, {}> {
   render () {
     log('rendering')
 
+    const { score, motions, playerId } = this.props
+
+    const motionsPerformedCount = Object.values(motions).reduce((memo, n) => {
+      // If the motion was performed once of more add 1 to our total
+      return n > 0 ? memo + 1 : memo
+    }, 0)
+
     return (
       <div style={`background-image: url(${GameOverSVG})`} class='game stopped'>
         <div class='overlay'>
           <h1>Game Over</h1>
-          <h2>{this.props.username}</h2>
+          <h2>{playerId}</h2>
           <div class='message'>
             <p>8<sup>th</sup> place</p>
-            <p>Final score: {this.props.score}</p>
-            <p>You did {this.props.motions.length} out of 6 motions</p>
+            <p>Final score: {score}</p>
+            <p>You did {motionsPerformedCount} out of {Object.values(motions).length} motions</p>
           </div>
         </div>
       </div>
@@ -31,6 +38,6 @@ export class GameStoppedView extends Component<GameStoppedViewProps, {}> {
 
 interface GameStoppedViewProps {
   score: number
-  username: string
-  motions: string[] // TODO
+  playerId: string
+  motions: Record<string, number>
 }
