@@ -5,6 +5,7 @@ import { GameConfiguration } from '@app/interfaces'
 
 import getLogger from '@app/log'
 
+import BabyBlueMachineLightning from '@public/assets/images/svg/machines/baby-blue-machine-lightning.svg'
 import BabyBlueMachine from '@public/assets/images/svg/machines/baby-blue-machine.svg'
 import BlackMachine from '@public/assets/images/svg/machines/black-machine.svg'
 import GreenMachine from '@public/assets/images/svg/machines/green-machine.svg'
@@ -17,32 +18,34 @@ import RedAltMachine from '@public/assets/images/svg/machines/red-alt-machine.sv
 
 const log = getLogger('component:machine')
 
-// Maps machine orientation, 0 is left hand, 1 is right
-// 1 means we apply row-reverse flex setting in CSS
+// This is required due to the orientation of machines.
+// Some need to be on the left of the screen, some right.
+// 0 is left hand, 1 is right. 1 means we apply row-reverse
+// flex setting in CSS
 const machineReverseMap: { [key: number]: number} = {
   0: 0,
-  1: 1,
-  2: 1,
+  1: 0,
+  2: 0,
   3: 0,
   4: 1,
   5: 1,
-  6: 0,
+  6: 1,
   7: 0,
-  8: 0,
+  8: 1,
   9: 0
 }
 
 const machineSvgMap: Record<number, any> = {
   0: YellowMachine,
-  1: GreenMachine,
-  2: PurpleMachine,
-  3: PinkMachine,
-  4: BlackMachine,
-  5: RedAltMachine,
-  6: BabyBlueMachine,
-  7: TurquoiseMachine,
-  8: YellowMachine, // TODO seem to be missing this one it's a robot arm?
-  9: RedMachine
+  1: RedMachine,
+  2: TurquoiseMachine,
+  3: BabyBlueMachineLightning,
+  4: GreenMachine,
+  5: PurpleMachine,
+  6: BlackMachine,
+  7: BabyBlueMachine,
+  8: RedAltMachine,
+  9: PinkMachine
 }
 
 export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {
