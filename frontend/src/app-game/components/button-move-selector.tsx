@@ -32,7 +32,6 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     })
 
     this.onConfigChange = this.onConfigChange.bind(this)
-    this.onMotionUpdate = this.onMotionUpdate.bind(this)
     this.onGestureChange = this.onGestureChange.bind(this)
   }
 
@@ -44,17 +43,11 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     this.forceUpdate()
   }
 
-  onMotionUpdate (data: MotionVectors) {
-    // Unset the selected gesture, probably could better centralise this logic
-    setCurrentSelectedGesture(undefined)
-  }
-
   componentWillMount () {
     log('will mount')
 
     emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
     emitter.addListener(ApplicationEventTypes.SelectedGestureChange, this.onGestureChange)
-    emitter.addListener(ApplicationEventTypes.MotionUpdate, this.onMotionUpdate)
   }
 
   componentWillUnmount () {

@@ -97,7 +97,6 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
           </div>
         </div>
 
-        {/* <MoveSelector/> */}
         <ButtonMoveSelector></ButtonMoveSelector>
 
         <MachineSvgComponent machineId={this.props.machineId}/>
