@@ -81,7 +81,7 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     log('rendering')
 
     const selectedGesture = getCurrentSelectedGesture()
-    const content = Object.keys(this.state.config.gameMotions)
+    const buttons = Object.keys(this.state.config.gameMotions)
       .map((m) => {
         let style = ``
         const isEnabled = this.state.config.gameMotions[m]
@@ -101,9 +101,11 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
       })
 
     return (
-      <div class='button-move-selector' style='width: 100vw; margin-top: 14vh;'>
+      <div class='button-move-selector'>
         <h2>CHOOSE A MOTION</h2>
-        {content}
+        <div>
+          {buttons}
+        </div>
       </div>
     )
   }

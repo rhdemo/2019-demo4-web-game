@@ -69,8 +69,10 @@
 
 }
 
-
 .button-move-selector {
+  width: 100vw;
+  margin-top: 12vh;
+
   h2 {
     color: white;
     text-shadow: #333 1px 1px 3px;
@@ -113,6 +115,12 @@
   }
 }
 
+@media screen and (min-height: 700px) {
+  .button-move-selector {
+    margin-top: 18vh;
+  }
+}
+
 .game.borked {
   padding: 15vh 1em;
 
@@ -141,13 +149,19 @@
     display: flex;
     bottom: 0;
     position: absolute;
+    min-height: 20vh;
+
+    .machine-container {
+      background-repeat: no-repeat;
+      background-position: left;
+    }
   }
 
   .machine-info-container.reverse {
     flex-direction: row-reverse;
 
     .machine-container {
-      text-align: right;
+      background-position: right;
     }
   }
 
