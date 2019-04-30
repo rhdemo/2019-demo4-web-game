@@ -62,6 +62,9 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       return <GameBorkedView />
     }
 
+    const activeView = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
+
+
     switch (this.state.config.gameState) {
       case ConfigGameMode.Loading:
         v = <GameLoadingView />
@@ -70,16 +73,16 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = <GameReadyView />
         break
       case ConfigGameMode.Active:
-        v = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
+        v = activeView
         break
       case ConfigGameMode.Paused:
-        v = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
+        v = activeView
         break
       case ConfigGameMode.Stopped:
         v = <GameStoppedView motions={[]} username={this.state.config.playerId} score={this.state.config.score}/>
         break
       case ConfigGameMode.Lobby:
-        v = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
+        v = activeView
         break
       default:
         setError(
