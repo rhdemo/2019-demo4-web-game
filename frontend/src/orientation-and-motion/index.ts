@@ -44,9 +44,6 @@ type EmitterCallback = (data: MotionVectors) => void
 let _callback: EmitterCallback = (data) => {
   if (hasSufficientMotionData(data)) {
     const uuid = nanoid()
-    // TODO - Need to get this from our central state store
-    // TODO - The server will eventually send us the motion
-    const gesture = 'todo'
 
     addCurrentGestureToHistory(uuid)
 
@@ -131,6 +128,8 @@ export async function initialiseMotionAndOrientationTracking (
 
   // If mode is dev then just ignore the check results, e.g running on desktop
   if (!isProduction || (supports[0] && supports[1])) {
+    log('initialising motion capture')
+
     ml = new MotionListener(
       (e) => mBuffer.push(e),
       Object.assign({}, DEFAULT_MOTION_OPTS, options ? options.mOpts : {})
@@ -141,6 +140,7 @@ export async function initialiseMotionAndOrientationTracking (
       Object.assign({}, DEFAULT_ORIENTATION_OPTS, options ? options.oOpts : {})
     )
   } else {
+    log('device motion appears to be unavailable')
     throw new DeviceMotionUnavailableError(supports[0], supports[1])
   }
 }

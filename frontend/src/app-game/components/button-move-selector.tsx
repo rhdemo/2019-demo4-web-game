@@ -28,7 +28,6 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     super()
 
     this.setState({
-      captureMode: false,
       config: getState().config
     })
 
@@ -42,15 +41,7 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
   }
 
   onGestureChange (gesture?: string) {
-    if (gesture) {
-      this.setState({
-        captureMode: true
-      })
-    } else {
-      this.setState({
-        captureMode: false
-      })
-    }
+    this.forceUpdate()
   }
 
   onMotionUpdate (data: MotionVectors) {
@@ -83,31 +74,42 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     return this.getEnabledMotionKeys().indexOf(selection)
   }
 
-  onButtonPress (m: string) {
+  onButtonPress (m: string, isEnabled: boolean) {
+    if (!isEnabled) {
+      log('attempted to select inactive motion. skipping')
+      return
+    }
+
+    log(`setting selected motion to "${m}"`)
     setCurrentSelectedGesture(m)
   }
 
   render () {
     log('rendering')
 
-    let content: JSX.Element|JSX.Element[]
+    const selectedGesture = getCurrentSelectedGesture()
+    const content = Object.keys(this.state.config.gameMotions)
+      .map((m) => {
+        let style = ``
+        const isEnabled = this.state.config.gameMotions[m]
+        const isSelected = m === selectedGesture
 
-    if (this.state.captureMode) {
-      content = <h2 style="color: white;">Do your best {getCurrentSelectedGesture()}!</h2>
-    } else {
-      content = Object.keys(this.state.config.gameMotions)
-        .map((m) => {
-          return (
-            <div class='button-container'>
-              <img src={moveIconsMap[m]} onClick={() => this.onButtonPress(m)} class="stage-shadow" disabled={!this.state.config.gameMotions[m]}/>
-            </div>
-          )
-        })
-    }
+        if (isEnabled) {
+          style = `background-image: url(${moveIconsMap[m]});`
+        } else {
+          style = `border: 0.1em white dashed;  background-color: transparent;`
+        }
 
+        return (
+          <div onClick={() => this.onButtonPress(m, isEnabled)} class={`button-container stage-shadow ${isSelected ? 'selected' : ''}`} disabled={!isEnabled} style={style}>
+            {isEnabled ? <h3>{m}</h3> : <h3>&nbsp;</h3>}
+          </div>
+        )
+      })
 
     return (
       <div class='button-move-selector' style="width: 100vw; margin-top: 14vh;">
+        <h2>CHOOSE A MOTION</h2>
         {content}
       </div>
     )
@@ -116,5 +118,4 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
 
 interface ButtonMoveSelectorState {
   config: GameConfiguration
-  captureMode: boolean
 }

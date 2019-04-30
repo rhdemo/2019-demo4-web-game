@@ -1,11 +1,9 @@
 import { Component, h } from 'preact'
 import { GameLoadingView } from './game.loading'
-import { GamePausedView } from './game.paused'
 import { GameBorkedView } from './game.borked'
 import { GameStoppedView } from './game.stopped'
 import { GameActiveView } from './game.active'
 import { GameReadyView } from './game.ready'
-import { GameLobbyView } from './game.lobby'
 import { Toast } from '@app/app-game/components/toast'
 import { connect } from '@app/websocks/ws'
 import {
@@ -72,16 +70,16 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = <GameReadyView />
         break
       case ConfigGameMode.Active:
-        v = <GameActiveView />
+        v = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
         break
       case ConfigGameMode.Paused:
-        v = <GameActiveView />
+        v = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
         break
       case ConfigGameMode.Stopped:
-        v = <GameActiveView />
+        v = <GameStoppedView motions={[]} username={this.state.config.playerId} score={this.state.config.score}/>
         break
       case ConfigGameMode.Lobby:
-        v = <GameActiveView />
+        v = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
         break
       default:
         setError(

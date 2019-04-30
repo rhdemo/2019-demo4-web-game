@@ -58,7 +58,12 @@
   &.lobby {
     padding-top: 30vh;
   }
-  &.paused, &.stopped {
+  &.stopped {
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+  }
+  &.paused {
     padding-top: 40vh;
   }
 
@@ -66,10 +71,31 @@
 
 
 .button-move-selector {
+  h2 {
+    color: white;
+    text-shadow: #333 1px 1px 3px;
+  }
+
   .button-container {
-    padding: 3vw 2.5vw;
-    width: 45vw;
+    transition: all 0.25s;
+    background-size: 260%;
+    margin: .75em;
+    border-radius: .5em;
     display: inline-block;
+    background-color: #ccc;
+    width: 25vw;
+    height: 25vw;
+    background-repeat: no-repeat;
+    background-position: -20vw -1vh;
+
+    &.selected {
+      background-color: white;
+    }
+
+    h3 {
+      margin: 0;
+      padding-top: .75em;
+    }
   }
 
   button:disabled {
@@ -84,18 +110,6 @@
     border-radius: 5px;
     color: white;
     text-transform: uppercase;
-  }
-}
-
-.move-selector {
-  align-items: center;
-  margin-top: 25vh;
-  display: flex;
-
-  #move-scroller h2 {
-    text-transform: uppercase;
-    color: white;
-    text-shadow: rgb(51, 51, 51) 1px 1px 3px;
   }
 }
 

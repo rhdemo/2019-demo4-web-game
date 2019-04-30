@@ -17,22 +17,22 @@ import { getMachineColourFromId } from '@app/utils';
 
 const log = getLogger('view:game.active')
 
-export class GameActiveView extends Component<{}, GameActiveViewState> {
-  constructor () {
+export class GameActiveView extends Component<GameActiveViewProps, GameActiveViewState> {
+  constructor (props: GameActiveViewProps) {
     super()
     log('creating')
     this.setState({
-      config: getState().config
+      score: props.score
     })
 
     // Binding "this" for event handlers
-    this.onConfigChange = this.onConfigChange.bind(this)
+    this.onScoreChange = this.onScoreChange.bind(this)
     this.onSelectedGestureChange = this.onSelectedGestureChange.bind(this)
   }
 
-  onConfigChange () {
+  onScoreChange (score: number) {
     this.setState({
-      config: getState().config
+      score
     })
   }
 
@@ -50,15 +50,15 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
 
   componentWillMount () {
     log('will mount')
-    emitter.addListener(ApplicationEventTypes.ConfigUpdate, this.onConfigChange)
+    emitter.addListener(ApplicationEventTypes.Score, this.onScoreChange)
     emitter.addListener(ApplicationEventTypes.SelectedGestureChange, this.onSelectedGestureChange)
   }
 
   componentWillUnmount () {
     log('will unmount')
     emitter.removeListener(
-      ApplicationEventTypes.ConfigUpdate,
-      this.onConfigChange
+      ApplicationEventTypes.Score,
+      this.onScoreChange
     )
 
     emitter.removeListener(
@@ -71,8 +71,8 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
   render () {
     log('render')
 
-    const { gameState } = this.state.config
-    const overlayClasses = `machine-${getMachineColourFromId(this.state.config.machineId)} ${this.state.config.gameState}`
+    const { gameState } = this.props
+    const overlayClasses = `machine-${getMachineColourFromId(this.props.machineId)} ${this.props.gameState}`
     let overlay: JSX.Element|undefined
 
     if (gameState === ConfigGameMode.Lobby) {
@@ -90,17 +90,17 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
         <div class='header'>
           <img src={GameHeaderSVG}/>
           <div>
-            <h3>{this.state.config.username}</h3>
+            <h3>{this.props.username}</h3>
           </div>
           <div>
-            <h3>{this.state.config.score} POINTS</h3>
+            <h3>{this.state.score} POINTS</h3>
           </div>
         </div>
 
         {/* <MoveSelector/> */}
         <ButtonMoveSelector></ButtonMoveSelector>
 
-        <MachineSvgComponent machineId={this.state.config.machineId}/>
+        <MachineSvgComponent machineId={this.props.machineId}/>
 
         {overlay}
       </div>
@@ -109,5 +109,12 @@ export class GameActiveView extends Component<{}, GameActiveViewState> {
 }
 
 interface GameActiveViewState {
-  config: GameConfiguration
+  score: number
+}
+
+interface GameActiveViewProps {
+  score: number
+  machineId: number
+  username: string
+  gameState: ConfigGameMode
 }

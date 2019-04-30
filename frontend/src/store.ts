@@ -17,7 +17,8 @@ export enum ApplicationEventTypes {
   ServerHeartBeat = 'ws:frame:heartbeat',
   MotionUpdate = 'orientation-motion:update',
   AppStateUpdate = 'app-state:update',
-  SelectedGestureChange = 'app-state:gesture-change'
+  SelectedGestureChange = 'app-state:gesture-change',
+  Score = 'app-state:score'
 }
 
 /**
@@ -31,6 +32,7 @@ export interface ApplicationEventHandlers {
   [ApplicationEventTypes.ServerHeartBeat]: () => void
   [ApplicationEventTypes.AppStateUpdate]: () => void
   [ApplicationEventTypes.SelectedGestureChange]: (gesture?: string) => void
+  [ApplicationEventTypes.Score]: (score: number) => void
 }
 
 /**
@@ -128,7 +130,7 @@ export function setPlayerScore (score: number) {
   state.config.score = score
 
   // We don't really need a score event, can just reuse config for now...
-  emitter.emit(ApplicationEventTypes.ConfigUpdate, state.config)
+  emitter.emit(ApplicationEventTypes.Score, state.config.score)
 }
 
 export function addLastMotionFeedback (feedback: IncomingFrames.MotionFeedback) {
