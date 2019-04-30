@@ -1,6 +1,6 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
-import { GameConfiguration, MotionVectors, ConfigGameMode } from '@app/interfaces'
+import { ConfigGameMode, GameConfiguration, MotionVectors } from '@app/interfaces'
 import { ApplicationEventTypes, emitter, getCurrentSelectedGesture, getState, setCurrentSelectedGesture } from '@app/store'
 
 import IconCircle from '@public/assets/images/svg/moves/icon-circle.svg'

@@ -11,4 +11,8 @@ cd ${DIR}/../frontend
 rm -rf dist .cache tmp
 yarn install
 yarn build
+
+# The no-source-maps flag in the parcel CLI is not working so delete them
+rm dist/*.map
+
 s2i build ./dist centos/nginx-112-centos7 ${UI_IMAGE_REPOSITORY}

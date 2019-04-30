@@ -70,8 +70,8 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
   render () {
     log('render')
 
-    const { gameState } = this.props
-    const overlayClasses = `machine-${getMachineColourFromId(this.props.machineId)} ${this.props.gameState}`
+    const { gameState, username, machineId } = this.props
+    const overlayClasses = `machine-${getMachineColourFromId(machineId)} ${gameState}`
     let overlay: JSX.Element | undefined
 
     if (gameState === ConfigGameMode.Lobby) {
@@ -87,7 +87,7 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
         <div class='header'>
           <img src={GameHeaderSVG}/>
           <div>
-            <h3>{this.props.username}</h3>
+            <h3>{username}</h3>
           </div>
           <div>
             <h3>{this.state.score} POINTS</h3>
@@ -96,7 +96,7 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
 
         <ButtonMoveSelector></ButtonMoveSelector>
 
-        <MachineSvgComponent machineId={this.props.machineId}/>
+        <MachineSvgComponent machineId={machineId}/>
 
         {overlay}
       </div>
