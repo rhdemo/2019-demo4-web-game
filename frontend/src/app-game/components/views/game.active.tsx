@@ -11,7 +11,6 @@ import { ButtonMoveSelector } from '@app/app-game/components/button-move-selecto
 
 import SVGLobby from '@public/assets/images/svg/state-lobby.svg'
 import SVGPause from '@public/assets/images/svg/state-pause.svg'
-import SVGStopped from '@public/assets/images/svg/state-stopped.svg'
 
 import { getMachineColourFromId } from '@app/utils'
 
@@ -79,8 +78,6 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
       overlay = <FullScreenOverlay text='Game Will Begin Shortly' classes={overlayClasses} svg={SVGLobby} />
     } else if (gameState === ConfigGameMode.Paused) {
       overlay = <FullScreenOverlay text='Game Will Resume Shortly' classes={overlayClasses} svg={SVGPause} />
-    } else if (gameState === ConfigGameMode.Stopped) {
-      overlay = <FullScreenOverlay text='Game Over' classes={overlayClasses} svg={SVGStopped} />
     } else {
       overlay = undefined
     }
