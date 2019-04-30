@@ -1,19 +1,19 @@
 import { Component, h } from 'preact'
 import { startSendLoop, stopSendLoop } from '@app/orientation-and-motion'
-import { GameConfiguration, ConfigGameMode } from '@app/interfaces'
+import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
-import { FullScreenOverlay } from '@app/app-game/components/full-screen-overlay';
+import { FullScreenOverlay } from '@app/app-game/components/full-screen-overlay'
 import getLogger from '@app/log'
 
 import GameHeaderSVG from '@public/assets/images/svg/header.svg'
 import { MachineSvgComponent } from '@app/app-game/components/machine'
-import { ButtonMoveSelector } from '@app/app-game/components/button-move-selector';
+import { ButtonMoveSelector } from '@app/app-game/components/button-move-selector'
 
 import SVGLobby from '@public/assets/images/svg/state-lobby.svg'
 import SVGPause from '@public/assets/images/svg/state-pause.svg'
 import SVGStopped from '@public/assets/images/svg/state-stopped.svg'
 
-import { getMachineColourFromId } from '@app/utils';
+import { getMachineColourFromId } from '@app/utils'
 
 const log = getLogger('view:game.active')
 
@@ -73,7 +73,7 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
 
     const { gameState } = this.props
     const overlayClasses = `machine-${getMachineColourFromId(this.props.machineId)} ${this.props.gameState}`
-    let overlay: JSX.Element|undefined
+    let overlay: JSX.Element | undefined
 
     if (gameState === ConfigGameMode.Lobby) {
       overlay = <FullScreenOverlay text='Game Will Begin Shortly' classes={overlayClasses} svg={SVGLobby} />

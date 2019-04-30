@@ -15,7 +15,7 @@ export class GameStoppedView extends Component<GameStoppedViewProps, {}> {
 
     return (
       <div style={`background-image: url(${GameOverSVG})`} class='game stopped'>
-        <div class="overlay">
+        <div class='overlay'>
           <h1>Game Over</h1>
           <h2>{this.props.username}</h2>
           <div class='message'>

@@ -7,7 +7,7 @@ import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import { addCurrentGestureToHistory, getCurrentSelectedGesture, emitter, ApplicationEventTypes } from '@app/store'
+import { addCurrentGestureToHistory, ApplicationEventTypes, emitter, getCurrentSelectedGesture } from '@app/store'
 import getLogger from '@app/log'
 
 const log = getLogger('motion')

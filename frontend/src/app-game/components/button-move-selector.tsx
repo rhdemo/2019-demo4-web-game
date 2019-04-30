@@ -108,7 +108,7 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
       })
 
     return (
-      <div class='button-move-selector' style="width: 100vw; margin-top: 14vh;">
+      <div class='button-move-selector' style='width: 100vw; margin-top: 14vh;'>
         <h2>CHOOSE A MOTION</h2>
         {content}
       </div>
