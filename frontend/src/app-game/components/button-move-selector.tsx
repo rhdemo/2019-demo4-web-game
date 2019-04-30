@@ -1,6 +1,6 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
-import { GameConfiguration, MotionVectors } from '@app/interfaces'
+import { GameConfiguration, MotionVectors, ConfigGameMode } from '@app/interfaces'
 import { ApplicationEventTypes, emitter, getCurrentSelectedGesture, getState, setCurrentSelectedGesture } from '@app/store'
 
 import IconCircle from '@public/assets/images/svg/moves/icon-circle.svg'
@@ -36,7 +36,15 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
   }
 
   onConfigChange () {
-    this.setState({ config: getState().config })
+    const state = getState()
+    const selectedGesture = getCurrentSelectedGesture()
+
+    this.setState({ config: state.config })
+
+    if (selectedGesture && state.config.gameState !== ConfigGameMode.Active) {
+      // If the game is inactive then deselect gesture
+      setCurrentSelectedGesture(undefined)
+    }
   }
 
   onGestureChange (gesture?: string) {
