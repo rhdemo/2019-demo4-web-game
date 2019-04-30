@@ -130,7 +130,6 @@ export function setGameConfiguration (config: GameConfiguration) {
 export function setPlayerScore (score: number) {
   state.config.score = score
 
-  // We don't really need a score event, can just reuse config for now...
   emitter.emit(ApplicationEventTypes.Score, state.config.score)
 }
 
