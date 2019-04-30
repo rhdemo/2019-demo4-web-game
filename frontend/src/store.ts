@@ -53,6 +53,7 @@ export interface ApplicationState {
 const state: ApplicationState = {
   // Always initialise in loading state
   config: {
+    successfulMotions: {},
     gameState: ConfigGameMode.Loading,
 
     // Default to full health

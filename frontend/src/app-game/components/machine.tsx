@@ -2,6 +2,10 @@ import { Component, h } from 'preact'
 import { machineIdToLetter } from '@app/utils'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import { GameConfiguration } from '@app/interfaces'
+import {
+  radialIndicator,
+  RadialIndicatorInstance
+} from '@evanshortiss/radial-indicator'
 
 import getLogger from '@app/log'
 
@@ -49,7 +53,7 @@ const machineSvgMap: Record<number, string> = {
 }
 
 export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {
-  private indicator: RadialIndicatorInstance<RadialIndicatorOptions> | undefined
+  private indicator: RadialIndicatorInstance | undefined
 
   constructor () {
     log('create')
@@ -82,9 +86,16 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
   }
 
   componentDidMount () {
-    this.indicator = window.radialIndicator('#indicator-container', {
+    this.indicator = radialIndicator('#indicator-container', {
       initValue: 100,
-      barColor: '#33FF66',
+      barColor: {
+        100: '#33FF66',
+        70: '#ff9e1d',
+        30: '#ff0000',
+        0: '#ff0000'
+      },
+      reverse: true,
+      interpolate: false,
       fontFamily: 'Lato',
       radius: 30,
       fontColor: '#111',

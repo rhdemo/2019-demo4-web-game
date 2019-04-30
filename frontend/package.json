@@ -25,6 +25,7 @@
     }
   },
   "dependencies": {
+    "@evanshortiss/radial-indicator": "evanshortiss/radial-indicator#types",
     "debug": "^4.1.1",
     "env-var": "^3.4.2",
     "webmo": "^0.5.2"
