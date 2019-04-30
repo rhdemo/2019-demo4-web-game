@@ -14,7 +14,7 @@ export class FullScreenOverlay extends Component<OverlayProps, {}> {
 }
 
 interface OverlayProps {
-  svg: any
+  svg: string
   text: string
   classes: string
 }

@@ -1,7 +1,13 @@
 import { Component, h } from 'preact'
 import getLogger from '@app/log'
-import { ConfigGameMode, GameConfiguration, MotionVectors } from '@app/interfaces'
-import { ApplicationEventTypes, emitter, getCurrentSelectedGesture, getState, setCurrentSelectedGesture } from '@app/store'
+import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
+import {
+  ApplicationEventTypes,
+  emitter,
+  getCurrentSelectedGesture,
+  getState,
+  setCurrentSelectedGesture
+} from '@app/store'
 
 import IconCircle from '@public/assets/images/svg/moves/icon-circle.svg'
 import IconFever from '@public/assets/images/svg/moves/icon-fever.svg'
@@ -10,7 +16,7 @@ import IconRoll from '@public/assets/images/svg/moves/icon-roll.svg'
 import IconShake from '@public/assets/images/svg/moves/icon-shake.svg'
 import IconX from '@public/assets/images/svg/moves/icon-x.svg'
 
-const moveIconsMap: { [key: string]: any} = {
+const moveIconsMap: { [key: string]: string } = {
   'circle': IconCircle,
   'fever': IconFever,
   'floss': IconFloss,
@@ -102,7 +108,11 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
         }
 
         return (
-          <div onClick={() => this.onButtonPress(m, isEnabled)} class={`button-container stage-shadow ${isSelected ? 'selected' : ''}`} disabled={!isEnabled} style={style}>
+          <div
+            onClick={() => this.onButtonPress(m, isEnabled)}
+            class={`button-container stage-shadow ${isSelected ? 'selected' : ''}`}
+            disabled={!isEnabled} style={style}
+          >
             {isEnabled ? <h3>{m}</h3> : <h3>&nbsp;</h3>}
           </div>
         )

@@ -35,7 +35,7 @@ const machineReverseMap: { [key: number]: number} = {
   9: 0
 }
 
-const machineSvgMap: Record<number, any> = {
+const machineSvgMap: Record<number, string> = {
   0: YellowMachine,
   1: RedMachine,
   2: TurquoiseMachine,

@@ -62,7 +62,12 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       return <GameBorkedView />
     }
 
-    const activeView = <GameActiveView gameState={this.state.config.gameState} machineId={this.state.config.machineId} score={this.state.config.score} username={this.state.config.playerId} />
+    const activeView = <GameActiveView
+      gameState={this.state.config.gameState}
+      machineId={this.state.config.machineId}
+      score={this.state.config.score}
+      username={this.state.config.playerId}
+    />
 
     switch (this.state.config.gameState) {
       case ConfigGameMode.Loading:
