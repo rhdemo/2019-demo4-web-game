@@ -15,4 +15,7 @@ yarn build
 # The no-source-maps flag in the parcel CLI is not working so delete them
 rm dist/*.map
 
+# Remove bundle report
+rm dist/report.html
+
 s2i build ./dist centos/nginx-112-centos7 ${UI_IMAGE_REPOSITORY}
