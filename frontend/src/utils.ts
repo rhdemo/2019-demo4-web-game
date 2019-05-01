@@ -40,15 +40,15 @@ export function removeStoredGameId () {
 export function getMachineColourFromId (id: number) {
   const idColorMap: Record<number, string> = {
     0: 'yellow',
-    1: 'green',
-    2: 'purple',
-    3: 'pink',
-    4: 'black',
-    5: 'red-alt',
-    6: 'baby-blue',
-    7: 'turquoise',
-    8: 'yellow', // TODO seem to be missing this one it's a robot arm?
-    9: 'red'
+    1: 'red',
+    2: 'turquoise',
+    3: 'baby-blue',
+    4: 'green',
+    5: 'purple',
+    6: 'black',
+    7: 'baby-blue',
+    8: 'red',
+    9: 'pink'
   }
 
   return idColorMap[id]
