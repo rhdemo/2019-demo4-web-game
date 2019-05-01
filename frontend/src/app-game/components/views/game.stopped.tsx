@@ -2,7 +2,7 @@ import { Component, h } from 'preact'
 import getLogger from '@app/log'
 
 import GameOverSVG from '@public/assets/images/svg/game-over-background.svg'
-import { getState } from '@app/store';
+import { getState } from '@app/store'
 import { indicator } from 'ordinal'
 
 const log = getLogger('view:game.stopped')

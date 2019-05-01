@@ -15,7 +15,7 @@ import IconFloss from '@public/assets/images/svg/moves/icon-floss.svg'
 import IconRoll from '@public/assets/images/svg/moves/icon-roll.svg'
 import IconShake from '@public/assets/images/svg/moves/icon-shake.svg'
 import IconX from '@public/assets/images/svg/moves/icon-x.svg'
-import { toSentence } from '@app/utils';
+import { toSentence } from '@app/utils'
 
 const moveIconsMap: { [key: string]: string } = {
   'circle': IconCircle,
@@ -98,7 +98,7 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     const selectedGesture = getCurrentSelectedGesture()
     const buttons = Object.keys(this.state.config.gameMotions)
       .map((m) => {
-        let imageTag: JSX.Element|undefined
+        let imageTag: JSX.Element | undefined
         const isEnabled = this.state.config.gameMotions[m]
         const isSelected = m === selectedGesture
 

@@ -1,6 +1,6 @@
 import { Component, h } from 'preact'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
-import { ToastMessage } from '@app/interfaces';
+import { ToastMessage } from '@app/interfaces'
 import getLogger from '@app/log'
 
 import '@styles/toast.scss'
@@ -55,7 +55,7 @@ export class Toast extends Component<{}, ToastState> {
     log('render')
 
     const visibilityClass = this.state.timer ? 'visible' : 'hidden'
-    let content: JSX.Element|undefined
+    let content: JSX.Element | undefined
 
     log('setting toast visibility to: ', visibilityClass)
 
