@@ -4,8 +4,8 @@
   "description": "Summit 2019 - Demo 4 game server",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js | pino-pretty -t",
-    "dev": "LOG_LEVEL=trace NODE_ENV=development nodemon server.js | pino-pretty -t"
+    "start": "node  --max-old-space-size=3072 server.js | pino-pretty -t",
+    "dev": "LOG_LEVEL=trace NODE_ENV=development nodemon --max-old-space-size=3072 server.js | pino-pretty -t"
   },
   "repository": {
     "type": "git",
