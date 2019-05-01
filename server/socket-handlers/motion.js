@@ -165,24 +165,17 @@ function calculateBonus(correct, gesture, player) {
     return 0;
   }
 
-  console.log(player);
-  let playerCount = player.successfulMotions[gesture];
-
-  //already had the bonus
-  if (playerCount) {
-    return 0;
-  }
-
-  let successfulMotions = {...player.successfulMotions};
-  successfulMotions[gesture] = 1;
-
-  for (let key in successfulMotions) {
-    if (!successfulMotions[key]) {
+  for (let key in player.successfulMotions) {
+    if (key === gesture && player.successfulMotions[key]) {
+      //already have the move, no bonus
+      return 0;
+    } else if (key !== gesture && !player.successfulMotions[key]) {
+      //still missing a move, no bonus
       return 0;
     }
   }
 
-  return global.game.scoring.bonus || 1000;
+  return lodashGet(global, "game.scoring.bonus", 1000);
 }
 
 async function updatePlayer({ws, player, gesture, correct, score, bonus}) {
