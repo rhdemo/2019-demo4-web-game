@@ -1,7 +1,6 @@
 const env = require("env-var");
 const axios = require("axios");
-const uuidv4 = require('uuid/v4');
-const _ = require('lodash');
+const lodashGet = require('lodash/get');
 
 const log = require("../utils/log")("socket-handlers/motion");
 const GAME_STATES = require("../models/game-states");
@@ -95,22 +94,34 @@ async function motionHandler(ws, messageObj) {
     }
   }
 
-  let score = correct ? _.get(global, `game.scoring.${gesture}`, 0) : 0;
-  let player = await updatePlayer({ws, playerId, gesture, correct, score});
+  // in the case of a long request to prediction, we don't want to have a score count after we've stopped
+  if (global.game.state !== GAME_STATES.ACTIVE) {
+    log.warn(`Ignoring predicted motion because the game is in state ${global.game.state}`);
+    return;
+  }
+
+
+  let player = await getPlayer(playerId);
+
   if (!player) {
     return
   }
+
+  const score = calculateScore(correct, gesture);
+  const bonus = calculateBonus(correct, gesture, player);
+
+  player = await updatePlayer({ws, player, gesture, correct, score, bonus});
 
   if (correct) {
     sendVibration({uuid, player, gesture, probability});
   }
 
-  return sendFeedback({ws, score, uuid, player, gesture, correct, probability, prediction});
+  return sendFeedback({ws, uuid, player, score, bonus, gesture, correct, probability, prediction});
 }
 
 function getResults(gesture, prediction) {
   const aiMotion = AI_MOTIONS[gesture];
-  const minProbability = _.get(global, `game.ai.${gesture}`);
+  const minProbability = lodashGet(global, `game.ai.${gesture}`);
   const probability = prediction.predictions[aiMotion];
   let correct;
 
@@ -123,21 +134,54 @@ function getResults(gesture, prediction) {
   return {correct, probability};
 }
 
-async function updatePlayer({ws, playerId, correct, gesture, score}) {
+async function getPlayer(id) {
   let player = null;
 
   try {
-    let playerStr = await global.playerClient.get(playerId);
+    let playerStr = await global.playerClient.get(id);
 
     if (playerStr) {
       player = JSON.parse(playerStr);
     } else {
-      log.error(`Player ${playerId} data not found`);
+      log.error(`Player ${id} data not found`);
       return null;
     }
+  } catch (error) {
+    log.error("error occurred getting player data:", error.message);
+  }
 
-    updatePlayerFields({player, correct, gesture, score})
-    await global.playerClient.put(playerId, JSON.stringify(player));
+  return player;
+}
+
+function calculateScore(correct, gesture) {
+  if (!correct) {
+    return 0;
+  }
+  return lodashGet(global, `game.scoring.${gesture}`, 0);
+}
+
+function calculateBonus(correct, gesture, player) {
+  if (!correct) {
+    return 0;
+  }
+
+  for (let key in player.successfulMotions) {
+    if (key === gesture && player.successfulMotions[key]) {
+      //already have the move, no bonus
+      return 0;
+    } else if (key !== gesture && !player.successfulMotions[key]) {
+      //still missing a move, no bonus
+      return 0;
+    }
+  }
+
+  return lodashGet(global, "game.scoring.bonus", 1000);
+}
+
+async function updatePlayer({ws, player, gesture, correct, score, bonus}) {
+  try {
+    updatePlayerFields({player, correct, gesture, score, bonus})
+    await global.playerClient.put(player.id, JSON.stringify(player));
     await updateLeaderboard(player);
     global.players[player.id] = {...player, ws};
   } catch (error) {
@@ -147,8 +191,9 @@ async function updatePlayer({ws, playerId, correct, gesture, score}) {
   return player;
 }
 
-function updatePlayerFields({player, gesture, correct, score}) {
+function updatePlayerFields({player, gesture, correct, score, bonus}) {
   player.score += score;
+  player.score += bonus;
   let motionRecord = correct? player.successfulMotions : player.failedMotions
   let numMotions = motionRecord[gesture] || 0;
   motionRecord[gesture] = numMotions + 1;
@@ -189,7 +234,7 @@ function sortPlayers(p1, p2)  {
   return p1.username.localeCompare(p2.username);
 }
 
-async function sendFeedback({ws, score, uuid, player, gesture, correct, probability, prediction}) {
+async function sendFeedback({ws, uuid, player, score, bonus, gesture, correct, probability, prediction}) {
   let feedbackMsg = {
     type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
     uuid,
@@ -197,6 +242,7 @@ async function sendFeedback({ws, score, uuid, player, gesture, correct, probabil
     correct,
     probability,
     score,
+    bonus,
     totalScore: player.score,
     prediction
   };
