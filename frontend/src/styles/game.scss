@@ -62,6 +62,17 @@
     background-size: cover;
     width: 100%;
     height: 100%;
+
+    h1 {
+      font-size: calc(2rem + 4vw);
+      margin: 0;
+    }
+
+    h2 {
+      font-size: calc(2rem + .5vw);
+      text-shadow:1px 1px 0 rgba(255,255,255,1), 2px 2px 0 rgba(8, 187, 178, 0.8);
+      margin: 0;
+    }
   }
   &.paused {
     padding-top: 40vh;
@@ -80,7 +91,6 @@
 
   .button-container {
     transition: all 0.25s;
-    background-size: 260%;
     margin: .75em;
     border-radius: .5em;
     display: inline-block;
@@ -88,12 +98,17 @@
     border: 0.1em #ccc solid;
     width: 25vw;
     height: 25vw;
-    background-repeat: no-repeat;
-    background-position: -20vw -1vh;
 
     &.selected {
       border: 0.1em white solid;
       background-color: white;
+    }
+
+    img {
+      width: 100%;
+      height: 55%;
+      margin-top: 0.4em;
+      display: block;
     }
 
     h3 {
@@ -102,7 +117,7 @@
     }
   }
 
-  .button-container:disabled {
+  .button-container[disabled="true"] {
     border: 0.1em white dashed;
     background-color: transparent;
   }

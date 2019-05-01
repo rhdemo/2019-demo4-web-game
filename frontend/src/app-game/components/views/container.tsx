@@ -28,17 +28,15 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     super()
 
     log('creating')
-    this.setState({ config: getState().config })
+
+    this.setState({ gameState: getState().config.gameState })
   }
 
   async componentWillMount () {
     log('mounting')
-    const onConfigChange = () => {
-      this.setState({ config: getState().config })
-    }
 
-    emitter.on(ApplicationEventTypes.ConfigUpdate, () =>
-      onConfigChange()
+    emitter.on(ApplicationEventTypes.GameStateChanged, (gameState: ConfigGameMode) =>
+      this.setState({ gameState })
     )
 
     initialiseMotionAndOrientationTracking()
@@ -54,7 +52,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     log('rendering')
     let v: JSX.Element
 
-    const { gameState, machineId, playerId, score, successfulMotions } = this.state.config
+    const { gameState, machineId, playerId, score } = getState().config
 
     if (getState().unsupportedDevice) {
       return <DeviceUnsupportedView />
@@ -64,12 +62,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       return <GameBorkedView />
     }
 
-    const activeView = <GameActiveView
-      gameState={gameState}
-      machineId={machineId}
-      score={score}
-      playerId={playerId}
-    />
+    const activeView = <GameActiveView gameState={gameState} machineId={machineId} playerId={playerId} score={score} />
 
     switch (gameState) {
       case ConfigGameMode.Loading:
@@ -85,7 +78,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = activeView
         break
       case ConfigGameMode.Stopped:
-        v = <GameStoppedView motions={successfulMotions} playerId={playerId} score={score}/>
+        v = <GameStoppedView/>
         break
       case ConfigGameMode.Lobby:
         v = activeView
@@ -111,6 +104,5 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 }
 
 interface ViewsContainerState {
-  config: GameConfiguration
-  playerId: string
+  gameState: ConfigGameMode
 }

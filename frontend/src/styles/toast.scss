@@ -1,7 +1,8 @@
-.toast {
+@import 'variables.scss';
 
+.toast {
   position: fixed;
-  background: #078ebe;
+  background: white;
   position: fixed;
   top: 75%;
   left: 50%;
@@ -14,10 +15,17 @@
   opacity: 1;
   transition: opacity 0.5s;
 
-  h3 {
-    text-shadow: rgb(51, 51, 51) 1px 1px 3px;
-    font-weight: bold;
+  img {
+    width: 12vw;
     margin: 1em;
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+
+  h2 {
+    text-shadow:1px 1px 0 rgba(255,255,255,1), 2px 2px 0 rgba($brand-green, 0.3);
   }
 }
 

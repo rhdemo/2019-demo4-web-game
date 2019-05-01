@@ -20,7 +20,7 @@
 
 "@evanshortiss/radial-indicator@evanshortiss/radial-indicator#types":
   version "1.0.0"
-  resolved "https://codeload.github.com/evanshortiss/radial-indicator/tar.gz/af772e1de9af34c09408dd377880feac1d9b1fe9"
+  resolved "https://codeload.github.com/evanshortiss/radial-indicator/tar.gz/9769ac2baee8fdd81be472440915424d6525e24d"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -2979,10 +2979,6 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
 
-gyronorm@evanshortiss/gyronorm.js#types:
-  version "2.0.6"
-  resolved "https://codeload.github.com/evanshortiss/gyronorm.js/tar.gz/0981cee7723bb229f5dcdadf1977b743847c39eb"
-
 gzip-size@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/gzip-size/-/gzip-size-4.1.0.tgz#8ae096257eabe7d69c45be2b67c448124ffb517c"
@@ -5081,6 +5077,10 @@ ora@^2.1.0:
     log-symbols "^2.2.0"
     strip-ansi "^4.0.0"
     wcwidth "^1.0.1"
+
+ordinal@evanshortiss/ordinal:
+  version "1.0.2"
+  resolved "https://codeload.github.com/evanshortiss/ordinal/tar.gz/6732a73da955e8020ce87b368621d444caa9c832"
 
 os-browserify@^0.3.0:
   version "0.3.0"
