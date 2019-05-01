@@ -101,6 +101,7 @@ export namespace WSS {
       probability: number
       uuid: string
       score: number
+      bonus: number
       totalScore: number
       prediction: {
         candidate: string
