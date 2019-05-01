@@ -47,20 +47,6 @@ body {
 }
 
 .stopped .overlay {
-  h1 {
-    color: $brand-pink;
-    font-size: calc(2rem + 4vw);
-    margin: 0;
-    text-shadow:1px 1px 0 rgba(255,255,255,1), 2px 2px 0 rgba(252, 81, 105, 0.8);
-  }
-
-  h2 {
-    color: $brand-green;
-    font-size: calc(2rem + .5vw);
-    margin: 0;
-    text-shadow:1px 1px 0 rgba(255,255,255,1), 2px 2px 0 rgba(8, 187, 178, 0.8);
-  }
-
   .message {
     background: #fff;
     border-radius: 5px;
@@ -71,4 +57,13 @@ body {
     box-shadow: 2px 2px 30px rgba(0,0,0,0.2);
     animation: message .5s;
   }
+}
+
+.pink-text {
+  color: $brand-pink;
+  text-shadow:1px 1px 0 rgba(255,255,255,1), 2px 2px 0 rgba(252, 81, 105, 0.8);
+}
+
+.green-text {
+  color: $brand-green;
 }

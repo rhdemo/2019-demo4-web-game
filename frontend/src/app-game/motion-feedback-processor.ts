@@ -1,13 +1,18 @@
 import { WSS } from '@app/interfaces'
 import { setPlayerScore, setToastMessage } from '@app/store'
+import { toSentence } from '@app/utils';
 
 export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
   if (feedback.correct) {
-    setToastMessage(`Your ${feedback.gesture} was recognised successfully!`)
+    setToastMessage({
+      title: `Nice ${toSentence(feedback.gesture)}!`,
+      subtitle: `${feedback.score} points`
+    })
   } else {
-    setToastMessage(
-      `You attempted a ${feedback.gesture}, but it wasn't quite right. Try again!`
-    )
+    setToastMessage({
+      title: 'Uh oh!',
+      subtitle: `Try doing the ${toSentence(feedback.gesture)} again`
+    })
   }
 
   setPlayerScore(feedback.totalScore)
