@@ -7,11 +7,11 @@
   "license": "MIT",
   "main": "public/index.html",
   "scripts": {
-    "clean": "rm -rf dist .cache",
+    "clean": "rm -rf dist .cache tmp",
     "format": "prettier src/**/*.ts src/**/*.tsx public/*.html --write",
     "start": "parcel serve public/*.html",
     "prebuild": "yarn lint && yarn clean",
-    "build": "npm run clean && env NODE_ENV=production parcel build --detailed-report --public-url ./ ./public/*.html",
+    "build": "npm run clean && env NODE_ENV=production parcel build --no-source-maps --public-url ./ ./public/*.html",
     "build:dev": "env NODE_ENV=development parcel build public/*.html",
     "postbuild": "cp nginx.conf dist",
     "lint": "tslint --format stylish --fix --project tsconfig.json",
@@ -25,6 +25,7 @@
     }
   },
   "dependencies": {
+    "@evanshortiss/radial-indicator": "evanshortiss/radial-indicator#types",
     "debug": "^4.1.1",
     "env-var": "^3.4.2",
     "webmo": "^0.5.2"

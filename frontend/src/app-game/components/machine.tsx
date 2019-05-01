@@ -2,9 +2,14 @@ import { Component, h } from 'preact'
 import { machineIdToLetter } from '@app/utils'
 import { ApplicationEventTypes, emitter, getState } from '@app/store'
 import { GameConfiguration } from '@app/interfaces'
+import {
+  radialIndicator,
+  RadialIndicatorInstance
+} from '@evanshortiss/radial-indicator'
 
 import getLogger from '@app/log'
 
+import BabyBlueMachineLightning from '@public/assets/images/svg/machines/baby-blue-machine-lightning.svg'
 import BabyBlueMachine from '@public/assets/images/svg/machines/baby-blue-machine.svg'
 import BlackMachine from '@public/assets/images/svg/machines/black-machine.svg'
 import GreenMachine from '@public/assets/images/svg/machines/green-machine.svg'
@@ -17,36 +22,38 @@ import RedAltMachine from '@public/assets/images/svg/machines/red-alt-machine.sv
 
 const log = getLogger('component:machine')
 
-// Maps machine orientation, 0 is left hand, 1 is right
-// 1 means we apply row-reverse flex setting in CSS
+// This is required due to the orientation of machines.
+// Some need to be on the left of the screen, some right.
+// 0 is left hand, 1 is right. 1 means we apply row-reverse
+// flex setting in CSS
 const machineReverseMap: { [key: number]: number} = {
   0: 0,
-  1: 1,
-  2: 1,
+  1: 0,
+  2: 0,
   3: 0,
   4: 1,
   5: 1,
-  6: 0,
+  6: 1,
   7: 0,
-  8: 0,
+  8: 1,
   9: 0
 }
 
-const machineSvgMap: Record<number, any> = {
+const machineSvgMap: Record<number, string> = {
   0: YellowMachine,
-  1: GreenMachine,
-  2: PurpleMachine,
-  3: PinkMachine,
-  4: BlackMachine,
-  5: RedAltMachine,
-  6: BabyBlueMachine,
-  7: TurquoiseMachine,
-  8: YellowMachine, // TODO seem to be missing this one it's a robot arm?
-  9: RedMachine
+  1: RedMachine,
+  2: TurquoiseMachine,
+  3: BabyBlueMachineLightning,
+  4: GreenMachine,
+  5: PurpleMachine,
+  6: BlackMachine,
+  7: BabyBlueMachine,
+  8: RedAltMachine,
+  9: PinkMachine
 }
 
 export class MachineSvgComponent extends Component<MachineSvgProps, { config: GameConfiguration }> {
-  private indicator: RadialIndicatorInstance<RadialIndicatorOptions> | undefined
+  private indicator: RadialIndicatorInstance | undefined
 
   constructor () {
     log('create')
@@ -79,10 +86,17 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
   }
 
   componentDidMount () {
-    this.indicator = window.radialIndicator('#indicator-container', {
+    this.indicator = radialIndicator('#indicator-container', {
       initValue: 100,
-      barColor: '#33FF66',
-      fontFamily: 'Overpass',
+      barColor: {
+        100: '#33FF66',
+        70: '#ff9e1d',
+        30: '#ff0000',
+        0: '#ff0000'
+      },
+      reverse: true,
+      interpolate: false,
+      fontFamily: 'Lato',
       radius: 30,
       fontColor: '#111',
       format: () => {
@@ -105,10 +119,7 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
 
     return (
       <div class={`machine-info-container ${this.isReversed() ? 'reverse' : ''}`}>
-        <div style='flex: 0.7;' class='machine-container'>
-          <img src={svg} />
-        </div>
-
+        <div class='machine-container' style={`flex: 0.7; background-image: url(${svg});`}/>
         <div style='flex: 0.3;' id='indicator-container' />
       </div>
     )

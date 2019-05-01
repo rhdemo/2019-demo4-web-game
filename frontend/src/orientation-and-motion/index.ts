@@ -7,7 +7,7 @@ import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
 import nanoid from 'nanoid'
-import { addCurrentGestureToHistory, getCurrentSelectedGesture } from '@app/store'
+import { addCurrentGestureToHistory, ApplicationEventTypes, emitter, getCurrentSelectedGesture } from '@app/store'
 import getLogger from '@app/log'
 
 const log = getLogger('motion')
@@ -44,14 +44,12 @@ type EmitterCallback = (data: MotionVectors) => void
 let _callback: EmitterCallback = (data) => {
   if (hasSufficientMotionData(data)) {
     const uuid = nanoid()
-    // TODO - Need to get this from our central state store
-    // TODO - The server will eventually send us the motion
-    const gesture = 'todo'
 
     addCurrentGestureToHistory(uuid)
 
     log('sending motion data to the server')
     sendMotionAndOrientationData({ ...data, uuid, gesture: getCurrentSelectedGesture() || 'unspecified' })
+    emitter.emit(ApplicationEventTypes.MotionUpdate, data)
   } else {
     log('data captured but not sent was:', data)
   }
@@ -130,6 +128,8 @@ export async function initialiseMotionAndOrientationTracking (
 
   // If mode is dev then just ignore the check results, e.g running on desktop
   if (!isProduction || (supports[0] && supports[1])) {
+    log('initialising motion capture')
+
     ml = new MotionListener(
       (e) => mBuffer.push(e),
       Object.assign({}, DEFAULT_MOTION_OPTS, options ? options.mOpts : {})
@@ -140,6 +140,7 @@ export async function initialiseMotionAndOrientationTracking (
       Object.assign({}, DEFAULT_ORIENTATION_OPTS, options ? options.oOpts : {})
     )
   } else {
+    log('device motion appears to be unavailable')
     throw new DeviceMotionUnavailableError(supports[0], supports[1])
   }
 }

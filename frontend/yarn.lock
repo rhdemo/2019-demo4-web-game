@@ -18,6 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@evanshortiss/radial-indicator@evanshortiss/radial-indicator#types":
+  version "1.0.0"
+  resolved "https://codeload.github.com/evanshortiss/radial-indicator/tar.gz/af772e1de9af34c09408dd377880feac1d9b1fe9"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

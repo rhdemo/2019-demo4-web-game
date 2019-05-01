@@ -58,23 +58,53 @@
   &.lobby {
     padding-top: 30vh;
   }
-  &.paused, &.stopped {
+  &.stopped {
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+  }
+  &.paused {
     padding-top: 40vh;
   }
 
 }
 
+.button-move-selector {
+  width: 100vw;
+  margin-top: 12vh;
 
-
-.move-selector {
-  align-items: center;
-  margin-top: 25vh;
-  display: flex;
-
-  #move-scroller h2 {
-    text-transform: uppercase;
+  h2 {
     color: white;
-    text-shadow: rgb(51, 51, 51) 1px 1px 3px;
+    text-shadow: #333 1px 1px 3px;
+  }
+
+  .button-container {
+    transition: all 0.25s;
+    background-size: 260%;
+    margin: .75em;
+    border-radius: .5em;
+    display: inline-block;
+    background-color: #ccc;
+    border: 0.1em #ccc solid;
+    width: 25vw;
+    height: 25vw;
+    background-repeat: no-repeat;
+    background-position: -20vw -1vh;
+
+    &.selected {
+      border: 0.1em white solid;
+      background-color: white;
+    }
+
+    h3 {
+      margin: 0;
+      padding-top: .75em;
+    }
+  }
+
+  .button-container:disabled {
+    border: 0.1em white dashed;
+    background-color: transparent;
   }
 }
 
@@ -106,10 +136,20 @@
     display: flex;
     bottom: 0;
     position: absolute;
+    min-height: 20vh;
+
+    .machine-container {
+      background-repeat: no-repeat;
+      background-position: left;
+    }
   }
 
   .machine-info-container.reverse {
     flex-direction: row-reverse;
+
+    .machine-container {
+      background-position: right;
+    }
   }
 
   /* CSS specific to iOS devices becuase Safari is garbage */
@@ -133,11 +173,23 @@
   }
 
   .machine-container {
+    text-align: left;
+
     img {
       position: relative;
       bottom: -3px;
+      max-width: 55vw;
     }
 
   }
+}
 
+@media screen and (min-height: 700px) {
+  .machine-info-container {
+    min-height: 25vh;
+  }
+
+  .button-move-selector {
+    margin-top: 18vh;
+  }
 }

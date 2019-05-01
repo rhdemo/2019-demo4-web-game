@@ -1,11 +1,9 @@
 import { Component, h } from 'preact'
 import { GameLoadingView } from './game.loading'
-import { GamePausedView } from './game.paused'
 import { GameBorkedView } from './game.borked'
 import { GameStoppedView } from './game.stopped'
 import { GameActiveView } from './game.active'
 import { GameReadyView } from './game.ready'
-import { GameLobbyView } from './game.lobby'
 import { Toast } from '@app/app-game/components/toast'
 import { connect } from '@app/websocks/ws'
 import {
@@ -56,6 +54,8 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     log('rendering')
     let v: JSX.Element
 
+    const { gameState, machineId, playerId, score, successfulMotions } = this.state.config
+
     if (getState().unsupportedDevice) {
       return <DeviceUnsupportedView />
     }
@@ -64,7 +64,14 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       return <GameBorkedView />
     }
 
-    switch (this.state.config.gameState) {
+    const activeView = <GameActiveView
+      gameState={gameState}
+      machineId={machineId}
+      score={score}
+      playerId={playerId}
+    />
+
+    switch (gameState) {
       case ConfigGameMode.Loading:
         v = <GameLoadingView />
         break
@@ -72,27 +79,27 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
         v = <GameReadyView />
         break
       case ConfigGameMode.Active:
-        v = <GameActiveView />
+        v = activeView
         break
       case ConfigGameMode.Paused:
-        v = <GamePausedView />
+        v = activeView
         break
       case ConfigGameMode.Stopped:
-        v = <GameStoppedView />
+        v = <GameStoppedView motions={successfulMotions} playerId={playerId} score={score}/>
         break
       case ConfigGameMode.Lobby:
-        v = <GameLobbyView />
+        v = activeView
         break
       default:
         setError(
           new Error(
-            `Received unknown game state of "${this.state.config.gameState}"`
+            `Received unknown game state of "${gameState}"`
           )
         )
         v = <GameBorkedView />
     }
 
-    const classname = `game-el-container machine-${getMachineColourFromId(this.state.config.machineId)}`
+    const classname = `game-el-container machine-${getMachineColourFromId(machineId)}`
 
     return (
       <div class={classname}>
