@@ -1,11 +1,11 @@
 const WebSocket = require("ws");
 const log = require("../utils/log")("send");
 
-async function send(ws, msg) {
+function send(ws, msg) {
   // log.debug("send", msg);
   try {
     if (ws.readyState === WebSocket.OPEN) {
-      return await ws.send(msg);
+      ws.send(msg);
     } else {
       log.warn("Attempted to send message on closed socket");
     }

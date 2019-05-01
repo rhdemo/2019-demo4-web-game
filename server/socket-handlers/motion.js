@@ -116,7 +116,7 @@ async function motionHandler(ws, messageObj) {
     sendVibration({uuid, player, gesture, probability});
   }
 
-  return sendFeedback({ws, uuid, player, score, bonus, gesture, correct, probability, prediction});
+  sendFeedback({ws, uuid, player, score, bonus, gesture, correct, probability, prediction});
 }
 
 function getResults(gesture, prediction) {
@@ -234,7 +234,7 @@ function sortPlayers(p1, p2)  {
   return p1.username.localeCompare(p2.username);
 }
 
-async function sendFeedback({ws, uuid, player, score, bonus, gesture, correct, probability, prediction}) {
+function sendFeedback({ws, uuid, player, score, bonus, gesture, correct, probability, prediction}) {
   let feedbackMsg = {
     type: OUTGOING_MESSAGE_TYPES.MOTION_FEEDBACK,
     uuid,
@@ -247,7 +247,7 @@ async function sendFeedback({ws, uuid, player, score, bonus, gesture, correct, p
     prediction
   };
 
-  return send(ws, JSON.stringify(feedbackMsg));
+  send(ws, JSON.stringify(feedbackMsg));
 }
 
 function sendVibration({uuid, player, gesture, probability}) {
