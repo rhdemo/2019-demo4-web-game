@@ -13,7 +13,7 @@
   border: 1px solid;
   border-color: rgba(51, 51, 51, 0.25);
   opacity: 1;
-  transition: opacity 0.5s;
+  transition: all 0.5s;
 
   img {
     width: 12vw;
@@ -31,4 +31,5 @@
 
 .toast.hidden {
   opacity: 0;
+  top: 120%;
 }
