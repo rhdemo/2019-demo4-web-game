@@ -15,6 +15,7 @@ import IconFloss from '@public/assets/images/svg/moves/icon-floss.svg'
 import IconRoll from '@public/assets/images/svg/moves/icon-roll.svg'
 import IconShake from '@public/assets/images/svg/moves/icon-shake.svg'
 import IconX from '@public/assets/images/svg/moves/icon-x.svg'
+import { toSentence } from '@app/utils'
 
 const moveIconsMap: { [key: string]: string } = {
   'circle': IconCircle,
@@ -97,21 +98,22 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     const selectedGesture = getCurrentSelectedGesture()
     const buttons = Object.keys(this.state.config.gameMotions)
       .map((m) => {
-        let style = ``
+        let imageTag: JSX.Element | undefined
         const isEnabled = this.state.config.gameMotions[m]
         const isSelected = m === selectedGesture
 
         if (isEnabled) {
-          style = `background-image: url(${moveIconsMap[m]});`
+          imageTag = <img src={moveIconsMap[m]}/>
         }
 
         return (
           <div
             onClick={() => this.onButtonPress(m, isEnabled)}
             class={`button-container stage-shadow ${isSelected ? 'selected' : ''}`}
-            disabled={!isEnabled} style={style}
+            disabled={!isEnabled}
           >
-            {isEnabled ? <h3>{m}</h3> : <h3>&nbsp;</h3>}
+            {isEnabled ? <h3>{toSentence(m)}</h3> : <h3>&nbsp;</h3>}
+            {imageTag}
           </div>
         )
       })
