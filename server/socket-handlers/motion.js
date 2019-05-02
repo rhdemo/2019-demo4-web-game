@@ -209,8 +209,7 @@ async function updateLeaderboard(player) {
 
   const length = global.leaderboard.players.length;
 
-  if (length < LEADERBOARD_MAX || player.score >= global.leaderboard.players[length - 1].score) {
-    await readLeaderboard();
+  if (length < LEADERBOARD_MAX || player.score > global.leaderboard.players[length - 1].score) {
     let newLeaders = global.leaderboard.players.filter(leader => leader.id !== player.id);
     newLeaders.push(player)
     newLeaders = newLeaders.sort(sortPlayers);
