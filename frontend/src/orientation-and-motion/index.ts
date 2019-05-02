@@ -60,7 +60,7 @@ export class DeviceMotionUnavailableError extends Error {
     public readonly motionSupported: boolean,
     public readonly orientationSupported: boolean
   ) {
-    super()
+    super('Device motion and orientation data appears to be unavailable.')
 
     Object.setPrototypeOf(this, DeviceMotionUnavailableError.prototype)
   }
