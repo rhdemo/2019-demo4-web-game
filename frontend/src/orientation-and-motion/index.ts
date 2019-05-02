@@ -6,8 +6,8 @@ import {
 import { MotionListener, MotionListenerEvent } from 'webmo/src/motion'
 import { MotionVectors } from '@app/interfaces'
 import { sendMotionAndOrientationData } from '@app/websocks/ws'
-import nanoid from 'nanoid'
 import { addCurrentGestureToHistory, ApplicationEventTypes, emitter, getCurrentSelectedGesture } from '@app/store'
+import nanoid from 'nanoid'
 import getLogger from '@app/log'
 
 const log = getLogger('motion')
@@ -16,6 +16,8 @@ const log = getLogger('motion')
 const TS_INDEX = 6
 // We must have motion events that span more than this time (in milliseconds)
 const MIN_MOTION_CAP_LEN = 2000
+// Time to wait for events before deciding the device lacks motion support
+const SUPPORTS_CHECK_TIMEOUT = 3000
 
 const DEFAULT_MOTION_OPTS = {
   autoStart: false,
@@ -122,8 +124,9 @@ export async function initialiseMotionAndOrientationTracking (
   }
 
   const supports = await Promise.all([
-    webmo.motion.deviceHasMotionSupport(),
-    webmo.orientation.deviceHasOrientationSupport()
+    // Wait a little longer than the default 1 second so slower devices
+    webmo.motion.deviceHasMotionSupport(SUPPORTS_CHECK_TIMEOUT),
+    webmo.orientation.deviceHasOrientationSupport(SUPPORTS_CHECK_TIMEOUT)
   ])
 
   // If mode is dev then just ignore the check results, e.g running on desktop
