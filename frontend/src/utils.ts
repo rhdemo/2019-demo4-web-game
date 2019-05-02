@@ -1,9 +1,13 @@
 export function isDeviceSupported () {
   if (process.env.NODE_ENV === 'production') {
-    return navigator.userAgent.match(/ipod|iphone|ipad|android/ig) !== null
+    return isMobileDevice()
   } else {
     return true
   }
+}
+
+export function isMobileDevice () {
+  return navigator.userAgent.match(/ipod|iphone|ipad|android/ig) !== null
 }
 
 export function isAppleTwelveDevice () {
