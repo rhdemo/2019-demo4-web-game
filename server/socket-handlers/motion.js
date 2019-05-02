@@ -1,5 +1,5 @@
 const env = require("env-var");
-const axios = require("axios");
+const request = require("../utils/request");
 const lodashGet = require('lodash/get');
 
 const log = require("../utils/log")("socket-handlers/motion");
@@ -52,8 +52,7 @@ async function motionHandler(ws, messageObj) {
   } else {
     try {
       const startTime = new Date();
-      const gestureResponse = await axios({
-        timeout: 5000,
+      const gestureResponse = await request({
         headers: {
           "Host": PREDICTION_HOST_HEADER,
           "content-type": "application/json",

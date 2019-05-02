@@ -3,7 +3,14 @@ const {INCOMING_MESSAGE_TYPES} = require("../message-types");
 
 
 function processSocketMessage(ws, messageStr) {
-    let messageObj = JSON.parse(messageStr);
+    let messageObj;
+
+    try {
+      messageObj = JSON.parse(messageStr);
+    } catch (error) {
+      log.error("Malformed socket message JSON:", error.message);
+      return;
+    }
 
     switch (messageObj.type) {
         case INCOMING_MESSAGE_TYPES.CONNECTION:
