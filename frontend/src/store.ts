@@ -1,7 +1,7 @@
 import getLogger from '@app/log'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import { EventEmitter } from 'events'
-import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS, ToastMessage } from './interfaces'
+import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, ToastMessage, WSS } from './interfaces'
 import { getStoredGameId, getStoredPlayerId, isDeviceSupported } from './utils'
 import IncomingFrames = WSS.IncomingFrames
 
@@ -200,8 +200,6 @@ export function setToastMessage (msg: ToastMessage) {
 
   emitter.emit(ApplicationEventTypes.AppStateUpdate)
 }
-
-(window as any).toast = setToastMessage
 
 /**
  * Set machine health configuration
