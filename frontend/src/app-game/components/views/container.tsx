@@ -41,7 +41,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     initialiseMotionAndOrientationTracking()
       .then(() => connect())
-      .then(() => setGameMode(ConfigGameMode.Ready))
+      .then(() => setGameMode(this.state.gameState))
       .catch((err) => {
         setError(err)
         setGameConfiguration(Object.create({ gameState: ConfigGameMode.Borked }))
