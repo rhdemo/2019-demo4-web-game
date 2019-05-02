@@ -1,5 +1,5 @@
 const env = require("env-var");
-const axios = require("axios");
+const request = require("../utils/request");
 const _ = require('lodash');
 
 const log = require("../utils/log")("socket-handlers/motion");
@@ -23,7 +23,7 @@ async function trainingMotionHandler(ws, messageObj) {
   let correct;
 
     try {
-      let gestureResponse = await axios({
+      let gestureResponse = await request({
         headers: {
           "Host": PREDICTION_HOST_HEADER,
           "content-type": "application/json",
