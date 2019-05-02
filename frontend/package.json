@@ -25,9 +25,10 @@
     }
   },
   "dependencies": {
-    "@evanshortiss/radial-indicator": "evanshortiss/radial-indicator#types",
+    "@evanshortiss/radial-indicator": "^1.0.0",
     "debug": "^4.1.1",
     "env-var": "^3.4.2",
+    "nosleep.js": "evanshortiss/nosleep.js#types",
     "ordinal": "evanshortiss/ordinal",
     "webmo": "^0.5.2"
   },
