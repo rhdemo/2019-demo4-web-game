@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 const send = require("../utils/send");
-const axios = require("axios");
+const request = require("../utils/request");
 const log = require("../utils/log")("datagrid/read-machines");
 const {OUTGOING_MESSAGE_TYPES} = require("../message-types");
 const MAX_HEALTH = 1000000000000000000;
@@ -28,7 +28,7 @@ async function readMachines(broadcastAll) {
 
 async function refreshMachine(machine, alwaysBroadcast) {
   try {
-    let response = await axios({method: "get", url: machine.url, timeout: 5000});
+    let response = await request({method: "get", url: machine.url});
     machine.value = response.data;
   } catch (error) {
     log.error(`error occurred in http call get counter for machine ${machine.id}`);
