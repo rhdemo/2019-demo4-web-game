@@ -5,6 +5,7 @@ const {OUTGOING_MESSAGE_TYPES} = require("./message-types");
 const machines = require("./models/machines");
 const {kafkaProducer} = require("./kafka-producer")
 const broadcast = require("./utils/broadcast");
+const logHeap = require("./utils/log-heap");
 const processSocketMessage = require("./socket-handlers/process-socket-message");
 require("./datagrid/enable-logging");
 const initData = require("./datagrid/init-data");
@@ -54,6 +55,7 @@ log.info(`Started Game server on ${IP}:${PORT}`);
 
 setInterval(function () {
   broadcast(OUTGOING_MESSAGE_TYPES.HEARTBEAT);
+  logHeap();
 }, 5000);
 
 
