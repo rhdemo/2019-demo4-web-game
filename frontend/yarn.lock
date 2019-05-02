@@ -18,9 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@evanshortiss/radial-indicator@evanshortiss/radial-indicator#types":
+"@evanshortiss/radial-indicator@^1.0.0":
   version "1.0.0"
-  resolved "https://codeload.github.com/evanshortiss/radial-indicator/tar.gz/9769ac2baee8fdd81be472440915424d6525e24d"
+  resolved "https://registry.yarnpkg.com/@evanshortiss/radial-indicator/-/radial-indicator-1.0.0.tgz#954d80757b7f597f4e6d0bcedc846bd295c4e778"
+  integrity sha512-mR5L8soJQyV0DxnRfsoeW+UMYN9rva3bHLwxBDPogTUfGqijgbX4sr/TDQl04AoK4wJPNJCtltk1V0ULuB3cgQ==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -4891,6 +4892,10 @@ normalize-url@^3.0.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
+
+nosleep.js@evanshortiss/nosleep.js#types:
+  version "0.10.0"
+  resolved "https://codeload.github.com/evanshortiss/nosleep.js/tar.gz/ee7ae39f48dd41ede3b7b211549dd1644edd71a9"
 
 npm-bundled@^1.0.1:
   version "1.0.5"
