@@ -1,7 +1,7 @@
 import getLogger from '@app/log'
 import StrictEventEmitter from 'strict-event-emitter-types'
 import { EventEmitter } from 'events'
-import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, WSS } from './interfaces'
+import { ConfigGameMode, GameConfiguration, GestureHistoryEntry, ToastMessage, WSS } from './interfaces'
 import { getStoredGameId, getStoredPlayerId, isDeviceSupported } from './utils'
 import IncomingFrames = WSS.IncomingFrames
 
@@ -17,6 +17,7 @@ export enum ApplicationEventTypes {
   ServerHeartBeat = 'ws:frame:heartbeat',
   MotionUpdate = 'orientation-motion:update',
   AppStateUpdate = 'app-state:update',
+  GameStateChanged = 'app-state:game-state-change',
   SelectedGestureChange = 'app-state:gesture-change',
   Score = 'app-state:score'
 }
@@ -33,6 +34,7 @@ export interface ApplicationEventHandlers {
   [ApplicationEventTypes.AppStateUpdate]: () => void
   [ApplicationEventTypes.SelectedGestureChange]: (gesture?: string) => void
   [ApplicationEventTypes.Score]: (score: number) => void
+  [ApplicationEventTypes.GameStateChanged]: (state: ConfigGameMode) => void
 }
 
 /**
@@ -47,12 +49,13 @@ export interface ApplicationState {
   gestureHistory: GestureHistoryEntry[]
   feedbackHistory: IncomingFrames.MotionFeedback[]
   unsupportedDevice: boolean
-  toastMessage?: string
+  toastMessage?: ToastMessage
 }
 
 const state: ApplicationState = {
   // Always initialise in loading state
   config: {
+    playerPlace: 1,
     successfulMotions: {},
     gameState: ConfigGameMode.Loading,
 
@@ -117,9 +120,15 @@ export function setGameConfiguration (config: GameConfiguration) {
     localStorage.setItem('gameId', config.gameId)
   }
 
+  const oldGameState = state.config.gameState
+
   state.config = config
 
   emitter.emit(ApplicationEventTypes.ConfigUpdate, config)
+
+  if (config.gameState !== oldGameState) {
+    emitter.emit(ApplicationEventTypes.GameStateChanged, config.gameState)
+  }
 }
 
 /**
@@ -185,9 +194,9 @@ export function clearGestureToHistory (entry: GestureHistoryEntry) {
 /**
  * Set a message to appear in a toast
  */
-export function setToastMessage (toastMessage: string) {
-  log(`setting toast message to ${toastMessage}`)
-  state.toastMessage = toastMessage
+export function setToastMessage (msg: ToastMessage) {
+  log(`setting toast message to ${msg}`)
+  state.toastMessage = msg
 
   emitter.emit(ApplicationEventTypes.AppStateUpdate)
 }

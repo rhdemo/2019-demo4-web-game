@@ -37,6 +37,10 @@ export function removeStoredGameId () {
   localStorage.removeItem('gameId')
 }
 
+export function toSentence (str: string) {
+  return `${str.charAt(0).toUpperCase()}${str.slice(1, str.length)}`
+}
+
 export function getMachineColourFromId (id: number) {
   const idColorMap: Record<number, string> = {
     0: 'yellow',
