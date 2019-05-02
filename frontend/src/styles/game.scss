@@ -89,6 +89,13 @@
     }
   }
 
+  &.rotate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
   &.lobby {
     padding-top: 30vh;
   }

@@ -15,6 +15,10 @@ export function isAppleTwelveDevice () {
   return navigator.userAgent.match(/iPhone OS 12_2/gi)
 }
 
+export function isInPortraitOrientation () {
+  return window.innerHeight > window.innerWidth
+}
+
 export function machineIdToLetter (id: number) {
   const letters = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k' ]
 

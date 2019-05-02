@@ -18,7 +18,8 @@ import { initialiseMotionAndOrientationTracking } from '@app/orientation-and-mot
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import getLogger from '@app/log'
 import { DeviceUnsupportedView } from './device-unsupported'
-import { getMachineColourFromId } from '@app/utils'
+import { getMachineColourFromId, isInPortraitOrientation } from '@app/utils'
+import { GameRotateView } from './game.rotate';
 
 const log = getLogger('view:container')
 const toast = <Toast></Toast>
@@ -29,10 +30,35 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     log('creating')
 
-    this.setState({ gameState: getState().config.gameState })
+    this.setState({
+      gameState: getState().config.gameState,
+      requiresRotation: isInPortraitOrientation() ? false : true
+    })
+
+    // Yes, I hate this too, but we need to ensure the UI reflows correctly,
+    // and due to the animations performed by various mobile OSes upon
+    // rotation we can't accurately detrmine when the animation ends, so
+    // we just keep calling this instead
+    setInterval(() => this.resetHeight(), 100)
+    window.addEventListener('orientationchange',  (ev) => {
+      const orientation = window.orientation
+
+      if (typeof orientation === 'number') {
+        this.setState({
+          requiresRotation: orientation !== 0 && orientation !== 180
+        })
+      }
+    })
   }
 
-  async componentWillMount () {
+  resetHeight () {
+    // On iOS and Android the address/menu bars overlay content. Visually this
+    // is not appealing. Constraing the content area within window.innerHeight
+    const mountNode = document.getElementById('root') as HTMLElement
+    mountNode.style.height = `${window.innerHeight}px`
+  }
+
+  componentWillMount () {
     log('mounting')
 
     emitter.on(ApplicationEventTypes.GameStateChanged, (gameState: ConfigGameMode) =>
@@ -60,6 +86,10 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     if (getState().error) {
       return <GameBorkedView />
+    }
+
+    if (this.state.requiresRotation) {
+      return <GameRotateView />
     }
 
     const activeView = <GameActiveView gameState={gameState} machineId={machineId} playerId={playerId} score={score} />
@@ -105,4 +135,5 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
 interface ViewsContainerState {
   gameState: ConfigGameMode
+  requiresRotation: boolean
 }
