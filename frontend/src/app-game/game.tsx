@@ -1,7 +1,7 @@
 import { h, render } from 'preact'
 import { App } from './game.view'
 import NoSleep from 'nosleep.js'
-import { isMobileDevice } from '@app/utils';
+import { isMobileDevice } from '@app/utils'
 
 // On iOS and Android the address/menu bars overlay content. Visually this
 // is not appealing. Constraing the content area within window.innerHeight
@@ -15,9 +15,9 @@ if (isMobileDevice()) {
   document.addEventListener('touchstart', function enableNoSleep () {
     console.log('NoSleep is now enabled!')
 
-    document.removeEventListener('touchstart', enableNoSleep, false);
-    plsnoslp.enable();
-  }, false);
+    document.removeEventListener('touchstart', enableNoSleep, false)
+    plsnoslp.enable()
+  }, false)
 }
 
 render(<App />, mountNode, mountNode.lastChild as HTMLElement)
