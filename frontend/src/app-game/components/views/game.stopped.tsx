@@ -22,13 +22,20 @@ export class GameStoppedView extends Component<{}, {}> {
       return n > 0 ? memo + 1 : memo
     }, 0)
 
+    let playerPlaceContent = <p></p>
+
+    if (playerPlace) {
+      // If the player was in the top X players add it to the UI
+      playerPlaceContent = <p>{playerPlace}<sup>{indicator(playerPlace)}</sup> place</p>
+    }
+
     return (
       <div style={`background-image: url(${GameOverSVG})`} class='game stopped'>
         <div class='overlay'>
           <h1 class='pink-text'>Game Over</h1>
           <h2 class='green-text'>{playerId}</h2>
           <div class='message'>
-            <p>{playerPlace}<sup>{indicator(playerPlace)}</sup> place</p>
+            {playerPlaceContent}
             <p>Final score: {score}</p>
             <p>You did {motionsPerformedCount} out of {Object.values(successfulMotions).length} motions</p>
           </div>
