@@ -1,5 +1,5 @@
 import { WSS } from '@app/interfaces'
-import { setPlayerScore, setToastMessage } from '@app/store'
+import { setPlayerScore, setToastMessage, setGameConfiguration, getState } from '@app/store'
 import { toSentence } from '@app/utils'
 import { Howl, Howler } from 'howler'
 
@@ -13,17 +13,28 @@ const scoreSound = (window as any).scoreSound = new Howl({
 })
 
 export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
-  if (feedback.correct && feedback.bonus > 0) {
-    setToastMessage({
-      title: `All Moves Bonus!`,
-      subtitle: `${feedback.bonus} points`
-    })
-    setTimeout(() => scoreSound.play())
-  } else if (feedback.correct) {
-    setToastMessage({
-      title: `Nice ${toSentence(feedback.gesture)}!`,
-      subtitle: `${feedback.score} points`
-    })
+  if (feedback.correct) {
+    if (feedback.bonus > 0) {
+      setToastMessage({
+        title: `All Moves Bonus!`,
+        subtitle: `${feedback.bonus} points`
+      })
+      setTimeout(() => scoreSound.play())
+    } else {
+      setToastMessage({
+        title: `Nice ${toSentence(feedback.gesture)}!`,
+        subtitle: `${feedback.score} points`
+      })
+    }
+
+    const cfg = getState().config
+
+    // Locally increment gesture. On refresh or gameState change we'll
+    // get the correct gesture amount from the server, but need to be at
+    // least 1 or more to show stars above moves that are completed
+    cfg.successfulMotions[feedback.gesture] += 1
+
+    setGameConfiguration(cfg)
   } else {
     setToastMessage({
       title: 'Uh oh!',
@@ -33,3 +44,5 @@ export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
 
   setPlayerScore(feedback.totalScore)
 }
+
+(window as any).feedback = processFeedback
