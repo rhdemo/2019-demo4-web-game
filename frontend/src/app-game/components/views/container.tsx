@@ -19,7 +19,7 @@ import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
 import getLogger from '@app/log'
 import { DeviceUnsupportedView } from './device-unsupported'
 import { getMachineColourFromId, isInPortraitOrientation } from '@app/utils'
-import { GameRotateView } from './game.rotate';
+import { GameRotateView } from './game.rotate'
 
 const log = getLogger('view:container')
 const toast = <Toast></Toast>
@@ -40,7 +40,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
     // rotation we can't accurately detrmine when the animation ends, so
     // we just keep calling this instead
     setInterval(() => this.resetHeight(), 100)
-    window.addEventListener('orientationchange',  (ev) => {
+    window.addEventListener('orientationchange', (ev) => {
       const orientation = window.orientation
 
       if (typeof orientation === 'number') {
