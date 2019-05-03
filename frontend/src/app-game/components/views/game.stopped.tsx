@@ -1,9 +1,10 @@
 import { Component, h } from 'preact'
-import getLogger from '@app/log'
-
-import GameOverSVG from '@public/assets/images/svg/game-over-background.svg'
 import { getState } from '@app/store'
 import { indicator } from 'ordinal'
+import { SvgContainer } from '../svg-container';
+
+import getLogger from '@app/log'
+import GameOverSVG from '@public/assets/images/svg/game-over-background.svg'
 
 const log = getLogger('view:game.stopped')
 
@@ -30,8 +31,9 @@ export class GameStoppedView extends Component<{}, {}> {
     }
 
     return (
-      <div style={`background-image: url(${GameOverSVG})`} class='game stopped'>
+      <div class='game stopped'>
         <div class='overlay'>
+          <SvgContainer svg={GameOverSVG} />
           <h1 class='pink-text'>Game Over</h1>
           <h2 class='green-text'>{playerId}</h2>
           <div class='message'>
