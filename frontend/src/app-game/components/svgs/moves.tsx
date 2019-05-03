@@ -1,6 +1,17 @@
 import { Component, h } from 'preact'
 
-const MOVES_SVG: Record<string, () => JSX.Element> = {
+let MOVES_SVG: Record<string, () => JSX.Element>
+
+
+export default class MoveSvg extends Component<{ move: string }, {}> {
+  render () {
+    return MOVES_SVG[this.props.move]()
+  }
+}
+
+// TSlint struggles to parse everything below this object so
+// we re-assign it down here...
+MOVES_SVG = {
   x: () => <svg class='lb__cards__card__icon' enable-background='new 0 0 157.5 179.8' version='1.1' viewBox='0 0 157.5 179.8' xmlns='http://www.w3.org/2000/svg'>
   <style type='text/css' dangerouslySetInnerHTML={{__html: `
     .st03{fill:#FC5169;}
@@ -93,10 +104,4 @@ const MOVES_SVG: Record<string, () => JSX.Element> = {
   <path class='st21' d='m123.5 24.2c7.3 0 13.2 5.9 13.2 13.2v97.2c0 7.3-5.9 13.2-13.2 13.2h-52c-7.3 0-13.2-5.9-13.2-13.2v-97.2c0-7.3 5.9-13.2 13.2-13.2h52m0-6.1h-52c-10.6 0-19.3 8.7-19.3 19.3v97.2c0 10.6 8.7 19.3 19.3 19.3h52c10.6 0 19.3-8.7 19.3-19.3v-97.2c0-10.7-8.7-19.3-19.3-19.3z'></path>
   <path class='st31' d='m77.3 133.9h40.3c5.6 0 10.3-4.6 10.3-10.3v-75.3c0-5.6-4.6-10.3-10.3-10.3h-40.3c-5.7 0-10.3 4.6-10.3 10.3v75.4c0 5.6 4.6 10.2 10.3 10.2z'></path>
   </svg>
-}
-
-export default class MoveSvg extends Component<{ move: string }, {}> {
-  render () {
-    return MOVES_SVG[this.props.move]()
-  }
 }
