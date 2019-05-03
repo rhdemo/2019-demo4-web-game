@@ -122,7 +122,7 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     return (
       <div class={classname}>
-        <div style={`display: ${this.state.requiresRotation ? 'none;' : 'inherit;'}`}>
+        <div style={`height: 100%; display: ${this.state.requiresRotation ? 'none;' : 'inherit;'}`}>
           {v}
           {toast}
         </div>

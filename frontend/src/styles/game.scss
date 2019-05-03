@@ -81,9 +81,9 @@
     }
 
     h3 {
-      color: white; 
+      color: white;
       text-shadow:1px 1px 0 rgba(8, 187, 178, 0.2), 2px 2px 0 rgba(0,0,0,.2);
-      text-transform: capitalize; 
+      text-transform: capitalize;
       letter-spacing: 1px;
       margin: 0;
     }
@@ -126,7 +126,7 @@
       z-index: -1;
 
       svg {
-        height: 100%;
+        width: 100%;
       }
     }
   }
@@ -148,7 +148,7 @@
 
   h2 {
     color: white;
-    margin:5vh 0; 
+    margin:5vh 0;
   }
 
   .button-container {
@@ -161,16 +161,17 @@
     opacity: .5;
     border: 1em #fff solid;
     position:relative;
-    
-  
+
+
 
     &.selected {
       opacity: 1;
     }
-    
-    & > img {
+
+    & > svg {
       max-height: 65px;
       margin-top: .5rem;
+      width: 65px;
     }
 
     .star {
@@ -202,7 +203,7 @@
 }
 
 .game.borked {
-  
+
   padding: 15vh 1em;
 
   ol li {

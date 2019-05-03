@@ -17,6 +17,7 @@ import IconShake from '@public/assets/images/svg/moves/icon-shake.svg'
 import IconX from '@public/assets/images/svg/moves/icon-x.svg'
 import { toSentence } from '@app/utils'
 import StarSVG from '@assets/images/svg/star.svg'
+import MoveSvg from './svgs/moves';
 
 const moveIconsMap: { [key: string]: string } = {
   'circle': IconCircle,
@@ -99,12 +100,12 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     const selectedGesture = getCurrentSelectedGesture()
     const buttons = Object.keys(this.state.config.gameMotions)
       .map((m) => {
-        let imageTag: JSX.Element | undefined
+        let moveSvg: JSX.Element | undefined
         const isEnabled = this.state.config.gameMotions[m]
         const isSelected = m === selectedGesture
 
         if (isEnabled) {
-          imageTag = <img src={moveIconsMap[m]}/>
+          moveSvg = <MoveSvg move={m} />
         }
 
         return (
@@ -113,11 +114,12 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
             class={`button-container stage-shadow ${isSelected ? 'selected' : ''}`}
             disabled={!isEnabled}
           >
-          <div class="star">
-          <img src={StarSVG}/>
-          </div>
+            {/* Star is visible if user has completed that move at least once */}
+            <div class={`star ${this.state.config.successfulMotions[m] === 0 ? 'hidden' : ''}`}>
+              <img src={StarSVG}/>
+            </div>
             {isEnabled ? <h3>{toSentence(m)}</h3> : <h3>&nbsp;</h3>}
-            {imageTag}
+            {moveSvg}
           </div>
         )
       })
