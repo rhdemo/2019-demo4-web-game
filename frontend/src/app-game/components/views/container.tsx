@@ -88,10 +88,6 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
       return <GameBorkedView />
     }
 
-    if (this.state.requiresRotation) {
-      return <GameRotateView />
-    }
-
     const activeView = <GameActiveView gameState={gameState} machineId={machineId} playerId={playerId} score={score} />
 
     switch (gameState) {
@@ -126,8 +122,13 @@ export class ViewsContainer extends Component<{}, ViewsContainerState> {
 
     return (
       <div class={classname}>
-        {v}
-        {toast}
+        <div style={`display: ${this.state.requiresRotation ? 'none;' : 'inherit;'}`}>
+          {v}
+          {toast}
+        </div>
+
+        {/* This will overlay all other content until user returns to portrait */}
+        {this.state.requiresRotation ? <GameRotateView /> : undefined}
       </div>
     )
   }
