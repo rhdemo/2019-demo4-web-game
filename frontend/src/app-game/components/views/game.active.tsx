@@ -86,11 +86,11 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
       <div class='game active'>
         <div class='header'>
           <img src={GameHeaderSVG}/>
-          <div>
+          <div class="header-player">
             <h3>{playerId}</h3>
           </div>
-          <div>
-            <h3>{this.state.score} POINTS</h3>
+          <div class="header-score">
+            <h3>{this.state.score} points</h3>
           </div>
         </div>
 

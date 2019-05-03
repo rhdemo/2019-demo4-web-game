@@ -5,53 +5,87 @@
 
   &.machine-baby-blue {
     background: $machine-baby-blue;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-baby-blue, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-black {
     background: $machine-black;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-black, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-green {
     background: $machine-green;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-green, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-pink {
     background: $machine-pink;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-pink, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-purple {
     background: $machine-purple;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-purple, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-red-alt {
     background: $machine-red-alt;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-red-alt, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-red {
     background: $machine-red;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-red, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-turquoise {
     background: $machine-turquoise;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-turquoise, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
   &.machine-yellow {
     background: $machine-yellow;
+    .motion-heading {
+      text-shadow:1px 1px 0 $machine-yellow, 2px 2px 0 rgba(0,0,0,.2);
+    }
   }
 }
 
+*, *:after, *:before {
+  box-sizing: border-box;
+  text-transform: capitalize;
+  letter-spacing: 1px;
+}
+
 .game {
+
   p, small {
     line-height: 1.2em;
   }
 
   .header {
-    div {
-      padding: 0.5em 1em; flex: 1;
-    }
-
-    div:first-of-type {
+    padding:1rem;
+    &-player {
       text-align: left;
     }
-
-    div:last-of-type {
+    &-score {
       text-align: right;
     }
 
     h3 {
-      color: white; text-shadow: #333 1px 1px 3px; text-transform: uppercase; font-weight: bold;
+      color: white; 
+      text-shadow:1px 1px 0 rgba(8, 187, 178, 0.2), 2px 2px 0 rgba(0,0,0,.2);
+      text-transform: capitalize; 
+      letter-spacing: 1px;
+      margin: 0;
     }
   }
 
@@ -62,10 +96,11 @@
     background-size: cover;
     width: 100%;
     height: 100%;
+    max-height: 100vh;
 
     h1 {
       font-size: calc(2rem + 4vw);
-      margin: 0;
+      margin: 0 0 1rem;
     }
 
     h2 {
@@ -80,50 +115,73 @@
 
 }
 
+.button-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 4vw;
+  padding: 0 3vw;
+}
+
 .button-move-selector {
-  width: 100vw;
-  margin-top: 12vh;
 
   h2 {
     color: white;
-    text-shadow: #333 1px 1px 3px;
+    margin:5vh 0; 
   }
 
   .button-container {
     transition: all 0.25s;
-    margin: .75em;
     border-radius: .5em;
-    display: inline-block;
-    background-color: #ccc;
-    border: 0.1em #ccc solid;
-    width: 25vw;
-    height: 25vw;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: #fff;
+    opacity: .5;
+    border: 1em #fff solid;
+    position:relative;
+    
+  
 
     &.selected {
-      border: 0.1em white solid;
-      background-color: white;
+      opacity: 1;
+    }
+    
+    & > img {
+      max-height: 65px;
+      margin-top: .5rem;
     }
 
-    img {
-      width: 100%;
-      height: 55%;
-      margin-top: 0.4em;
-      display: block;
+    .star {
+      position: absolute;
+      width:30px;
+      height:30px;
+      border-radius: 100%;
+      background: #fff;
+      padding:.25rem .4rem;
+      left: 50%;
+      top: -1.5rem;
+      transform: translateX(-50%);
     }
 
     h3 {
       margin: 0;
-      padding-top: .75em;
+      position:relative;
+      z-index: 10;
+      flex-basis: 100%;
+      text-shadow:1px 1px 0 #fff, 2px 2px 0 rgba(0,0,0,.2);
     }
   }
 
   .button-container[disabled="true"] {
-    border: 0.1em white dashed;
+    border: 0.2em white dashed;
     background-color: transparent;
+    min-height: 130px;
   }
 }
 
 .game.borked {
+  
   padding: 15vh 1em;
 
   ol li {
@@ -132,10 +190,12 @@
 }
 
 .game.active {
+  display: grid;
+  grid-template-rows:1.5fr 6fr 2fr;
+  height:100%;
   .header {
     display: flex;
-    width: 100vw;
-
+    justify-content:space-between;
     div {
       z-index: 2;
     }
@@ -143,19 +203,21 @@
     img {
       z-index: 1;
       position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+
     }
   }
 
   .machine-info-container {
     width: 100%;
     display: flex;
-    bottom: 0;
-    position: absolute;
-    min-height: 20vh;
 
     .machine-container {
       background-repeat: no-repeat;
-      background-position: left;
+      background-position:bottom left;
     }
   }
 
@@ -163,7 +225,7 @@
     flex-direction: row-reverse;
 
     .machine-container {
-      background-position: right;
+      background-position: bottom right;
     }
   }
 
@@ -201,10 +263,6 @@
 
 @media screen and (min-height: 700px) {
   .machine-info-container {
-    min-height: 25vh;
-  }
-
-  .button-move-selector {
-    margin-top: 18vh;
+    // min-height: 25vh;
   }
 }
