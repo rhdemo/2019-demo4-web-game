@@ -8,7 +8,7 @@ import { Component, h } from 'preact'
 export class SvgContainer extends Component<{ svg: any, classes?: string }, {}> {
   render () {
     return (
-      <div class={`svg-container ${this.props.classes || ''}`} dangerouslySetInnerHTML={{__html: this.props.svg}}></div>
+      <div class={`svg-container ${this.props.classes || ''}`} dangerouslySetInnerHTML={{ __html: this.props.svg }}></div>
     )
   }
 }

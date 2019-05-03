@@ -17,7 +17,7 @@ import IconShake from '@public/assets/images/svg/moves/icon-shake.svg'
 import IconX from '@public/assets/images/svg/moves/icon-x.svg'
 import { toSentence } from '@app/utils'
 import StarSVG from '@assets/images/svg/star.svg'
-import MoveSvg from './svgs/moves';
+import MoveSvg from './svgs/moves'
 
 const moveIconsMap: { [key: string]: string } = {
   'circle': IconCircle,
@@ -126,8 +126,8 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
 
     return (
       <div class='button-move-selector'>
-        <h2 class="motion-heading">choose a motion</h2>
-        <div class="button-wrapper">
+        <h2 class='motion-heading'>choose a motion</h2>
+        <div class='button-wrapper'>
           {buttons}
         </div>
       </div>
