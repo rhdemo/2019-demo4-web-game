@@ -18,9 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@evanshortiss/radial-indicator@evanshortiss/radial-indicator#types":
+"@evanshortiss/radial-indicator@^1.0.0":
   version "1.0.0"
-  resolved "https://codeload.github.com/evanshortiss/radial-indicator/tar.gz/9769ac2baee8fdd81be472440915424d6525e24d"
+  resolved "https://registry.yarnpkg.com/@evanshortiss/radial-indicator/-/radial-indicator-1.0.0.tgz#954d80757b7f597f4e6d0bcedc846bd295c4e778"
+  integrity sha512-mR5L8soJQyV0DxnRfsoeW+UMYN9rva3bHLwxBDPogTUfGqijgbX4sr/TDQl04AoK4wJPNJCtltk1V0ULuB3cgQ==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -51,6 +52,11 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
+
+"@types/howler@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/howler/-/howler-2.1.0.tgz#a525727788dd941aaab0dfde937e374c0f37cf95"
+  integrity sha512-FQiZRxGbBoOEe35dg1BOIQ+YHEYO3SldrnaPuKJJVuaxJJ/7NwEah87tyWxoTgunLlj6p4kkDKYcQH0aAXliQw==
 
 "@types/jest@^23.3.0":
   version "23.3.2"
@@ -3127,6 +3133,11 @@ hosted-git-info@^2.1.4:
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
   integrity sha512-7T/BxH19zbcCTa8XkMlbK5lTo1WtgkFi3GvdWEyNuc4Vex7/9Dqbnpsf4JMydcfj9HCg4zUWFTL3Za6lapg5/w==
 
+howler@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/howler/-/howler-2.1.2.tgz#8433a09d8fe84132a3e726e05cb2bd352ef8bd49"
+  integrity sha512-oKrTFaVXsDRoB/jik7cEpWKTj7VieoiuzMYJ7E/EU5ayvmpRhumCv3YQ3823zi9VTJkSWAhbryHnlZAionGAJg==
+
 hsl-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/hsl-regex/-/hsl-regex-1.0.0.tgz#d49330c789ed819e276a4c0d272dffa30b18fe6e"
@@ -4891,6 +4902,10 @@ normalize-url@^3.0.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
+
+nosleep.js@evanshortiss/nosleep.js#types:
+  version "0.10.0"
+  resolved "https://codeload.github.com/evanshortiss/nosleep.js/tar.gz/ee7ae39f48dd41ede3b7b211549dd1644edd71a9"
 
 npm-bundled@^1.0.1:
   version "1.0.5"

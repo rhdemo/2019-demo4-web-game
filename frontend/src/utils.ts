@@ -1,14 +1,22 @@
 export function isDeviceSupported () {
   if (process.env.NODE_ENV === 'production') {
-    return navigator.userAgent.match(/ipod|iphone|ipad|android/ig) !== null
+    return isMobileDevice()
   } else {
     return true
   }
 }
 
+export function isMobileDevice () {
+  return navigator.userAgent.match(/ipod|iphone|ipad|android/ig) !== null
+}
+
 export function isAppleTwelveDevice () {
   // TODO: check for minor version number
   return navigator.userAgent.match(/iPhone OS 12_2/gi)
+}
+
+export function isInPortraitOrientation () {
+  return window.innerHeight > window.innerWidth
 }
 
 export function machineIdToLetter (id: number) {
