@@ -16,6 +16,7 @@ import IconRoll from '@public/assets/images/svg/moves/icon-roll.svg'
 import IconShake from '@public/assets/images/svg/moves/icon-shake.svg'
 import IconX from '@public/assets/images/svg/moves/icon-x.svg'
 import { toSentence } from '@app/utils'
+import StarSVG from '@assets/images/svg/star.svg'
 
 const moveIconsMap: { [key: string]: string } = {
   'circle': IconCircle,
@@ -112,6 +113,9 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
             class={`button-container stage-shadow ${isSelected ? 'selected' : ''}`}
             disabled={!isEnabled}
           >
+          <div class="star">
+          <img src={StarSVG}/>
+          </div>
             {isEnabled ? <h3>{toSentence(m)}</h3> : <h3>&nbsp;</h3>}
             {imageTag}
           </div>
@@ -120,8 +124,8 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
 
     return (
       <div class='button-move-selector'>
-        <h2>CHOOSE A MOTION</h2>
-        <div>
+        <h2 class="motion-heading">choose a motion</h2>
+        <div class="button-wrapper">
           {buttons}
         </div>
       </div>
