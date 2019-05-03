@@ -74,7 +74,9 @@ export class MachineSvgComponent extends Component<MachineSvgProps, { config: Ga
 
       log('update indicator with health value:', health)
 
-      this.indicator.value(health)
+      // We never set to zero since this is a bug in the radial bar
+      // and shows full health, but red!
+      this.indicator.value(health ? health : 1)
     }
   }
 
