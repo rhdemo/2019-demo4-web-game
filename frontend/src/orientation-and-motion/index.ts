@@ -17,7 +17,7 @@ const TS_INDEX = 6
 // We must have motion events that span more than this time (in milliseconds)
 const MIN_MOTION_CAP_LEN = 2000
 // Time to wait for events before deciding the device lacks motion support
-const SUPPORTS_CHECK_TIMEOUT = 3000
+const SUPPORTS_CHECK_TIMEOUT = 5000
 
 const DEFAULT_MOTION_OPTS = {
   autoStart: false,
