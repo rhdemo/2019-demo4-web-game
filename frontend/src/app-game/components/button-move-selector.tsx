@@ -9,23 +9,17 @@ import {
   setCurrentSelectedGesture
 } from '@app/store'
 
-import IconCircle from '@public/assets/images/svg/moves/icon-circle.svg'
-import IconFever from '@public/assets/images/svg/moves/icon-fever.svg'
-import IconFloss from '@public/assets/images/svg/moves/icon-floss.svg'
-import IconRoll from '@public/assets/images/svg/moves/icon-roll.svg'
-import IconShake from '@public/assets/images/svg/moves/icon-shake.svg'
-import IconX from '@public/assets/images/svg/moves/icon-x.svg'
 import { toSentence } from '@app/utils'
 import StarSVG from '@assets/images/svg/star.svg'
 import MoveSvg from './svgs/moves'
 
-const moveIconsMap: { [key: string]: string } = {
-  'circle': IconCircle,
-  'fever': IconFever,
-  'floss': IconFloss,
-  'roll': IconRoll,
-  'shake': IconShake,
-  'x': IconX
+const moveTextMap: Record<string, string> = {
+  'circle': 'Draw a Circle',
+  'fever': 'Do the Fever',
+  'floss': 'Do the Floss',
+  'roll': 'Roll your Phone',
+  'shake': 'Shake your Phone',
+  'x': 'Draw an X'
 }
 
 const log = getLogger('component:button-move-selector')
@@ -124,9 +118,10 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
         )
       })
 
+    const moveText = selectedGesture ? moveTextMap[selectedGesture] : 'choose a motion'
     return (
       <div class='button-move-selector'>
-        <h2 class='motion-heading'>choose a motion</h2>
+        <h2 class='motion-heading'>{moveText}</h2>
         <div class='button-wrapper'>
           {buttons}
         </div>
