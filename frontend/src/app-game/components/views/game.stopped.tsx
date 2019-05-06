@@ -1,7 +1,6 @@
 import { Component, h } from 'preact'
 import { getState } from '@app/store'
 import { indicator } from 'ordinal'
-import { SvgContainer } from '../svg-container'
 import GameOverSVG from '@app/app-game/components/svgs/game-over'
 import getLogger from '@app/log'
 
