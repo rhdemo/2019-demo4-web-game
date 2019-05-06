@@ -13,15 +13,6 @@ import { toSentence } from '@app/utils'
 import StarSVG from '@assets/images/svg/star.svg'
 import MoveSvg from './svgs/moves'
 
-const moveTextMap: Record<string, string> = {
-  'circle': 'Draw a Circle',
-  'fever': 'Do the Fever',
-  'floss': 'Do the Floss',
-  'roll': 'Roll your Phone',
-  'shake': 'Shake your Phone',
-  'x': 'Draw an X'
-}
-
 const log = getLogger('component:button-move-selector')
 
 export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
@@ -118,10 +109,8 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
         )
       })
 
-    const moveText = selectedGesture ? moveTextMap[selectedGesture] : 'choose a motion'
     return (
       <div class='button-move-selector'>
-        {/* <h2 class='motion-heading'>{moveText}</h2> */}
         <div class='button-wrapper'>
           {buttons}
         </div>
