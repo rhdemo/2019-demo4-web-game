@@ -84,14 +84,14 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
 
     return (
       <div class='game active'>
-        <div class='header'>
-          <img src={GameHeaderSVG}/>
+        <div class='header' style={`background-image:url(${GameHeaderSVG})`}>
           <div class='header-player'>
             <h3>{playerId}</h3>
           </div>
           <div class='header-score'>
             <h3>{this.state.score} points</h3>
           </div>
+          <h2 class="header-title motion-heading">title test here</h2>
         </div>
 
         <ButtonMoveSelector></ButtonMoveSelector>

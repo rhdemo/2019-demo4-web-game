@@ -121,7 +121,7 @@ export class ButtonMoveSelector extends Component<{}, ButtonMoveSelectorState> {
     const moveText = selectedGesture ? moveTextMap[selectedGesture] : 'choose a motion'
     return (
       <div class='button-move-selector'>
-        <h2 class='motion-heading'>{moveText}</h2>
+        {/* <h2 class='motion-heading'>{moveText}</h2> */}
         <div class='button-wrapper'>
           {buttons}
         </div>
