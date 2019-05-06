@@ -201,8 +201,6 @@ export function setToastMessage (msg: ToastMessage) {
   emitter.emit(ApplicationEventTypes.AppStateUpdate)
 }
 
-(window as any).toast = setToastMessage
-
 /**
  * Set machine health configuration
  */

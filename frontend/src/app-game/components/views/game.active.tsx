@@ -1,7 +1,7 @@
 import { Component, h } from 'preact'
 import { startSendLoop, stopSendLoop } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
-import { ApplicationEventTypes, emitter, getState } from '@app/store'
+import { ApplicationEventTypes, emitter, getState, getCurrentSelectedGesture } from '@app/store'
 import { FullScreenOverlay } from '@app/app-game/components/full-screen-overlay'
 import getLogger from '@app/log'
 
@@ -16,12 +16,22 @@ import { getMachineColourFromId } from '@app/utils'
 
 const log = getLogger('view:game.active')
 
+const moveTextMap: Record<string, string> = {
+  'circle': 'Draw a Circle',
+  'fever': 'Do the Fever',
+  'floss': 'Do the Floss',
+  'roll': 'Roll your Phone',
+  'shake': 'Shake your Phone',
+  'x': 'Draw an X'
+}
+
 export class GameActiveView extends Component<GameActiveViewProps, GameActiveViewState> {
   constructor (props: GameActiveViewProps) {
     super()
     log('creating')
     this.setState({
-      score: props.score
+      score: props.score,
+      selectedGesture: getCurrentSelectedGesture()
     })
 
     // Binding "this" for event handlers
@@ -45,6 +55,8 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
       // we wait until user selects a valid gesture
       startSendLoop()
     }
+
+    this.setState({ selectedGesture: gesture })
   }
 
   componentWillMount () {
@@ -71,6 +83,7 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
     log('render')
 
     const { gameState, playerId, machineId } = this.props
+    const gesture = this.state.selectedGesture
     const overlayClasses = `machine-${getMachineColourFromId(machineId)} ${gameState}`
     let overlay: JSX.Element | undefined
 
@@ -84,14 +97,16 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
 
     return (
       <div class='game active'>
-        <div class='header'>
-          <img src={GameHeaderSVG}/>
+        <div class='header' style={`background-image:url(${GameHeaderSVG})`}>
           <div class='header-player'>
             <h3>{playerId}</h3>
           </div>
           <div class='header-score'>
             <h3>{this.state.score} points</h3>
           </div>
+          <h2 class="header-title motion-heading">
+            { gesture ? moveTextMap[gesture] : 'choose a motion' }
+          </h2>
         </div>
 
         <ButtonMoveSelector></ButtonMoveSelector>
@@ -106,6 +121,7 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
 
 interface GameActiveViewState {
   score: number
+  selectedGesture?: string
 }
 
 interface GameActiveViewProps {
