@@ -35,7 +35,7 @@ export class Toast extends Component<{}, ToastState> {
         this.setState({
           timer: undefined
         })
-      }, 300000)
+      }, 3000)
 
       this.setState({ timer, message })
     }
