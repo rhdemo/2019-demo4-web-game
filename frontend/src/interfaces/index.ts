@@ -16,6 +16,7 @@ export interface GestureHistoryEntry {
 export interface ToastMessage {
   title: string
   subtitle: string
+  star: boolean
 }
 
 export interface GameConfiguration {

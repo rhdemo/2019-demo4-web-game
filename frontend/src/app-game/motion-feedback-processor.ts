@@ -16,12 +16,14 @@ export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
   if (feedback.correct) {
     if (feedback.bonus > 0) {
       setToastMessage({
+        star: true,
         title: `All Moves Bonus!`,
         subtitle: `${feedback.bonus} points`
       })
       setTimeout(() => scoreSound.play())
     } else {
       setToastMessage({
+        star: true,
         title: `Nice ${toSentence(feedback.gesture)}!`,
         subtitle: `${feedback.score} points`
       })
@@ -37,6 +39,7 @@ export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
     setGameConfiguration(cfg)
   } else {
     setToastMessage({
+      star: false,
       title: 'Uh oh!',
       subtitle: `Try doing the ${toSentence(feedback.gesture)} again`
     })

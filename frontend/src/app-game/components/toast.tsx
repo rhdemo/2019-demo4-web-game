@@ -55,15 +55,14 @@ export class Toast extends Component<{}, ToastState> {
     log('render')
 
     const visibilityClass = this.state.timer ? 'visible' : 'hidden'
-    let content: JSX.Element | undefined
 
     log('setting toast visibility to: ', visibilityClass)
 
     if (this.state.message) {
-      const { title, subtitle } = this.state.message
-      content = (
-        <div>
-          <img src={StarSVG}/>
+      const { title, subtitle, star } = this.state.message
+      return (
+        <div class={`toast ${visibilityClass}`}>
+          {star ? <img src={StarSVG}/> : undefined}
           <h1 class='pink-text'>{title}</h1>
           <h2 class='green-text'>{subtitle}</h2>
         </div>
@@ -71,9 +70,7 @@ export class Toast extends Component<{}, ToastState> {
     }
 
     return (
-      <div class={`toast ${visibilityClass} stage-shadow`}>
-        {content}
-      </div>
+      <div class={`toast ${visibilityClass}`}></div>
     )
   }
 }
