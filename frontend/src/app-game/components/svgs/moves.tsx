@@ -2,7 +2,6 @@ import { Component, h } from 'preact'
 
 let MOVES_SVG: Record<string, () => JSX.Element>
 
-
 export default class MoveSvg extends Component<{ move: string }, {}> {
   render () {
     return MOVES_SVG[this.props.move]()

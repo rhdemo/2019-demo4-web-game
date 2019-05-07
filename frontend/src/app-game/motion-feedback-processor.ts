@@ -1,5 +1,5 @@
 import { WSS } from '@app/interfaces'
-import { setPlayerScore, setToastMessage, setGameConfiguration, getState } from '@app/store'
+import { getState, setGameConfiguration, setPlayerScore, setToastMessage } from '@app/store'
 import { toSentence } from '@app/utils'
 import { Howl, Howler } from 'howler'
 
