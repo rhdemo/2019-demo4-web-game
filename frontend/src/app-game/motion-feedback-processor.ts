@@ -36,6 +36,11 @@ export function processFeedback (feedback: WSS.IncomingFrames.MotionFeedback) {
     // least 1 or more to show stars above moves that are completed
     cfg.successfulMotions[feedback.gesture] += 1
 
+    // Vibrate the phone if the function is available
+    if (navigator.vibrate) {
+      navigator.vibrate([250, 30, 250, 30, 250, 30, 250])
+    }
+
     setGameConfiguration(cfg)
   } else {
     setToastMessage({
