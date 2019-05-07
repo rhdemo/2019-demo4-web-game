@@ -11,6 +11,18 @@ export class GameBorkedView extends Component {
     super()
     log('creating')
   }
+
+  getChromeUrl () {
+    const href = window.location.href
+    const proto = window.location.protocol
+
+    if (proto.indexOf('https') !== -1) {
+      return href.replace('https', 'googlechromes')
+    } else {
+      return href.replace('http', 'googlechrome')
+    }
+  }
+
   render () {
     log('render')
 
@@ -18,19 +30,14 @@ export class GameBorkedView extends Component {
 
     if (err instanceof DeviceMotionUnavailableError && isAppleTwelveDevice()) {
       return (
-        <div class='game borked'>
-          <h2>
-            HEY THERE!
-          </h2>
-
+        <div class='game borked' style="text-transform: none !important;">
           <div style='text-align: left;'>
-            <p>
-              Looks like you're using iOS 12. You'll need to make a quick settings change to play this game on your device.
-            </p>
+            <p class='center'>To play this game on iOS, please switch to <a href={this.getChromeUrl()}>Google Chrome</a>.</p>
+            <b><h3 class='center'>OR</h3></b>
             <ol>
-              <li>Open your Settings application</li>
-              <li>Navigate to <i>Safari > Motion & Orientation Access</i></li>
-              <li>Enable the setting</li>
+              <li style="padding-top: 0;">Open the Settings application.</li>
+              <li>Scroll down and select <i>Safari</i>.</li>
+              <li>Scroll to <i>Motion & Orientation Access</i> and enable it.</li>
               <li>Refresh this page after doing so and you'll be able to play!</li>
             </ol>
           </div>
@@ -40,9 +47,9 @@ export class GameBorkedView extends Component {
 
     return (
       <div class='game borked'>
-        <h2>GAME BORKED</h2>
+        <h2>GAME ERROR</h2>
         <p>
-          Sorry! If you're see this, then something isn't working the way it
+          Sorry! If you're seeing this then something isn't working the way it
           should.
         </p>
         <p>Here are some details:</p>

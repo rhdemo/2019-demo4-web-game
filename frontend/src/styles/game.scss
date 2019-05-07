@@ -213,11 +213,23 @@
 }
 
 .game.borked {
-
-  padding: 15vh 1em;
+  padding: 0 1em 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
 
   ol li {
     padding-top: 0.5em;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  * {
+    text-transform: none;
   }
 }
 
