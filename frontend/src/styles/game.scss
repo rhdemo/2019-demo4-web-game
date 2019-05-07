@@ -2,11 +2,16 @@
 
 .game-el-container {
   height: 100%;
-
+  .stage-shadow {
+    animation: all .25s linear;
+  }
   &.machine-baby-blue {
     background: $machine-baby-blue;
     .motion-heading {
       text-shadow:1px 1px 0 $machine-baby-blue, 2px 2px 0 rgba(0,0,0,.2);
+    }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-baby-blue, 3px 3px 0 rgba(0, 0, 0, 0.2);
     }
   }
   &.machine-black {
@@ -14,11 +19,17 @@
     .motion-heading {
       text-shadow:1px 1px 0 $machine-black, 2px 2px 0 rgba(0,0,0,.2);
     }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-black, 4px 4px 0 rgba(0, 0, 0, 0.2);
+    }
   }
   &.machine-green {
     background: $machine-green;
     .motion-heading {
       text-shadow:1px 1px 0 $machine-green, 2px 2px 0 rgba(0,0,0,.2);
+    }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-green, 4px 4px 0 rgba(0, 0, 0, 0.2);
     }
   }
   &.machine-pink {
@@ -26,11 +37,17 @@
     .motion-heading {
       text-shadow:1px 1px 0 $machine-pink, 2px 2px 0 rgba(0,0,0,.2);
     }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-pink, 4px 4px 0 rgba(0, 0, 0, 0.2);
+    }
   }
   &.machine-purple {
     background: $machine-purple;
     .motion-heading {
       text-shadow:1px 1px 0 $machine-purple, 2px 2px 0 rgba(0,0,0,.2);
+    }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-purple, 4px 4px 0 rgba(0, 0, 0, 0.2);
     }
   }
   &.machine-red-alt {
@@ -38,11 +55,17 @@
     .motion-heading {
       text-shadow:1px 1px 0 $machine-red-alt, 2px 2px 0 rgba(0,0,0,.2);
     }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-red-alt, 4px 4px 0 rgba(0, 0, 0, 0.2);
+    }
   }
   &.machine-red {
     background: $machine-red;
     .motion-heading {
       text-shadow:1px 1px 0 $machine-red, 2px 2px 0 rgba(0,0,0,.2);
+    }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-red, 4px 4px 0 rgba(0, 0, 0, 0.2);
     }
   }
   &.machine-turquoise {
@@ -50,11 +73,17 @@
     .motion-heading {
       text-shadow:1px 1px 0 $machine-turquoise, 2px 2px 0 rgba(0,0,0,.2);
     }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-turquoise, 4px 4px 0 rgba(0, 0, 0, 0.2);
+    }
   }
   &.machine-yellow {
     background: $machine-yellow;
     .motion-heading {
       text-shadow:1px 1px 0 $machine-yellow, 2px 2px 0 rgba(0,0,0,.2);
+    }
+    .stage-shadow.selected {
+      box-shadow: 1px 1px 0 $machine-yellow, 4px 4px 0 rgba(0, 0, 0, 0.2);
     }
   }
 }
@@ -84,7 +113,7 @@
     }
     &-title {
       width: 100%;
-      margin:15vh 0 0;
+      margin:16vh 0 3vh;
       z-index: 2;
       color: #fff;
       text-align:center;
@@ -235,7 +264,7 @@
 
 .game.active {
   display: grid;
-  grid-template-rows:1.5fr 6fr 2fr;
+  grid-template-rows:1.5fr 4fr 2fr;
   height:100%;
   .header {
     display: flex;
@@ -258,10 +287,13 @@
   .machine-info-container {
     width: 100%;
     display: flex;
+    
 
     .machine-container {
+      flex: 70%;
       background-repeat: no-repeat;
       background-position:bottom left;
+
     }
   }
 
@@ -280,7 +312,9 @@
       -webkit-overflow-scrolling: touch;
     }
   }
-
+  .indicator-container {
+    flex-basis: 30%;
+  }
   #indicator-container {
     display: flex;
     align-items: center;
