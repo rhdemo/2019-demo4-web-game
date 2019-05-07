@@ -1,7 +1,7 @@
 import { Component, h } from 'preact'
 import { startSendLoop, stopSendLoop } from '@app/orientation-and-motion'
 import { ConfigGameMode, GameConfiguration } from '@app/interfaces'
-import { ApplicationEventTypes, emitter, getState, getCurrentSelectedGesture } from '@app/store'
+import { ApplicationEventTypes, emitter, getCurrentSelectedGesture, getState } from '@app/store'
 import { FullScreenOverlay } from '@app/app-game/components/full-screen-overlay'
 import getLogger from '@app/log'
 
@@ -104,7 +104,7 @@ export class GameActiveView extends Component<GameActiveViewProps, GameActiveVie
           <div class='header-score'>
             <h3>{this.state.score} points</h3>
           </div>
-          <h2 class="header-title motion-heading">
+          <h2 class='header-title motion-heading'>
             { gesture ? moveTextMap[gesture] : 'choose a motion' }
           </h2>
         </div>
