@@ -10,6 +10,7 @@ import nanoid from 'nanoid'
 import getLogger from '@app/log'
 
 import twists from '@public/assets/images/twists.gif'
+import shake from '@public/assets/images/shake.gif'
 import circles from '@public/assets/images/circles.gif'
 import triangles from '@public/assets/images/triangles.gif'
 import disco from '@public/assets/images/disco.gif'
@@ -44,7 +45,7 @@ const GESTURES: Gesture[] = shuffle([
   {
     name: 'Phone Shake',
     id: 'shake',
-    gif: twists
+    gif: shake
   },
   {
     name: 'Draw a Circle',
