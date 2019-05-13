@@ -287,7 +287,7 @@
   .machine-info-container {
     width: 100%;
     display: flex;
-    
+
 
     .machine-container {
       flex: 70%;
@@ -305,13 +305,6 @@
     }
   }
 
-  /* CSS specific to iOS devices becuase Safari is garbage */
-  @supports (-webkit-overflow-scrolling: touch) {
-    .move-selector {
-      // iOS won't scroll elements without this
-      -webkit-overflow-scrolling: touch;
-    }
-  }
   .indicator-container {
     flex-basis: 30%;
   }
