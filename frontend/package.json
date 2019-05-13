@@ -29,8 +29,7 @@
     "debug": "^4.1.1",
     "env-var": "^3.4.2",
     "howler": "^2.1.2",
-    "nosleep.js": "evanshortiss/nosleep.js#types",
-    "ordinal": "evanshortiss/ordinal",
+    "ordinal": "^1.0.3",
     "webmo": "^0.5.2"
   },
   "devDependencies": {
