@@ -48,7 +48,7 @@ achieve this in Google Chrome by:
 
 A screenshot is included below for demonstration.
 
-
+![](https://github.com/rhdemo/2019-demo4-web-game/raw/master/frontend/screenshots/Screenshot%202019-05-01%20at%209.15.38%20PM.png)
 
 ### Motion API Explainer
 
