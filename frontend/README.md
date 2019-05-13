@@ -12,6 +12,9 @@ known to work.
 
 ### Development & Running the App
 
+_Note: Read the "Motion API Explainer" section below to better understand 
+how this application is designed and the contexts in which it will operate._
+
 Clone the repository and install the dependencies:
 
 ```sh
@@ -34,6 +37,18 @@ depending on the service you need to view.
 
 If you make code changes the server will automatically detect them, make a new 
 build, and refresh the browser.
+
+If viewing `index.html` on a laptop/desktop you must set your web browser 
+window dimensions to match those of a mobile device in portrait mode. You can
+achieve this in Google Chrome by:
+
+* Opening the Developer Tools 
+* Clicking "Toggle device toolbar" next to "Elements"
+* Selecting an Android or iOS Device in the new dropdown.
+
+A screenshot is included below for demonstration.
+
+
 
 ### Motion API Explainer
 
